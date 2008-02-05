@@ -1,6 +1,6 @@
 APPS:=xcowsay
-OBJS:=xcowsay.o
-HEADERS:=
+OBJS:=xcowsay.o floating_shape.o
+HEADERS:=floating_shape.h
 
 CFLAGS:=-Wall -g `pkg-config --cflags gtk+-2.0`
 LDFLAGS:=`pkg-config --libs gtk+-2.0`
