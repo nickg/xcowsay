@@ -217,5 +217,10 @@ void display_cow(char *text)
    
    gtk_main();
 
+   free_shape(xcowsay.bubble);
+   free_shape(xcowsay.cow);
+   xcowsay.bubble = NULL;
+   xcowsay.cow = NULL;
+   
    printf("Here!\n");
 }
