@@ -52,10 +52,14 @@ static void get_alpha_mask(float_shape_t *shape)
    for (y = 0; y < shape->height; y++) {
       for (x = 0; x < shape->width; x++) {
          p = pixels + y*rowstride + x*nchannels;
-         bright_green = 0 != p[0] && 255 != p[1] && 0 != p[2];
-         if ((has_alpha && 255 == p[3])  // p[3] is alpha channel
-             || bright_green)            // Green is also alpha
+         bright_green = 0 == p[0] && 255 == p[1] && 0 == p[2];
+         if (has_alpha) {
+            if (255 == p[3])  // p[3] is alpha channel
+               gdk_draw_point(shape->mask_bitmap, gc, x, y);
+         } 
+         else if (!bright_green) {   // Bright green is alpha for RGB images
             gdk_draw_point(shape->mask_bitmap, gc, x, y);
+         }
       }
    }
 }
@@ -73,12 +77,13 @@ float_shape_t *make_shape_from_pixbuf(GdkPixbuf *pixbuf)
    gtk_window_set_decorated(GTK_WINDOW(s->window), FALSE);
    gtk_window_set_title(GTK_WINDOW(s->window), "shape");
    gtk_window_set_skip_taskbar_hint(GTK_WINDOW(s->window), TRUE);
+   gtk_window_set_keep_above(GTK_WINDOW(s->window), TRUE);
    
    s->image = gtk_image_new_from_pixbuf(pixbuf);
    gtk_container_add(GTK_CONTAINER(s->window), s->image);
 
    get_alpha_mask(s);
-   //gtk_widget_shape_combine_mask(s->window, s->mask_bitmap, 0, 0);
+   gtk_widget_shape_combine_mask(s->window, s->mask_bitmap, 0, 0);
    
    g_signal_connect(G_OBJECT(s->window), "destroy",
                     G_CALLBACK(quit_callback), NULL);
@@ -98,4 +103,11 @@ void move_shape(float_shape_t *shape, int x, int y)
    shape->x = x;
    shape->y = y;
    gtk_window_move(GTK_WINDOW(shape->window), shape->x, shape->y);
+}
+
+void free_shape(float_shape_t *shape)
+{
+   g_assert(shape);
+   
+   free(shape);
 }
