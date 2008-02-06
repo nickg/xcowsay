@@ -15,10 +15,12 @@
 #define CORNER_RADIUS  30  // Radius of corners on the speech bubble
 #define CORNER_DIAM    CORNER_RADIUS*2
 #define BUBBLE_BORDER  5   // Pixels to leave free around edge of bubble
-#define BUBBLE_XOFFSET 10  // Distance from cow to bubble
+#define BUBBLE_XOFFSET 5  // Distance from cow to bubble
 #define MIN_TIP_HEIGHT 15
 
 #define TICK_TIMEOUT   100
+
+#define max(a, b) ((a) > (b) ? (a) : (b))
 
 typedef enum {
    csLeadIn, csDisplay, csLeadOut, csCleanup
@@ -92,8 +94,7 @@ static GdkPixbuf *create_bubble(char *text)
    bubble_width = 2*BUBBLE_BORDER + CORNER_DIAM + TIP_WIDTH + text_width;
    bubble_height = BUBBLE_BORDER + CORNER_DIAM + text_height;
 
-   bubble_pixmap = gdk_pixmap_new(shape_window(xcowsay.cow)->window,
-                                  bubble_width, bubble_height, -1);
+   bubble_pixmap = gdk_pixmap_new(NULL, bubble_width, bubble_height, 24);
    bubble_gc = gdk_gc_new(bubble_pixmap);
    
    colormap = gdk_colormap_get_system();
@@ -191,7 +192,7 @@ static GdkPixbuf *create_bubble(char *text)
    gdk_draw_line(bubble_pixmap, bubble_gc,
                  BUBBLE_BORDER + TIP_WIDTH + CORNER_RADIUS, bubble_height,
                  bubble_width - CORNER_RADIUS, bubble_height);
-
+   
    xcowsay.bubble_width = bubble_width + BUBBLE_BORDER;
    xcowsay.bubble_height = bubble_height + BUBBLE_BORDER;
 
@@ -268,19 +269,30 @@ void display_cow(const char *text)
    size_t len = strlen(text_copy);
    if ('\n' == text_copy[len-1])
       text_copy[len-1] = '\0';
+
+   xcowsay.bubble_pixbuf = create_bubble(text_copy);
+   free(text_copy);
    
    g_assert(xcowsay.cow_pixbuf);
    xcowsay.cow = make_shape_from_pixbuf(xcowsay.cow_pixbuf);
-   move_shape(xcowsay.cow, 10, 30);
+   
+   int total_width = shape_width(xcowsay.cow) + BUBBLE_XOFFSET
+      + xcowsay.bubble_width;
+   int total_height = max(shape_height(xcowsay.cow), xcowsay.bubble_height);
+
+   GdkScreen *screen = gdk_screen_get_default();
+   int area_w = gdk_screen_get_width(screen) - total_width;
+   int area_h = gdk_screen_get_height(screen) - total_height;
+   
+   move_shape(xcowsay.cow, rand()%area_w, rand()%area_h);
    show_shape(xcowsay.cow);
 
-   xcowsay.bubble_pixbuf = create_bubble(text_copy);
-   xcowsay.bubble = make_shape_from_pixbuf(xcowsay.bubble_pixbuf);
+   xcowsay.bubble = make_shape_from_pixbuf(xcowsay.bubble_pixbuf);   
    int bx = shape_x(xcowsay.cow) + shape_width(xcowsay.cow) + BUBBLE_XOFFSET;
    int by = shape_y(xcowsay.cow)
       + (shape_height(xcowsay.cow) - shape_height(xcowsay.bubble))/2;
    move_shape(xcowsay.bubble, bx, by);
-
+   
    xcowsay.state = csLeadIn;
    xcowsay.transition_timeout = get_int_option("lead_in_time");
    g_timeout_add(TICK_TIMEOUT, tick, NULL);

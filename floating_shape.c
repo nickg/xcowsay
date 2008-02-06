@@ -73,7 +73,7 @@ float_shape_t *make_shape_from_pixbuf(GdkPixbuf *pixbuf)
    s->width = gdk_pixbuf_get_width(pixbuf);
    s->height = gdk_pixbuf_get_height(pixbuf);
    
-   s->window = gtk_window_new(GTK_WINDOW_TOPLEVEL);
+   s->window = gtk_window_new(GTK_WINDOW_POPUP);
    gtk_window_set_decorated(GTK_WINDOW(s->window), FALSE);
    gtk_window_set_title(GTK_WINDOW(s->window), "shape");
    gtk_window_set_skip_taskbar_hint(GTK_WINDOW(s->window), TRUE);
@@ -96,6 +96,8 @@ void show_shape(float_shape_t *shape)
    gtk_window_move(GTK_WINDOW(shape->window), shape->x, shape->y);
    gtk_window_resize(GTK_WINDOW(shape->window), shape->width, shape->height);
    gtk_widget_show_all(shape->window);
+                                         
+   gdk_window_set_back_pixmap(shape->window->window, NULL, TRUE);
 }
 
 void hide_shape(float_shape_t *shape)
@@ -115,6 +117,7 @@ void destroy_shape(float_shape_t *shape)
    g_assert(shape);
 
    gtk_widget_destroy(shape->window);
+   g_object_unref(shape->mask_bitmap);
    
    free(shape);
 }

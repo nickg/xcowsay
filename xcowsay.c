@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <time.h>
 
 #include "display_cow.h"
 #include "settings.h"
@@ -31,6 +32,8 @@ int main(int argc, char **argv)
    add_int_option("lead_in_time", DEF_LEAD_IN_TIME);
    add_int_option("display_time", DEF_DISPLAY_TIME);
    add_int_option("lead_out_time", get_int_option("lead_in_time"));
+
+   srand((unsigned)time(NULL));
    
    gtk_init(&argc, &argv);
 
