@@ -5,7 +5,7 @@
 #include <gtk/gtkwindow.h>
 
 // Show a cow with the given string and clean up afterwards
-void display_cow(char *text);
+void display_cow(const char *text);
 void cowsay_init(void);
 
 #endif

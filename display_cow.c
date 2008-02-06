@@ -1,33 +1,57 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <stdbool.h>
+#include <string.h>
 
 #include <gtk/gtk.h>
 #include <gtk/gtkwindow.h>
 
 #include "floating_shape.h"
 #include "display_cow.h"
+#include "settings.h"
 
-#define SPEED          10  // Horizontal speed in pixels per 100ms
 #define LEFT_BUF       5   // Amount of pixels to leave after cow's tail
 #define TIP_WIDTH      20  // Length of the triangle bit on the speech bubble
 #define CORNER_RADIUS  30  // Radius of corners on the speech bubble
 #define CORNER_DIAM    CORNER_RADIUS*2
 #define BUBBLE_BORDER  5   // Pixels to leave free around edge of bubble
 #define BUBBLE_XOFFSET 10  // Distance from cow to bubble
-#define MIN_TIP_HEIGHT 15 
+#define MIN_TIP_HEIGHT 15
+
+#define TICK_TIMEOUT   100
+
+typedef enum {
+   csLeadIn, csDisplay, csLeadOut, csCleanup
+} cowstate_t;
 
 typedef struct {
    float_shape_t *cow, *bubble;
    int bubble_width, bubble_height;
    GdkPixbuf *cow_pixbuf, *bubble_pixbuf;
+   cowstate_t state;
+   int transition_timeout;
 } xcowsay_t;
 
 static xcowsay_t xcowsay;
 
+static cowstate_t next_state(cowstate_t state)
+{
+   switch (state) {
+   case csLeadIn:
+      return csDisplay;
+   case csDisplay:
+      return csLeadOut;
+   case csLeadOut:
+      return csCleanup;
+   case csCleanup:
+   default:
+      return csCleanup;
+   }
+}
+
 static GdkPixbuf *load_cow()
 {
-   GdkPixbuf *pixbuf = gdk_pixbuf_new_from_file("cow_large.png", NULL);
+   GdkPixbuf *pixbuf = gdk_pixbuf_new_from_file("cow_med.png", NULL);
    if (NULL == pixbuf) {
       fprintf(stderr, "Failed to load cow image!\n");
       exit(EXIT_FAILURE);
@@ -192,6 +216,35 @@ static GdkPixbuf *create_bubble(char *text)
    return pixbuf;
 }
 
+static gboolean tick(gpointer data)
+{
+   xcowsay.transition_timeout -= TICK_TIMEOUT;
+   if (xcowsay.transition_timeout <= 0) {
+      xcowsay.state = next_state(xcowsay.state);
+      switch (xcowsay.state) {
+      case csLeadIn:
+         fprintf(stderr, "Internal Error: Invalid state csLeadIn\n");
+         exit(EXIT_FAILURE);
+      case csDisplay:
+         show_shape(xcowsay.bubble);
+         xcowsay.transition_timeout = get_int_option("display_time");
+         break;
+      case csLeadOut:
+         hide_shape(xcowsay.bubble);
+         xcowsay.transition_timeout = get_int_option("lead_out_time");
+         break;
+      case csCleanup:
+         destroy_shape(xcowsay.cow);
+         xcowsay.cow = NULL;
+         destroy_shape(xcowsay.bubble);
+         xcowsay.bubble = NULL;
+         break;
+      }
+   }
+   
+   return TRUE;
+}
+
 void cowsay_init(void)
 {
    xcowsay.cow = NULL;
@@ -200,27 +253,40 @@ void cowsay_init(void)
    xcowsay.cow_pixbuf = load_cow();
 }
 
-void display_cow(char *text)
+char *copy_string(const char *s)
 {
+   char *copy = malloc(strlen(s)+1);
+   strcpy(copy, s);
+   return copy;
+}
+
+void display_cow(const char *text)
+{
+   char *text_copy = copy_string(text);
+
+   // Trim any trailing newline
+   size_t len = strlen(text_copy);
+   if ('\n' == text_copy[len-1])
+      text_copy[len-1] = '\0';
+   
    g_assert(xcowsay.cow_pixbuf);
    xcowsay.cow = make_shape_from_pixbuf(xcowsay.cow_pixbuf);
+   move_shape(xcowsay.cow, 10, 30);
    show_shape(xcowsay.cow);
 
-   xcowsay.bubble_pixbuf = create_bubble(text);
+   xcowsay.bubble_pixbuf = create_bubble(text_copy);
    xcowsay.bubble = make_shape_from_pixbuf(xcowsay.bubble_pixbuf);
    int bx = shape_x(xcowsay.cow) + shape_width(xcowsay.cow) + BUBBLE_XOFFSET;
    int by = shape_y(xcowsay.cow)
-      + (shape_width(xcowsay.cow) - shape_width(xcowsay.bubble))/2;
+      + (shape_height(xcowsay.cow) - shape_height(xcowsay.bubble))/2;
    move_shape(xcowsay.bubble, bx, by);
-   
-   show_shape(xcowsay.bubble);   
+
+   xcowsay.state = csLeadIn;
+   xcowsay.transition_timeout = get_int_option("lead_in_time");
+   g_timeout_add(TICK_TIMEOUT, tick, NULL);
    
    gtk_main();
 
-   free_shape(xcowsay.bubble);
-   free_shape(xcowsay.cow);
-   xcowsay.bubble = NULL;
-   xcowsay.cow = NULL;
-   
-   printf("Here!\n");
+   g_object_unref(xcowsay.bubble_pixbuf);
+   xcowsay.bubble_pixbuf = NULL;
 }

@@ -98,6 +98,11 @@ void show_shape(float_shape_t *shape)
    gtk_widget_show_all(shape->window);
 }
 
+void hide_shape(float_shape_t *shape)
+{
+   gtk_widget_hide_all(shape->window);
+}
+
 void move_shape(float_shape_t *shape, int x, int y)
 {
    shape->x = x;
@@ -105,9 +110,11 @@ void move_shape(float_shape_t *shape, int x, int y)
    gtk_window_move(GTK_WINDOW(shape->window), shape->x, shape->y);
 }
 
-void free_shape(float_shape_t *shape)
+void destroy_shape(float_shape_t *shape)
 {
    g_assert(shape);
+
+   gtk_widget_destroy(shape->window);
    
    free(shape);
 }

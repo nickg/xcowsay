@@ -18,7 +18,8 @@ typedef struct {
 float_shape_t *make_shape_from_pixbuf(GdkPixbuf *pixbuf);
 void move_shape(float_shape_t *shape, int x, int y);
 void show_shape(float_shape_t *shape);
-void free_shape(float_shape_t *shape);
+void hide_shape(float_shape_t *shape);
+void destroy_shape(float_shape_t *shape);
 
 #define shape_window(s) (s->window)
 #define shape_x(s) (s->x)
