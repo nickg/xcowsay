@@ -75,7 +75,7 @@ static GdkPixbuf *create_bubble(char *text)
    PangoContext *pango_context = gdk_pango_context_get();
    PangoLayout *layout = pango_layout_new(pango_context);
    PangoFontDescription *font =
-      pango_font_description_from_string("Bitstream Vera Sans 14");
+      pango_font_description_from_string(get_string_option("font"));
    PangoAttrList *pango_attrs = NULL;
 
    char *stripped;
@@ -246,8 +246,10 @@ static gboolean tick(gpointer data)
    return TRUE;
 }
 
-void cowsay_init(void)
+void cowsay_init(int *argc, char ***argv)
 {
+   gtk_init(argc, argv);
+   
    xcowsay.cow = NULL;
    xcowsay.bubble = NULL;
    xcowsay.bubble_pixbuf = NULL;

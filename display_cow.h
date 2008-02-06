@@ -6,6 +6,6 @@
 
 // Show a cow with the given string and clean up afterwards
 void display_cow(const char *text);
-void cowsay_init(void);
+void cowsay_init(int *argc, char ***argv);
 
 #endif
