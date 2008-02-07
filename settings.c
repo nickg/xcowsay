@@ -45,37 +45,50 @@ static option_t *get_option(const char *name)
    exit(EXIT_FAILURE);
 }
 
+
+static void assert_string(const option_t *opt)
+{
+   if (optString != opt->type) {
+      fprintf(stderr, "Error: Option %s is not of type string\n", opt->name);
+      exit(EXIT_FAILURE);
+   }
+}
+
+static void assert_int(const option_t *opt)
+{
+   if (optInt != opt->type) {
+      fprintf(stderr, "Error: Option %s is not of type integer\n", opt->name);
+      exit(EXIT_FAILURE);
+   }
+}
+
+static void assert_bool(const option_t *opt)
+{
+   if (optBool != opt->type) {
+      fprintf(stderr, "Error: Option %s is not of type Boolean\n", opt->name);
+      exit(EXIT_FAILURE);
+   }
+}
+
 int get_int_option(const char *name)
 {
    option_t *opt = get_option(name);
-   if (optInt == opt->type)
-      return opt->u.ival;
-   else {
-      fprintf(stderr, "Error: Option %s is not of type integer\n", name);
-      exit(EXIT_FAILURE);
-   }
+   assert_int(opt);
+   return opt->u.ival;
 }
 
 bool get_bool_option(const char *name)
 {
    option_t *opt = get_option(name);
-   if (optBool == opt->type)
-      return opt->u.bval;
-   else {
-      fprintf(stderr, "Error: Option %s is not of type Boolean\n", name);
-      exit(EXIT_FAILURE);
-   }
+   assert_bool(opt);
+   return opt->u.bval;
 }
 
 const char *get_string_option(const char *name)
 {
    option_t *opt = get_option(name);
-   if (optString == opt->type)
-      return opt->u.sval;
-   else {
-      fprintf(stderr, "Error: Option %s is not of type string\n", name);
-      exit(EXIT_FAILURE);
-   }
+   assert_string(opt);
+   return opt->u.sval;
 }
 
 static void add_option(const char *name, option_type_t type, option_value_t def)
@@ -113,4 +126,26 @@ void add_string_option(const char *name, const char *sval)
    option_value_t u;
    u.sval = copy_string(sval);
    add_option(name, optString, u);
+}
+
+void set_int_option(const char *name, int ival)
+{
+   option_t *opt = get_option(name);
+   assert_int(opt);
+   opt->u.ival = ival;
+}
+
+void set_bool_option(const char *name, bool bval)
+{
+   option_t *opt = get_option(name);
+   assert_bool(opt);
+   opt->u.bval = bval;
+}
+
+void set_string_option(const char *name, const char *sval)
+{
+   option_t *opt = get_option(name);
+   assert_string(opt);
+   free(opt->u.sval);
+   opt->u.sval = sval;
 }

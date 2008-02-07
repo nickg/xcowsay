@@ -12,5 +12,8 @@ int get_int_option(const char *name);
 bool get_bool_option(const char *name);
 const char *get_string_option(const char *name);
 
+void set_int_option(const char *name, int ival);
+void set_bool_option(const char *name, bool bval);
+void set_string_option(const char *name, const char *sval);
 
 #endif

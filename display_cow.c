@@ -51,11 +51,15 @@ static cowstate_t next_state(cowstate_t state)
    }
 }
 
+#define MAX_COW_PATH 256
 static GdkPixbuf *load_cow()
 {
-   GdkPixbuf *pixbuf = gdk_pixbuf_new_from_file("cow_med.png", NULL);
+   char cow_path[MAX_COW_PATH];
+   snprintf(cow_path, MAX_COW_PATH, "%s/cow_med.png", DATADIR);
+   
+   GdkPixbuf *pixbuf = gdk_pixbuf_new_from_file(cow_path, NULL);
    if (NULL == pixbuf) {
-      fprintf(stderr, "Failed to load cow image!\n");
+      fprintf(stderr, "Failed to load cow image: %s\n", cow_path);
       exit(EXIT_FAILURE);
    }
    return pixbuf;
@@ -243,7 +247,7 @@ static gboolean tick(gpointer data)
       }
    }
    
-   return TRUE;
+   return (xcowsay.state != csCleanup);
 }
 
 void cowsay_init(int *argc, char ***argv)
