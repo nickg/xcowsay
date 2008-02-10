@@ -1,0 +1,1 @@
+echo "dbus-send --dest=uk.me.doof.Cowsay /uk/me/doof/Cowsay uk.me.doof.Cowsay.ShowCow string:\"$2\"" | at $1
