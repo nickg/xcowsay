@@ -31,7 +31,6 @@ AC_ARG_ENABLE(dbus,
          CFLAGS="$CFLAGS -DWITHOUT_DBUS"],
         [modules="$xcowsayd_modules"])
 
-echo $modules
 PKG_CHECK_MODULES(XCOWSAY, $modules)
 
 AC_CONFIG_HEADERS([config.h])
