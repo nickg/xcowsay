@@ -1,1 +1,0 @@
-exec dbus-send --dest=uk.me.doof.Cowsay /uk/me/doof/Cowsay uk.me.doof.Cowsay.ShowCow string:"$*"

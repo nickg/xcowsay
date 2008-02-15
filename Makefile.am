@@ -1,5 +1,5 @@
 bin_PROGRAMS = xcowsay
-bin_SCRIPTS = xcowat xcowsend
+bin_SCRIPTS = xcowat xcowfortune
 
 AM_CFLAGS = $(XCOWSAY_CFLAGS) -DDATADIR=\"$(pkgdatadir)\"
 LDADD = $(XCOWSAY_LIBS)

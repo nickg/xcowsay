@@ -1,1 +1,7 @@
-echo "dbus-send --dest=uk.me.doof.Cowsay /uk/me/doof/Cowsay uk.me.doof.Cowsay.ShowCow string:\"$2\"" | at $1
+#!/bin/sh
+
+#
+# Run xcowsay at the specified time using atd
+#
+
+echo "xcowsay \"$2\"" | at $1

@@ -6,6 +6,12 @@
 #include <gtk/gtk.h>
 #include <gtk/gtkwindow.h>
 
+#ifndef WITHOUT_DBUS
+#include <dbus/dbus-glib-bindings.h>
+#define XCOWSAY_PATH "/uk/me/doof/Cowsay"
+#define XCOWSAY_NAMESPACE "uk.me.doof.Cowsay"
+#endif
+
 #include "floating_shape.h"
 #include "display_cow.h"
 #include "settings.h"
@@ -307,4 +313,55 @@ void display_cow(const char *text)
 
    g_object_unref(xcowsay.bubble_pixbuf);
    xcowsay.bubble_pixbuf = NULL;
+}
+
+#ifdef WITHOUT_DBUS
+
+bool try_dbus(bool debug, const char *text)
+{
+   if (debug)
+      printf("Skipping DBus (disabled by configure)\n");
+   return false;
+}
+
+#else 
+
+bool try_dbus(bool debug, const char *text)
+{
+   DBusGConnection *connection;
+   GError *error;
+   DBusGProxy *proxy;
+
+   g_type_init();
+   error = NULL;
+   connection = dbus_g_bus_get(DBUS_BUS_SESSION, &error);
+   if (NULL == connection) {
+      if (debug)
+         g_printerr("Failed to open connection to bus: %s\n", error->message);
+      g_error_free(error);
+      return false;
+   }
+
+   proxy = dbus_g_proxy_new_for_name(connection, XCOWSAY_NAMESPACE,
+                                     XCOWSAY_PATH, XCOWSAY_NAMESPACE);
+   g_assert(proxy);
+
+   error = NULL;
+   if (!dbus_g_proxy_call(proxy, "ShowCow", &error, G_TYPE_STRING, text,
+                          G_TYPE_INVALID, G_TYPE_INVALID)) {
+      if (debug)
+         g_printerr("ShowCow failed: %s\n", error->message);
+      g_error_free(error);
+      return false;
+   }
+
+   return true;
+}
+
+#endif /* #ifdef WITHOUT_DBUS */       
+
+void display_cow_or_invoke_daemon(bool debug, const char *text)
+{
+   if (!try_dbus(debug, text))
+      display_cow(text);
 }

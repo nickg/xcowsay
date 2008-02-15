@@ -16,14 +16,14 @@
 #define MAX_STDIN 4096   // Maximum chars to read from stdin
 
 static int daemon_flag = 0;
-static int daemon_debug = 0;
+static int debug = 0;
 
 static struct option long_options[] = {
    {"help", no_argument, 0, 'h'},
    {"time", required_argument, 0, 't'},
    {"font", required_argument, 0, 'f'},
    {"daemon", no_argument, &daemon_flag, 1},
-   {"debug", no_argument, &daemon_debug, 1},
+   {"debug", no_argument, &debug, 1},
    {0, 0, 0, 0}
 };
 
@@ -37,7 +37,7 @@ static void read_from_stdin(void)
    }
    data[n] = '\0';
 
-   display_cow(data);
+   display_cow_or_invoke_daemon(debug, data);
    free(data);
 }
 
@@ -107,7 +107,7 @@ int main(int argc, char **argv)
    srand((unsigned)time(NULL));
 
    if (daemon_flag) {
-      run_cowsay_daemon(daemon_debug, argc, argv);
+      run_cowsay_daemon(debug, argc, argv);
    }
    else {
       cowsay_init(&argc, &argv);
@@ -116,7 +116,7 @@ int main(int argc, char **argv)
          read_from_stdin();
       }
       else if (optind == argc - 1) {
-         display_cow(argv[optind]);
+         display_cow_or_invoke_daemon(debug, argv[optind]);
       }
       else {
          fprintf(stderr, "Error: Too many arguments\n");

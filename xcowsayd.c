@@ -225,7 +225,7 @@ void run_cowsay_daemon(bool debug, int argc, char **argv)
 
 #else /* #ifndef WITHOUT_DBUS */
 
-void run_cowsay_daemon(bool debug)
+void run_cowsay_daemon(bool debug, int argc, char **argv)
 {
    fprintf(stderr, "Error: Daemon mode unavailable as xcowsay was compiled "
            "without DBus support.\n");
