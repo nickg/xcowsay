@@ -9,4 +9,4 @@ xcowsay_SOURCES = xcowsay.c display_cow.c display_cow.h floating_shape.h \
 	xcowsayd.c
 
 dist_pkgdata_DATA = cow_small.png cow_med.png cow_large.png
-EXTRA_DIST = cow.svg
+EXTRA_DIST = cow.svg xcowat xcowfortune

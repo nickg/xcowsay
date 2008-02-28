@@ -98,17 +98,19 @@ static void request_complete()
 
 static gpointer cow_display_thread(gpointer data)
 {
-   printf("In the cow display thread\n");
+   bool debug = *(bool*)data;
+   
+   debug_msg("In the cow display thread\n");
 
    for (;;) {
       const char *mess = wait_for_request();
-      printf("Processing request: %s\n", mess);
+      debug_msg("Processing request: %s\n", mess);
 
       // We need to wrap the GTK+ stuff in gdk_threads_X since
       // GTK assumes it is being called from the main thread
       // (and it isn't here)
       gdk_threads_enter();
-      display_cow(mess);
+      display_cow(debug, mess);
       gdk_threads_leave();
       
       request_complete();
@@ -213,10 +215,10 @@ void run_cowsay_daemon(bool debug, int argc, char **argv)
    g_type_init();
    Cowsay *server = g_object_new(cowsayd_get_type(), NULL);
 
-   GThread *displ = g_thread_create(cow_display_thread, NULL, FALSE, NULL);
+   GThread *displ = g_thread_create(cow_display_thread, (gpointer)&debug, FALSE, NULL);
    g_assert(displ);
 
-   printf("Cowsay daemon starting...\n");
+   debug_msg("Cowsay daemon starting...\n");
    GMainLoop *main_loop = g_main_loop_new(NULL, FALSE);
    g_main_loop_run(main_loop);
 

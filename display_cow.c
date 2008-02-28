@@ -38,6 +38,7 @@ typedef struct {
    GdkPixbuf *cow_pixbuf, *bubble_pixbuf;
    cowstate_t state;
    int transition_timeout;
+   int display_time;
 } xcowsay_t;
 
 static xcowsay_t xcowsay;
@@ -238,7 +239,7 @@ static gboolean tick(gpointer data)
          exit(EXIT_FAILURE);
       case csDisplay:
          show_shape(xcowsay.bubble);
-         xcowsay.transition_timeout = get_int_option("display_time");
+         xcowsay.transition_timeout = xcowsay.display_time;
          break;
       case csLeadOut:
          hide_shape(xcowsay.bubble);
@@ -266,14 +267,29 @@ void cowsay_init(int *argc, char ***argv)
    xcowsay.cow_pixbuf = load_cow();
 }
 
-char *copy_string(const char *s)
+static char *copy_string(const char *s)
 {
    char *copy = malloc(strlen(s)+1);
    strcpy(copy, s);
    return copy;
 }
 
-void display_cow(const char *text)
+static int count_words(const char *s)
+{
+   bool last_was_space = false;
+   int words;
+   for (words = 1; *s; s++) {
+      if (isspace(*s) && !last_was_space) {
+         words++;
+         last_was_space = true;
+      }
+      else
+         last_was_space = false;
+   }
+   return words;
+}
+
+void display_cow(bool debug, const char *text)
 {
    char *text_copy = copy_string(text);
 
@@ -281,6 +297,29 @@ void display_cow(const char *text)
    size_t len = strlen(text_copy);
    if ('\n' == text_copy[len-1])
       text_copy[len-1] = '\0';
+
+   // Count the words and work out the display time, if neccessary
+   xcowsay.display_time = get_int_option("display_time");
+   if (xcowsay.display_time < 0) {
+      int words = count_words(text_copy);
+      xcowsay.display_time = words * get_int_option("reading_speed");
+      debug_msg("Calculated display time as %dms from %d words\n",
+                xcowsay.display_time, words);
+   }
+   else {
+      debug_msg("Using default display time %dms\n", xcowsay.display_time);
+   }
+
+   int min_display = get_int_option("min_display_time");
+   int max_display = get_int_option("max_display_time");
+   if (xcowsay.display_time < min_display) {
+      xcowsay.display_time = min_display;
+      debug_msg("Display time too short: clamped to %d\n", min_display);
+   }
+   else if (xcowsay.display_time > max_display) {
+      xcowsay.display_time = max_display;
+      debug_msg("Display time too long: clamped to %d\n", max_display);
+   }
 
    xcowsay.bubble_pixbuf = create_bubble(text_copy);
    free(text_copy);
@@ -319,8 +358,7 @@ void display_cow(const char *text)
 
 bool try_dbus(bool debug, const char *text)
 {
-   if (debug)
-      printf("Skipping DBus (disabled by configure)\n");
+   debug_msg("Skipping DBus (disabled by configure)\n");
    return false;
 }
 
@@ -336,8 +374,7 @@ bool try_dbus(bool debug, const char *text)
    error = NULL;
    connection = dbus_g_bus_get(DBUS_BUS_SESSION, &error);
    if (NULL == connection) {
-      if (debug)
-         g_printerr("Failed to open connection to bus: %s\n", error->message);
+      debug_err("Failed to open connection to bus: %s\n", error->message);
       g_error_free(error);
       return false;
    }
@@ -349,8 +386,7 @@ bool try_dbus(bool debug, const char *text)
    error = NULL;
    if (!dbus_g_proxy_call(proxy, "ShowCow", &error, G_TYPE_STRING, text,
                           G_TYPE_INVALID, G_TYPE_INVALID)) {
-      if (debug)
-         g_printerr("ShowCow failed: %s\n", error->message);
+      debug_err("ShowCow failed: %s\n", error->message);
       g_error_free(error);
       return false;
    }
@@ -363,5 +399,5 @@ bool try_dbus(bool debug, const char *text)
 void display_cow_or_invoke_daemon(bool debug, const char *text)
 {
    if (!try_dbus(debug, text))
-      display_cow(text);
+      display_cow(debug, text);
 }
