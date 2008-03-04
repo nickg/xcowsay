@@ -1,0 +1,21 @@
+#!/bin/sh
+
+#
+# Display the output of fortune via xcowsay
+#
+
+# I run this via a cron job where DISPLAY isn't set
+if [ "$DISPLAY" = "" ]; then
+    export DISPLAY=:0.0
+fi
+
+# xcowsay may not be on the PATH...
+# ...but it should be in the same directory as xcowfortune
+PATH=$PATH:`dirname $0`
+
+# fortune is often in /usr/games which may not be on the PATH
+PATH=$PATH:/usr/games
+
+export PATH
+
+exec env fortune | env xcowsay

@@ -5,7 +5,7 @@
 #
 
 # Might not have a display
-if [ "$DISPLAY" == "" ]; then
+if [ "$DISPLAY" = "" ]; then
     export DISPLAY=:0.0
 fi
 
