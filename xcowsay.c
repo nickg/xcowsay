@@ -14,7 +14,9 @@
 #define DEF_MIN_TIME      1000
 #define DEF_MAX_TIME      30000
 #define DEF_FONT          "Bitstream Vera Sans 14"
-#define DEF_READING_SPEED 250   // Human average is apparently 200-250 WPM (=4 WPS)
+#define DEF_READING_SPEED 200   // Human average is apparently 200-250 WPM (=5 WPS)
+#define DEF_COW_SIZE      "med"
+#define DEF_IMAGE_BASE    "cow"
 
 #define MAX_STDIN 4096   // Maximum chars to read from stdin
 
@@ -25,6 +27,7 @@ static struct option long_options[] = {
    {"help", no_argument, 0, 'h'},
    {"time", required_argument, 0, 't'},
    {"font", required_argument, 0, 'f'},
+   {"cow-size", required_argument, 0, 'c'},
    {"reading-speed", required_argument, 0, 'r'},
    {"daemon", no_argument, &daemon_flag, 1},
    {"debug", no_argument, &debug, 1},
@@ -56,6 +59,7 @@ static void usage()
       " -r, --reading-speed=N\tNumber of milliseconds to delay per word.\n"
       " -f, --font=FONT\tSet message font (Pango format).\n"
       " -d, --daemon\t\tRun xcowsay in daemon mode.\n"
+      "     --cow-size=SIZE\tSize of the cow (small, med, large).\n"
       "     --debug\t\tKeep daemon attached to terminal.\n\n"
       "Default values for these options can be specified in the xcowsay config\n"
       "file. See the manpage for more information [Or not... ;-)]\n\n"
@@ -86,6 +90,8 @@ int main(int argc, char **argv)
    add_int_option("max_display_time", DEF_MAX_TIME);
    add_int_option("reading_speed", DEF_READING_SPEED);
    add_string_option("font", DEF_FONT);
+   add_string_option("cow_size", DEF_COW_SIZE);
+   add_string_option("image_base", DEF_IMAGE_BASE);
    
    int c, index = 0, failure = 0;
    const char *spec = "hdrt:f:";
@@ -96,6 +102,9 @@ int main(int argc, char **argv)
          break;
       case 'd':
          daemon_flag = 1;
+         break;
+      case 'c':
+         set_string_option("cow_size", optarg);
          break;
       case 'h':
          usage();

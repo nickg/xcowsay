@@ -62,7 +62,8 @@ static cowstate_t next_state(cowstate_t state)
 static GdkPixbuf *load_cow()
 {
    char cow_path[MAX_COW_PATH];
-   snprintf(cow_path, MAX_COW_PATH, "%s/cow_med.png", DATADIR);
+   snprintf(cow_path, MAX_COW_PATH, "%s/%s_%s.png", DATADIR,
+            get_string_option("image_base"), get_string_option("cow_size"));
    
    GdkPixbuf *pixbuf = gdk_pixbuf_new_from_file(cow_path, NULL);
    if (NULL == pixbuf) {

@@ -6,13 +6,11 @@
 
 # Might not have a display
 if [ "$DISPLAY" = "" ]; then
-    export DISPLAY=:0.0
+    DISPLAY=:0.0
 fi
 
 # xcowsay may not be on the PATH...
 # ...but it should be in the same directory as xcowat
 PATH=$PATH:`dirname $0`
 
-export PATH
-
-echo "DISPLAY=$DISPLAY env xcowsay \"$2\"" | at $1
+echo "env DISPLAY=$DISPLAY PATH=$PATH xcowsay \"$2\"" | at $1
