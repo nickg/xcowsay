@@ -258,6 +258,15 @@ static gboolean tick(gpointer data)
    return (xcowsay.state != csCleanup);
 }
 
+static gboolean cow_clicked(GtkWidget *widget, GdkEventButton *event, gpointer data)
+{
+   if (csDisplay == xcowsay.state) {
+      xcowsay.transition_timeout = 0;
+      tick(NULL);
+   }
+   return true;
+}
+
 void cowsay_init(int *argc, char ***argv)
 {
    gtk_init(argc, argv);
@@ -348,6 +357,12 @@ void display_cow(bool debug, const char *text)
    xcowsay.state = csLeadIn;
    xcowsay.transition_timeout = get_int_option("lead_in_time");
    g_timeout_add(TICK_TIMEOUT, tick, NULL);
+
+   GdkEventMask events = gdk_window_get_events(shape_window(xcowsay.cow)->window);
+   events |= GDK_BUTTON_PRESS_MASK;
+   gdk_window_set_events(shape_window(xcowsay.cow)->window, events);
+   g_signal_connect(G_OBJECT(shape_window(xcowsay.cow)), "button-press-event",
+                    G_CALLBACK(cow_clicked), NULL);
    
    gtk_main();
 
