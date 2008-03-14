@@ -1,4 +1,4 @@
-/*  xcowsay.c -- Cute talking cow for GTK+
+/*  xcowsay.c -- Cute talking cow for GTK+.
  *  Copyright (C) 2008  Nick Gasson
  *
  *  This program is free software: you can redistribute it and/or modify
@@ -24,6 +24,10 @@
 #include "settings.h"
 #include "xcowsayd.h"
 
+#ifdef HAVE_CONFIG_H
+#include "config.h"
+#endif
+
 // Default settings
 #define DEF_LEAD_IN_TIME  250
 #define DEF_DISPLAY_TIME  CALCULATE_DISPLAY_TIME
@@ -42,6 +46,7 @@ static int debug = 0;
 
 static struct option long_options[] = {
    {"help", no_argument, 0, 'h'},
+   {"version", no_argument, 0, 'v'},
    {"time", required_argument, 0, 't'},
    {"font", required_argument, 0, 'f'},
    {"cow-size", required_argument, 0, 'c'},
@@ -72,6 +77,7 @@ static void usage()
       "Display a cow on your desktop with MESSAGE or standard input.\n\n"
       "Options:\n"
       " -h, --help\t\tDisplay this message and exit.\n"
+      " -v, --version\t\tPrint version information.\n"
       " -t, --time=SECONDS\tDisplay message for SECONDS seconds.\n"
       " -r, --reading-speed=N\tNumber of milliseconds to delay per word.\n"
       " -f, --font=FONT\tSet message font (Pango format).\n"
@@ -79,11 +85,26 @@ static void usage()
       "     --cow-size=SIZE\tSize of the cow (small, med, large).\n"
       "     --debug\t\tKeep daemon attached to terminal.\n\n"
       "Default values for these options can be specified in the xcowsay config\n"
-      "file. See the manpage for more information [Or not... ;-)]\n\n"
+      "file. See the man page for more information.\n\n"
       "If the display_time option is not set the display time will be calcuated\n"
       "from the reading_speed parameter multiplied by the word count.\n\n"
       "Report bugs to nick@cakesniffer.co.uk";
    puts(usage_message);
+}
+
+static void version()
+{
+   static const char *copy =
+      "Copyright (C) 2008  Nick Gasson\n"
+      "This program comes with ABSOLUTELY NO WARRANTY. This is free software, and\n"
+      "you are welcome to redistribute it under certain conditions.  See the GNU\n"
+      "General Public Licence for details.";
+   
+#ifdef HAVE_CONFIG_H
+   puts(PACKAGE_STRING);
+#endif
+
+   puts(copy);   
 }
 
 static int parse_int_option(const char *optarg)
@@ -111,7 +132,7 @@ int main(int argc, char **argv)
    add_string_option("image_base", DEF_IMAGE_BASE);
    
    int c, index = 0, failure = 0;
-   const char *spec = "hdrt:f:";
+   const char *spec = "hvdrt:f:";
    while ((c = getopt_long(argc, argv, spec, long_options, &index)) != -1) {
       switch (c) {
       case 0:
@@ -125,6 +146,9 @@ int main(int argc, char **argv)
          break;
       case 'h':
          usage();
+         exit(EXIT_SUCCESS);
+      case 'v':
+         version();
          exit(EXIT_SUCCESS);
       case 't':
          set_int_option("display_time", parse_int_option(optarg)*1000);

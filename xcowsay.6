@@ -14,7 +14,35 @@ xcowsay \- Display a cute cow and speech bubble.
 .RI \| font \|]
 .RI [\| text \|]
 .SH DESCRIPTION
-TODO: Description here
+Display a cow with a speech bubble containing some text. If 
+.I text
+is speficied it will be displayed in the bubble. Otherwise the text
+will be read from the standard input and displayed when end of file
+is encountered.
+
+The cow is displayed for either a fixed amount of time, or an amount
+of time calculated from the size of the text. Click on the cow to
+dismiss it immediately.
+
+If 
+.B xcowsay
+is started with
+.B "--daemon"
+it will fork away from the terminal and run in daemon mode. The 
+daemon provides a DBus service 
+.B uk.me.doof.Cowsay 
+that responds to
+.B ShowCow 
+requests. The daemon can queue up any number of requests and displays
+them in order. 
+
+When
+.B xcowsay
+starts it checks to see if a daemon is running, and if it is, sends a
+.B ShowCow
+request and returns immediately. Otherwise 
+.B xcowsay
+will block until the cow has disappeared.
 .SH OPTIONS
 Note that these options override any settings in the config file.
 .TP
@@ -51,11 +79,16 @@ description for more information.
 .BI "--cow-size=" size
 Size of the cow image. Current choices are 
 .BR small ", " med ", or " large .
+The corresponding config file option is
+.IR cow_size .
 .TP
-.BI "--debug"
+.B "--debug"
 Print messages about what
 .B xcowsay
 is doing. Useful for finding out why the daemon fails.
+.TP
+.B "-v, --version"
+Print version information.
 .SH "SEE ALSO"
 .BR cowsay (6)
 .SH BUGS

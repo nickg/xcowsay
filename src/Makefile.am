@@ -7,3 +7,5 @@ LDADD = $(XCOWSAY_LIBS)
 xcowsay_SOURCES = xcowsay.c display_cow.c display_cow.h floating_shape.h \
 	floating_shape.c settings.h settings.c Cowsay_glue.h xcowsayd.h \
 	xcowsayd.c
+
+EXTRA_DIST = xcowat xcowfortune
