@@ -1,0 +1,62 @@
+.\" man page for xcowsay
+.TH "xcowsay" 6
+.SH NAME
+xcowsay \- Display a cute cow and speech bubble.
+.SH SYNOPSIS
+.B xcowsay
+.RB [ "-h" ]
+.RB [ "-t"
+.RI \| time \|]
+.RB [ "-r"
+.RI \| speed \|]
+.RB [ "-d" ]
+.RB [ "-f"
+.RI \| font \|]
+.RI [\| text \|]
+.SH DESCRIPTION
+TODO: Description here
+.SH OPTIONS
+Note that these options override any settings in the config file.
+.TP
+.B "-h, --help"
+Display usage information.
+.TP
+.BI "-t " time ", --time=" time
+Display the cow for
+.I time
+seconds. This overrides any value set for
+.IR reading_speed .
+The corresponding config file option is
+.IR display_time .
+.TP
+.BI "-r " speed ", --reading-speed=" speed
+Number of milliseconds to display the cow for each word in the input
+text. This is clamped to a minimum of
+.I min_display_time
+and a maximum of
+.IR max_display_time .
+The defaults are 1 second and 30 seconds respectively. The corresponding
+config file option is
+.IR reading_speed .
+.TP
+.BI "-f " font ", --font=" font
+Font for the speech bubble text. Accepts Pango font strings. The
+corresponding config file option is
+.IR font .
+.TP
+.B "-d, --daemon"
+Run xcowsay in daemon mode if DBus support has been enabled. See the
+description for more information.
+.TP
+.BI "--cow-size=" size
+Size of the cow image. Current choices are 
+.BR small ", " med ", or " large .
+.TP
+.BI "--debug"
+Print messages about what
+.B xcowsay
+is doing. Useful for finding out why the daemon fails.
+.SH "SEE ALSO"
+.BR cowsay (6)
+.SH BUGS
+There are no bugs.
