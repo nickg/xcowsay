@@ -15,7 +15,6 @@
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-
 #ifndef INC_FLOATING_SHAPE_H
 #define INC_FLOATING_SHAPE_H
 
