@@ -1,4 +1,4 @@
-AC_INIT([xcowsay], [0.6],
+AC_INIT([xcowsay], [0.6.1],
         [Nick Gasson <nick.gasson@yahoo.co.uk>],
         [xcowsay])
 AM_INIT_AUTOMAKE([-Wall])
@@ -34,4 +34,4 @@ AC_ARG_ENABLE(dbus,
 PKG_CHECK_MODULES(XCOWSAY, $modules)
 
 AC_CONFIG_HEADERS([config.h])
-AC_OUTPUT([Makefile src/Makefile])
+AC_OUTPUT([Makefile debian/Makefile src/Makefile])

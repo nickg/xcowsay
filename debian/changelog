@@ -1,0 +1,6 @@
+xcowsay (0.6-1) unstable; urgency=low
+
+  * Initial release (Closes: #nnnn)  <nnnn is the bug number of your ITP>
+
+ -- Nick Gasson <nick@cakesniffer.co.uk>  Sun, 16 Mar 2008 11:42:46 +0000
+

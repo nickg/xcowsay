@@ -95,9 +95,9 @@ static void usage()
 static void version()
 {
    static const char *copy =
-      "Copyright (C) 2008  Nick Gasson\n"
+      "Copyright (C) 2008 Nick Gasson\n"
       "This program comes with ABSOLUTELY NO WARRANTY. This is free software, and\n"
-      "you are welcome to redistribute it under certain conditions.  See the GNU\n"
+      "you are welcome to redistribute it under certain conditions. See the GNU\n"
       "General Public Licence for details.";
    
 #ifdef HAVE_CONFIG_H
