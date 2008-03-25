@@ -75,6 +75,7 @@ static cowstate_t next_state(cowstate_t state)
    }
 }
 
+// TODO: Change this to use the actual max path length...
 #define MAX_COW_PATH 256
 static GdkPixbuf *load_cow()
 {
@@ -297,6 +298,7 @@ void cowsay_init(int *argc, char ***argv)
 static char *copy_string(const char *s)
 {
    char *copy = malloc(strlen(s)+1);
+   g_assert(copy);
    strcpy(copy, s);
    return copy;
 }
