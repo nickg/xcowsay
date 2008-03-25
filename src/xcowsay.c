@@ -19,6 +19,8 @@
 #include <stdlib.h>
 #include <time.h>
 #include <getopt.h>
+#include <assert.h>
+#include <string.h>
 
 #include "display_cow.h"
 #include "settings.h"
@@ -73,7 +75,7 @@ static void read_from_stdin(void)
 static void usage()
 {
    static const char *usage_message =
-      "Usage: xcowsay [OPTION]... [MESSAGE]\n"
+      "Usage: xcowsay [OPTION]... [MESSAGE]...\n"
       "Display a cow on your desktop with MESSAGE or standard input.\n\n"
       "Options:\n"
       " -h, --help\t\tDisplay this message and exit.\n"
@@ -117,6 +119,30 @@ static int parse_int_option(const char *optarg)
       fprintf(stderr, "Error: %s is not a valid integer\n", optarg);
       exit(EXIT_FAILURE);
    }
+}
+
+/*
+ * Join all the strings in argv from ind to argc-1 into one big
+ * string with spaces between the words.
+ */
+static char *cat_from_index(int ind, int argc, char **argv)
+{
+   size_t len = 0, i;
+   for (i = ind; i < argc; i++)
+      len += strlen(argv[i]) + (i < argc - 1 ? 1 : 0);
+
+   char *buf = malloc(len+1);
+   assert(buf);
+
+   char *p = buf;
+   for (i = ind; i < argc; i++) {
+      strcpy(p, argv[i]);
+      p += strlen(argv[i]);
+      if (i < argc - 1)  // No space at the end
+         *p++ = ' ';
+   }
+
+   return buf;
 }
 
 int main(int argc, char **argv)
@@ -181,11 +207,10 @@ int main(int argc, char **argv)
       if (optind == argc) {
          read_from_stdin();
       }
-      else if (optind == argc - 1) {
-         display_cow_or_invoke_daemon(debug, argv[optind]);
-      }
       else {
-         fprintf(stderr, "Error: Too many arguments\n");
+         char *str = cat_from_index(optind, argc, argv);
+         display_cow_or_invoke_daemon(debug, str);
+         free(str);
       }
    }
    

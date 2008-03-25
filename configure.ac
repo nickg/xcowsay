@@ -1,5 +1,5 @@
-AC_INIT([xcowsay], [0.6.1],
-        [Nick Gasson <nick.gasson@yahoo.co.uk>],
+AC_INIT([xcowsay], [0.7],
+        [Nick Gasson <nick@nickg.me.uk>],
         [xcowsay])
 AM_INIT_AUTOMAKE([-Wall])
 AC_PROG_CC
