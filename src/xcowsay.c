@@ -25,6 +25,7 @@
 #include "display_cow.h"
 #include "settings.h"
 #include "xcowsayd.h"
+#include "config_file.h"
 
 #ifdef HAVE_CONFIG_H
 #include "config.h"
@@ -156,6 +157,8 @@ int main(int argc, char **argv)
    add_string_option("font", DEF_FONT);
    add_string_option("cow_size", DEF_COW_SIZE);
    add_string_option("image_base", DEF_IMAGE_BASE);
+
+   parse_config_file();
    
    int c, index = 0, failure = 0;
    const char *spec = "hvdrt:f:";

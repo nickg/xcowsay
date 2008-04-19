@@ -13,6 +13,7 @@ xcowsay \- Display a cute cow and speech bubble.
 .RB [ "-f"
 .RI \| font \|]
 .RI [\| text \|]...
+
 .SH DESCRIPTION
 Display a cow with a speech bubble containing some text. If 
 .I text
@@ -43,6 +44,22 @@ starts it checks to see if a daemon is running, and if it is, sends a
 request and returns immediately. Otherwise 
 .B xcowsay
 will block until the cow has disappeared.
+
+.SH CONFIGURATION FILE
+xcowsay reads a configuration file on startup. Currently the file must
+be named .xcowsayrc in your home directory, a system-wide config file
+might be added in a later release.
+
+The configuration file consists of 'option = value' pairs, one per line.  The
+valid keys are given in the next section. For example, the following line sets
+display time to 10 seconds:
+.PP
+.RS
+display_time = 10000
+.RE
+.PP
+The character '#' begins a comment which lasts until the end of the line.
+
 .SH OPTIONS
 Note that these options override any settings in the config file.
 .TP
