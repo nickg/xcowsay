@@ -26,6 +26,7 @@
 #include "settings.h"
 #include "xcowsayd.h"
 #include "config_file.h"
+#include "i18n.h"
 
 #ifdef HAVE_CONFIG_H
 #include "config.h"
@@ -35,10 +36,10 @@
 #define DEF_LEAD_IN_TIME  250
 #define DEF_DISPLAY_TIME  CALCULATE_DISPLAY_TIME
 #define DEF_LEAD_OUT_TIME LEAD_IN_TIME
-#define DEF_MIN_TIME      1000
+#define DEF_MIN_TIME      2000
 #define DEF_MAX_TIME      30000
 #define DEF_FONT          "Bitstream Vera Sans 14"
-#define DEF_READING_SPEED 200   // Human average is apparently 200-250 WPM (=5 WPS)
+#define DEF_READING_SPEED 250   // Human average is apparently 200-250 WPM (=5 WPS)
 #define DEF_COW_SIZE      "med"
 #define DEF_IMAGE_BASE    "cow"
 
@@ -75,24 +76,37 @@ static void read_from_stdin(void)
 
 static void usage()
 {
-   static const char *usage_message =
-      "Usage: xcowsay [OPTION]... [MESSAGE]...\n"
-      "Display a cow on your desktop with MESSAGE or standard input.\n\n"
-      "Options:\n"
-      " -h, --help\t\tDisplay this message and exit.\n"
-      " -v, --version\t\tPrint version information.\n"
-      " -t, --time=SECONDS\tDisplay message for SECONDS seconds.\n"
-      " -r, --reading-speed=N\tNumber of milliseconds to delay per word.\n"
-      " -f, --font=FONT\tSet message font (Pango format).\n"
-      " -d, --daemon\t\tRun xcowsay in daemon mode.\n"
-      "     --cow-size=SIZE\tSize of the cow (small, med, large).\n"
-      "     --debug\t\tKeep daemon attached to terminal.\n\n"
-      "Default values for these options can be specified in the xcowsay config\n"
-      "file. See the man page for more information.\n\n"
-      "If the display_time option is not set the display time will be calcuated\n"
-      "from the reading_speed parameter multiplied by the word count.\n\n"
-      "Report bugs to nick@cakesniffer.co.uk";
-   puts(usage_message);
+   printf
+      ("Usage: xcowsay [OPTION]... [MESSAGE]...\n"
+       "%s\n\n"
+       "Options:\n"
+       " -h, --help\t\t%s\n"
+       " -v, --version\t\t%s\n"
+       " -t, --time=SECONDS\t%s\n"
+       " -r, --reading-speed=N\t%s\n"
+       " -f, --font=FONT\t%s\n"
+       " -d, --daemon\t\t%s\n"
+       "     --cow-size=SIZE\t%s\n"
+       "     --debug\t\t%s\n\n"
+       "%s\n\n"
+       "%s\n\n"
+       "%s\n",
+       i18n("Display a cow on your desktop with MESSAGE or standard input."),
+       i18n("Display this message and exit."),
+       i18n("Print version information."),
+       i18n("Number of seconds to display message for"),
+       i18n("Number of milliseconds to delay per word."),
+       i18n("Set message font (Pango format)."),
+       i18n("Run xcowsay in daemon mode."),
+       i18n("Size of the cow (small, med, large)."),
+       i18n("Keep daemon attached to terminal."),
+       i18n("Default values for these options can be specified in the "
+            "xcowsay config\nfile. See the man page for more information."),
+       i18n("If the display_time option is not set the display time will "
+            "be calcuated\nfrom the reading_speed parameter multiplied by "
+            "the word count."),
+       i18n("Report bugs to nick@cakesniffer.co.uk")
+       );
 }
 
 static void version()
@@ -117,7 +131,7 @@ static int parse_int_option(const char *optarg)
    if ('\0' == *endptr)
       return r;
    else {
-      fprintf(stderr, "Error: %s is not a valid integer\n", optarg);
+      fprintf(stderr, i18n("Error: %s is not a valid integer\n"), optarg);
       exit(EXIT_FAILURE);
    }
 }
@@ -148,6 +162,10 @@ static char *cat_from_index(int ind, int argc, char **argv)
 
 int main(int argc, char **argv)
 {
+   setlocale(LC_ALL, "");
+   bindtextdomain(PACKAGE, LOCALEDIR);
+   textdomain(PACKAGE);
+   
    add_int_option("lead_in_time", DEF_LEAD_IN_TIME);
    add_int_option("display_time", DEF_DISPLAY_TIME);
    add_int_option("lead_out_time", get_int_option("lead_in_time"));
@@ -157,7 +175,7 @@ int main(int argc, char **argv)
    add_string_option("font", DEF_FONT);
    add_string_option("cow_size", DEF_COW_SIZE);
    add_string_option("image_base", DEF_IMAGE_BASE);
-
+   
    parse_config_file();
    
    int c, index = 0, failure = 0;

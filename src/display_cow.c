@@ -32,6 +32,7 @@
 #include "floating_shape.h"
 #include "display_cow.h"
 #include "settings.h"
+#include "i18n.h"
 
 #define LEFT_BUF       5   // Amount of pixels to leave after cow's tail
 #define TIP_WIDTH      20  // Length of the triangle bit on the speech bubble
@@ -85,7 +86,7 @@ static GdkPixbuf *load_cow()
    
    GdkPixbuf *pixbuf = gdk_pixbuf_new_from_file(cow_path, NULL);
    if (NULL == pixbuf) {
-      fprintf(stderr, "Failed to load cow image: %s\n", cow_path);
+      fprintf(stderr, i18n("Failed to load cow image: %s\n"), cow_path);
       exit(EXIT_FAILURE);
    }
    return pixbuf;
@@ -110,7 +111,7 @@ static GdkPixbuf *create_bubble(char *text)
 
    char *stripped;
    if (!pango_parse_markup(text, -1, 0, &pango_attrs, &stripped, NULL, NULL)) {
-      fprintf(stderr, "Warning: Failed to parse Pango attributes\n");
+      fprintf(stderr, i18n("Warning: Failed to parse Pango attributes\n"));
       stripped = text;
    }
    else {

@@ -1,0 +1,9 @@
+Refer to the INSTALL file for installation instructions.
+
+./configure
+make
+make install
+
+If you don't want DBus support configure with --disable-dbus
+
+Check out the man page xcowsay(6) for the documentation.

@@ -1,0 +1,12 @@
+src/display_cow.h
+src/settings.h
+src/settings.c
+src/display_cow.c
+src/xcowsayd.c
+src/floating_shape.c
+src/Cowsay_glue.h
+src/xcowsay.c
+src/xcowsayd.h
+src/config_file.c
+src/config_file.h
+src/floating_shape.h

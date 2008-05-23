@@ -12,5 +12,10 @@ Architecture: any
 Depends: ${shlibs:Depends}, ${misc:Depends}, 
          libgtk2.0-0, libdbus-glib-1-2,
          libdbus-1-3, libglib2.0-0
-Description: <insert up to 60 chars description>
- <insert long description, indented with spaces>
+Description: Graphical configurable talking cow
+ A graphical configurable talking cow. It's a GTK+ version of the 
+ classic cowsay Perl script. It displays a cute pop-up cow on your 
+ desktop with a speech bubble and some customizable text. It comes
+ with a fortune(6) wrapper script, xcowfortune, which you can cron
+ to deliver periodic fortune cookies of joy via the cow. It even has
+ a daemon mode which lets you send the cow messages over DBus!

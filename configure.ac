@@ -1,11 +1,13 @@
-AC_INIT([xcowsay], [0.7],
-        [Nick Gasson <nick@nickg.me.uk>],
+AC_INIT([xcowsay], [1.0],
+        [Nick Gasson <nick@nick.me.uk>],
         [xcowsay])
 AM_INIT_AUTOMAKE([-Wall])
 AC_PROG_CC
 AC_PROG_INSTALL
 
 # Checks for libraries.
+
+AM_GNU_GETTEXT([external])
 
 # Checks for header files.
 AC_HEADER_STDC
@@ -34,4 +36,4 @@ AC_ARG_ENABLE(dbus,
 PKG_CHECK_MODULES(XCOWSAY, $modules)
 
 AC_CONFIG_HEADERS([config.h])
-AC_OUTPUT([Makefile debian/Makefile src/Makefile])
+AC_OUTPUT([Makefile debian/Makefile src/Makefile po/Makefile.in])
