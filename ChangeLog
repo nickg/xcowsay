@@ -1,3 +1,9 @@
+2008-06-04  Nick Gasson  <nick@nickg.me.uk>
+
+	* src/display_cow.c (display_cow): Fix bug where cow would appear
+	off the side of the screen and fix a floating point exception in
+	rare circumstances.
+
 2008-05-23  gettextize  <bug-gnu-gettext@gnu.org>
 
 	* Makefile.am (SUBDIRS): Add po.

@@ -364,6 +364,13 @@ void display_cow(bool debug, const char *text)
    GdkScreen *screen = gdk_screen_get_default();
    int area_w = gdk_screen_get_width(screen) - total_width;
    int area_h = gdk_screen_get_height(screen) - total_height;
+
+   // Fit the cow on the screen as best as we can
+   // The area can't be be zero or we'd get an FPE
+   if (area_w < 1)
+      area_w = 1;
+   if (area_h < 1)
+      area_h = 1;
    
    move_shape(xcowsay.cow, rand()%area_w, rand()%area_h);
    show_shape(xcowsay.cow);
