@@ -23,7 +23,7 @@ AC_FUNC_MALLOC
 AC_CHECK_FUNCS([strtol])
 
 # Check for pkg-config packages
-modules="gtk+-2.0"
+modules="gtk+-2.0 libpanelapplet-2.0"
 xcowsayd_modules="$modules dbus-glib-1 gthread-2.0"
 AC_ARG_ENABLE(dbus,
         [AS_HELP_STRING([--disable-dbus], [Do not build DBus daemon.])],
@@ -36,4 +36,5 @@ AC_ARG_ENABLE(dbus,
 PKG_CHECK_MODULES(XCOWSAY, $modules)
 
 AC_CONFIG_HEADERS([config.h])
-AC_OUTPUT([Makefile debian/Makefile src/Makefile po/Makefile.in])
+AC_OUTPUT([Makefile debian/Makefile src/Makefile po/Makefile.in
+           src/applet/Makefile])

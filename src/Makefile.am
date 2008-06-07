@@ -1,16 +1,26 @@
-bin_PROGRAMS = xcowsay
-bin_SCRIPTS = xcowat xcowfortune
-
 AM_CFLAGS = $(XCOWSAY_CFLAGS) 
 LDADD = $(XCOWSAY_LIBS)
 
-xcowsay_SOURCES = xcowsay.c display_cow.c display_cow.h floating_shape.h \
-	floating_shape.c settings.h settings.c Cowsay_glue.h xcowsayd.h \
-	xcowsayd.c config_file.h config_file.c i18n.h
+libexec_PROGRAMS = xcowsay_applet
 
-EXTRA_DIST = xcowat xcowfortune
+libexecdir = $(libdir)/gnome-applets
+
+xcowsay_applet_SOURCES = display_cow.c display_cow.h floating_shape.h \
+	floating_shape.c settings.h settings.c Cowsay_glue.h xcowsayd.h \
+	xcowsayd.c config_file.h config_file.c i18n.h applet.c
 
 localedir = $(datadir)/locale
 
-# Add -DSHOW_FPS here to show FPS in title bar
 DEFS = -DLOCALEDIR=\"$(localedir)\" -DDATADIR=\"$(pkgdatadir)\" @DEFS@
+
+serverdir = $(libdir)/bonobo/servers
+server_files = CowsayApplet.server
+
+$(server_files): $(server_files).in
+	sed -e "s|\@LIBEXECDIR\@|$(libexecdir)|" $< > $@
+
+EXTRA_DIST = $(server_files).in
+
+install-data-local: $(server_files)
+	mkdir -p $(serverdir)
+	$(INSTALL_DATA) $(server_files) $(serverdir)
