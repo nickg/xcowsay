@@ -1,6 +1,6 @@
-AC_INIT([xcowsay], [1.1],
+AC_INIT([xcowsay_applet], [0.1],
         [Nick Gasson <nick@nick.me.uk>],
-        [xcowsay])
+        [xcowsay_applet])
 AM_INIT_AUTOMAKE([-Wall])
 AC_PROG_CC
 AC_PROG_INSTALL
@@ -23,18 +23,8 @@ AC_FUNC_MALLOC
 AC_CHECK_FUNCS([strtol])
 
 # Check for pkg-config packages
-modules="gtk+-2.0 libpanelapplet-2.0"
-xcowsayd_modules="$modules dbus-glib-1 gthread-2.0"
-AC_ARG_ENABLE(dbus,
-        [AS_HELP_STRING([--disable-dbus], [Do not build DBus daemon.])],
-        [if test "$enableval" != "no" ; then
-           modules="$xcowsayd_modules"
-         fi
-         CFLAGS="$CFLAGS -DWITHOUT_DBUS"],
-        [modules="$xcowsayd_modules"])
-
+modules="gtk+-2.0 libpanelapplet-2.0 dbus-glib-1 gthread-2.0"
 PKG_CHECK_MODULES(XCOWSAY, $modules)
 
 AC_CONFIG_HEADERS([config.h])
-AC_OUTPUT([Makefile debian/Makefile src/Makefile po/Makefile.in
-           src/applet/Makefile])
+AC_OUTPUT([Makefile debian/Makefile src/Makefile po/Makefile.in])
