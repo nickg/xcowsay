@@ -56,6 +56,8 @@ typedef struct _cowsay_queue_t {
 static cowsay_queue_t *requests = NULL;
 static GMutex *queue_lock = NULL;
 static GCond *request_ready = NULL;
+static GMutex *display_lock = NULL;
+static GCond *display_complete = NULL;
 
 #define QUEUE_MUTEX_LOCK g_mutex_lock(queue_lock)
 #define QUEUE_MUTEX_UNLOCK g_mutex_unlock(queue_lock)
@@ -127,8 +129,10 @@ static gpointer cow_display_thread(gpointer data)
       // GTK assumes it is being called from the main thread
       // (and it isn't here)
       gdk_threads_enter();
-      display_cow(debug, mess);
+      display_cow(debug, mess, false);
       gdk_threads_leave();
+
+      g_cond_wait(display_complete, display_lock);
       
       request_complete();
    }
@@ -226,6 +230,8 @@ void run_cowsay_daemon(bool debug, int argc, char **argv)
 
    queue_lock = g_mutex_new();
    request_ready = g_cond_new();
+   display_complete = g_cond_new();
+   display_lock = g_mutex_new();
    
    cowsay_init(&argc, &argv);
 
@@ -236,8 +242,10 @@ void run_cowsay_daemon(bool debug, int argc, char **argv)
    g_assert(displ);
 
    debug_msg("Cowsay daemon starting...\n");
-   GMainLoop *main_loop = g_main_loop_new(NULL, FALSE);
-   g_main_loop_run(main_loop);
+   for (;;) {
+      gtk_main();
+      g_cond_signal(display_complete);
+   }
 
    exit(EXIT_SUCCESS);
 }
