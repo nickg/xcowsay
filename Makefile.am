@@ -4,7 +4,6 @@ dist_pkgdata_DATA = cow_small.png cow_med.png cow_large.png \
 	cow_panel_icon.png
 EXTRA_DIST = config.rpath m4/ChangeLog cow.svg xcowsay.6 cow_icon.png \
 	cow_panel_icon.png
-man_MANS = xcowsay.6
 
 ACLOCAL_AMFLAGS = -I m4
 
