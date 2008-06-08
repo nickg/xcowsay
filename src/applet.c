@@ -1,5 +1,24 @@
+/*  applet.c -- Gnome panel applet.
+ *  Copyright (C) 2008  Nick Gasson
+ *
+ *  This program is free software: you can redistribute it and/or modify
+ *  it under the terms of the GNU General Public License as published by
+ *  the Free Software Foundation, either version 3 of the License, or
+ *  (at your option) any later version.
+ *
+ *  This program is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *  GNU General Public License for more details.
+ *
+ *  You should have received a copy of the GNU General Public License
+ *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
+
 #include <string.h>
 #include <stdio.h>
+#include <sys/types.h>
+#include <sys/wait.h>
 
 #include <X11/Xlib.h>
 #include <panel-applet.h>
@@ -26,16 +45,50 @@
 #define MAX_STDIN 4096   // Maximum chars to read from stdin
 
 
+static pid_t daemon_pid = 0;
+
+static void restart_daemon(void)
+{
+   daemon_pid = fork();
+   if (daemon_pid == 0) {
+      close(ConnectionNumber(gdk_display));
+      
+      execl("/usr/bin/env", "/usr/bin/env", "xcowsay",
+            "--daemon", "--debug", NULL);
+      perror("execl");
+      abort();
+   }
+   else if (daemon_pid == -1) {
+      perror("fork");
+      abort();
+   }
+}
+
 static gboolean on_button_press(GtkWidget *applet,
                                 GdkEventButton *event,
                                 gpointer data)
 {
+   int status;
+   
    // Don't react to anything other than a left click
    if (event->button != 1)
       return FALSE;
 
-   printf("Moo!\n");
-   system("/usr/bin/env xcowfortune &");
+   // Check daemon is still alive
+   pid_t rc = waitpid(daemon_pid, &status, WNOHANG);
+   if (rc == 0) {
+      // Daemon is still alive
+      printf("Daemon still alive\n");
+   }
+   else if (rc == daemon_pid) {
+      // Daemon has terminated
+      printf("Daemon terminated -restarting\n");
+      restart_daemon();
+   }
+   else if (rc == -1) {
+      perror("waitpid");
+      abort();
+   }
    
    return TRUE;
 }
@@ -66,14 +119,7 @@ static gboolean xcowsay_applet_fill(PanelApplet *applet,
 
    load_defaults();
 
-   if (fork() == 0) {
-      close(ConnectionNumber(gdk_display));
-      
-      execl("/usr/bin/env", "/usr/bin/env", "xcowsay",
-            "--daemon", "--debug", NULL);
-      perror("execl");
-      abort();
-   }
+   restart_daemon();
 
    image = gtk_image_new_from_file(DATADIR "/cow_panel_icon.png");
    g_assert(image);
@@ -86,8 +132,6 @@ static gboolean xcowsay_applet_fill(PanelApplet *applet,
                     image);
    
    gtk_widget_show_all(GTK_WIDGET(applet));
-
-   
    
    return TRUE;
 }
