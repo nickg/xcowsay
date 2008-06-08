@@ -17,6 +17,7 @@
 
 #include <string.h>
 #include <stdio.h>
+#include <assert.h>
 #include <sys/types.h>
 #include <sys/wait.h>
 
@@ -69,6 +70,8 @@ static gboolean on_button_press(GtkWidget *applet,
                                 gpointer data)
 {
    int status;
+   char *buf;
+   FILE *pout;
    
    // Don't react to anything other than a left click
    if (event->button != 1)
@@ -82,13 +85,27 @@ static gboolean on_button_press(GtkWidget *applet,
    }
    else if (rc == daemon_pid) {
       // Daemon has terminated
-      printf("Daemon terminated -restarting\n");
+      printf("Daemon terminated - restarting\n");
       restart_daemon();
    }
    else if (rc == -1) {
       perror("waitpid");
       abort();
    }
+
+   buf = calloc(MAX_STDIN, 1);
+   assert(buf);
+   pout = popen("fortune", "r");
+   if (NULL == pout)
+      strcpy(buf, "Error: Failed to run fortune program!");
+   else {
+      fread(buf, 1, MAX_STDIN, pout);
+      fclose(pout);
+   }
+
+   display_cow_or_invoke_daemon(false, buf);
+
+   free(buf);
    
    return TRUE;
 }
@@ -113,6 +130,7 @@ static gboolean xcowsay_applet_fill(PanelApplet *applet,
                                     gpointer data)
 {
    GtkWidget *image;
+   GdkWindow *win;
    
    if (strcmp(iid, "OAFIID:CowsayApplet") != 0)
       return FALSE;
@@ -130,8 +148,10 @@ static gboolean xcowsay_applet_fill(PanelApplet *applet,
                     "button_press_event",
                     G_CALLBACK(on_button_press),
                     image);
-   
+
    gtk_widget_show_all(GTK_WIDGET(applet));
+
+   gdk_window_set_back_pixmap(GTK_WIDGET(applet)->window, NULL, TRUE);
    
    return TRUE;
 }
