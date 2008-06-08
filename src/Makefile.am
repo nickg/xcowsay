@@ -11,7 +11,8 @@ xcowsay_applet_SOURCES = display_cow.c display_cow.h floating_shape.h \
 
 localedir = $(datadir)/locale
 
-DEFS = -DLOCALEDIR=\"$(localedir)\" -DDATADIR=\"$(pkgdatadir)\" @DEFS@
+DEFS = -DLOCALEDIR=\"$(localedir)\" -DDATADIR=\"$(pkgdatadir)\" \
+	-DPIXMAPDIR=\"$(datadir)/pixmaps\" @DEFS@ 
 
 serverdir = $(libdir)/bonobo/servers
 server_files = CowsayApplet.server
