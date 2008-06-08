@@ -319,7 +319,7 @@ static int count_words(const char *s)
    return words;
 }
 
-void display_cow(bool debug, const char *text)
+void display_cow(bool debug, const char *text, bool run_main)
 {
    char *text_copy = copy_string(text);
 
@@ -390,8 +390,9 @@ void display_cow(bool debug, const char *text)
    gdk_window_set_events(shape_window(xcowsay.cow)->window, events);
    g_signal_connect(G_OBJECT(shape_window(xcowsay.cow)), "button-press-event",
                     G_CALLBACK(cow_clicked), NULL);
-   
-   gtk_main();
+
+   if (run_main)
+      gtk_main();
 
    g_object_unref(xcowsay.bubble_pixbuf);
    xcowsay.bubble_pixbuf = NULL;
@@ -442,5 +443,5 @@ bool try_dbus(bool debug, const char *text)
 void display_cow_or_invoke_daemon(bool debug, const char *text)
 {
    if (!try_dbus(debug, text))
-      display_cow(debug, text);
+      display_cow(debug, text, true);
 }
