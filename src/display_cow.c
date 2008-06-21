@@ -35,6 +35,7 @@
 #include "i18n.h"
 
 GdkPixbuf *make_text_bubble(char *text, int *p_width, int *p_height);
+GdkPixbuf *make_dream_bubble(const char *file, int *p_width, int *p_height);
 
 #define TICK_TIMEOUT   100
 #define BUBBLE_XOFFSET 5  // Distance from cow to bubble
@@ -198,6 +199,12 @@ static void normal_setup(const char *text, bool debug)
 static void dream_setup(const char *file, bool debug)
 {
    debug_msg("Dreaming file: %s\n", file);
+
+   // TODO: calculate display time
+   xcowsay.display_time = 10000;
+
+   xcowsay.bubble_pixbuf = make_dream_bubble(file, &xcowsay.bubble_width,
+                                             &xcowsay.bubble_height);   
 }
 
 void display_cow(bool debug, const char *text, bool run_main, cowmode_t mode)

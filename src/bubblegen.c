@@ -171,6 +171,11 @@ static int bubble_content_top()
    return CORNER_RADIUS;
 }
 
+GdkPixbuf *make_dream_bubble(const char *file, int *p_width, int *p_height)
+{
+   return NULL;
+}
+
 GdkPixbuf *make_text_bubble(char *text, int *p_width, int *p_height)
 {
    bubble_t bubble;
