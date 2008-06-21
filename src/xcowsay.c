@@ -71,7 +71,7 @@ static void read_from_stdin(void)
    }
    data[n] = '\0';
 
-   display_cow_or_invoke_daemon(debug, data);
+   display_cow_or_invoke_daemon(debug, data, COWMODE_NORMAL);
    free(data);
 }
 
@@ -232,14 +232,16 @@ int main(int argc, char **argv)
       cowsay_init(&argc, &argv);
 
       if (dream_file != NULL) {
-         printf("Dream %s\n", dream_file);
+         // COWMODE_DREAM not in daemon yet
+         // TODO: need to make path absolute
+         display_cow_or_invoke_daemon(debug, dream_file, COWMODE_DREAM);
       }
       else if (optind == argc) {
          read_from_stdin();
       }
       else {
          char *str = cat_from_index(optind, argc, argv);
-         display_cow_or_invoke_daemon(debug, str);
+         display_cow_or_invoke_daemon(debug, str, COWMODE_NORMAL);
          free(str);
       }
    }

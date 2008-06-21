@@ -158,15 +158,15 @@ static int count_words(const char *s)
    return words;
 }
 
-void display_cow(bool debug, const char *text, bool run_main)
+static void normal_setup(const char *text, bool debug)
 {
    char *text_copy = copy_string(text);
-
+   
    // Trim any trailing newline
    size_t len = strlen(text_copy);
    if ('\n' == text_copy[len-1])
       text_copy[len-1] = '\0';
-
+   
    // Count the words and work out the display time, if neccessary
    xcowsay.display_time = get_int_option("display_time");
    if (xcowsay.display_time < 0) {
@@ -189,10 +189,30 @@ void display_cow(bool debug, const char *text, bool run_main)
       xcowsay.display_time = max_display;
       debug_msg("Display time too long: clamped to %d\n", max_display);
    }
-
+   
    xcowsay.bubble_pixbuf = make_text_bubble(text_copy, &xcowsay.bubble_width,
                                             &xcowsay.bubble_height);
    free(text_copy);
+}
+
+static void dream_setup(const char *file, bool debug)
+{
+   debug_msg("Dreaming file: %s\n", file);
+}
+
+void display_cow(bool debug, const char *text, bool run_main, cowmode_t mode)
+{
+   switch (mode) {
+   case COWMODE_NORMAL:
+      normal_setup(text, debug);
+      break;
+   case COWMODE_DREAM:
+      dream_setup(text, debug);
+      break;
+   default:
+      fprintf(stderr, "Error: Unsupported cow mode %d\n", mode);
+      exit(1);
+   }
    
    g_assert(xcowsay.cow_pixbuf);
    xcowsay.cow = make_shape_from_pixbuf(xcowsay.cow_pixbuf);
@@ -240,7 +260,7 @@ void display_cow(bool debug, const char *text, bool run_main)
 
 #ifdef WITHOUT_DBUS
 
-bool try_dbus(bool debug, const char *text)
+bool try_dbus(bool debug, const char *text, cowmode_t mode)
 {
    debug_msg("Skipping DBus (disabled by configure)\n");
    return false;
@@ -248,7 +268,7 @@ bool try_dbus(bool debug, const char *text)
 
 #else 
 
-bool try_dbus(bool debug, const char *text)
+bool try_dbus(bool debug, const char *text, cowmode_t mode)
 {
    DBusGConnection *connection;
    GError *error;
@@ -280,8 +300,8 @@ bool try_dbus(bool debug, const char *text)
 
 #endif /* #ifdef WITHOUT_DBUS */       
 
-void display_cow_or_invoke_daemon(bool debug, const char *text)
+void display_cow_or_invoke_daemon(bool debug, const char *text, cowmode_t mode)
 {
-   if (!try_dbus(debug, text))
-      display_cow(debug, text, true);
+   if (!try_dbus(debug, text, mode))
+      display_cow(debug, text, true, mode);
 }

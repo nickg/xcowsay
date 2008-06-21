@@ -129,7 +129,7 @@ static gpointer cow_display_thread(gpointer data)
       // GTK assumes it is being called from the main thread
       // (and it isn't here)
       gdk_threads_enter();
-      display_cow(debug, mess, false);
+      display_cow(debug, mess, false, COWMODE_NORMAL);
       gdk_threads_leave();
 
       g_cond_wait(display_complete, display_lock);
