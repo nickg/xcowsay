@@ -21,6 +21,7 @@
 #include <string.h>
 
 #include <gtk/gtk.h>
+#include <gdk-pixbuf/gdk-pixbuf.h>
 
 #include "floating_shape.h"
 #include "settings.h"
@@ -173,7 +174,29 @@ static int bubble_content_top()
 
 GdkPixbuf *make_dream_bubble(const char *file, int *p_width, int *p_height)
 {
-   return NULL;
+   bubble_t bubble;
+   GError *error = NULL;
+   GdkPixbuf *image = gdk_pixbuf_new_from_file(file, &error);
+   
+   if (NULL == image) {
+      fprintf(stderr, "Error: failed to load %s\n", file);
+      exit(1);
+   }
+   
+   bubble_size_from_content(&bubble, gdk_pixbuf_get_width(image),
+                            gdk_pixbuf_get_height(image));
+   *p_width = bubble.width;
+   *p_height = bubble.height;
+
+   bubble_init(&bubble);
+
+   gdk_draw_pixbuf(bubble.pixmap, bubble.gc, image, 0, 0,
+                   bubble_content_left(), bubble_content_top(),
+                   -1, -1, GDK_RGB_DITHER_NONE, 0, 0);
+   
+   gdk_pixbuf_unref(image);
+   
+   return bubble_tidy(&bubble);
 }
 
 GdkPixbuf *make_text_bubble(char *text, int *p_width, int *p_height)
