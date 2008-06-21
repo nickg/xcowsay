@@ -161,6 +161,16 @@ static GdkPixbuf *bubble_tidy(bubble_t *b)
    return pixbuf;
 }
 
+static int bubble_content_left()
+{
+   return BUBBLE_BORDER + TIP_WIDTH + CORNER_RADIUS;
+}
+
+static int bubble_content_top()
+{
+   return CORNER_RADIUS;
+}
+
 GdkPixbuf *make_text_bubble(char *text, int *p_width, int *p_height)
 {
    bubble_t bubble;
@@ -194,8 +204,7 @@ GdkPixbuf *make_text_bubble(char *text, int *p_width, int *p_height)
    
    // Render the text
    gdk_draw_layout(bubble.pixmap, bubble.gc,
-                   BUBBLE_BORDER + TIP_WIDTH + CORNER_RADIUS,
-                   CORNER_RADIUS, layout);
+                   bubble_content_left(), bubble_content_top(), layout);
 
    // Make sure to free the Pango objects
    g_object_unref(pango_context);
