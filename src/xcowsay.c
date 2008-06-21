@@ -77,21 +77,23 @@ static void read_from_stdin(void)
 static void usage()
 {
    printf
-      ("Usage: xcowsay [OPTION]... [MESSAGE]...\n"
+      ("%s: xcowsay [OPTION]... [MESSAGE]...\n"
        "%s\n\n"
-       "Options:\n"
+       "%s:\n"
        " -h, --help\t\t%s\n"
        " -v, --version\t\t%s\n"
        " -t, --time=SECONDS\t%s\n"
        " -r, --reading-speed=N\t%s\n"
        " -f, --font=FONT\t%s\n"
-       " -d, --daemon\t\t%s\n"
+       "     --daemon\t\t%s\n"
        "     --cow-size=SIZE\t%s\n"
        "     --debug\t\t%s\n\n"
        "%s\n\n"
        "%s\n\n"
        "%s\n",
+       i18n("Usage"),
        i18n("Display a cow on your desktop with MESSAGE or standard input."),
+       i18n("Options"),
        i18n("Display this message and exit."),
        i18n("Print version information."),
        i18n("Number of seconds to display message for"),
@@ -186,7 +188,7 @@ int main(int argc, char **argv)
          // Set a flag
          break;
       case 'd':
-         daemon_flag = 1;
+         
          break;
       case 'c':
          set_string_option("cow_size", optarg);
