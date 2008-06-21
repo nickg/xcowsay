@@ -53,6 +53,7 @@ static struct option long_options[] = {
    {"version", no_argument, 0, 'v'},
    {"time", required_argument, 0, 't'},
    {"font", required_argument, 0, 'f'},
+   {"dream", required_argument, 0, 'd'},
    {"cow-size", required_argument, 0, 'c'},
    {"reading-speed", required_argument, 0, 'r'},
    {"daemon", no_argument, &daemon_flag, 1},
@@ -85,6 +86,7 @@ static void usage()
        " -t, --time=SECONDS\t%s\n"
        " -r, --reading-speed=N\t%s\n"
        " -f, --font=FONT\t%s\n"
+       " -d, --dream=FILE\t%s\n"
        "     --daemon\t\t%s\n"
        "     --cow-size=SIZE\t%s\n"
        "     --debug\t\t%s\n\n"
@@ -99,6 +101,7 @@ static void usage()
        i18n("Number of seconds to display message for"),
        i18n("Number of milliseconds to delay per word."),
        i18n("Set message font (Pango format)."),
+       i18n("Display an image instead of text."),
        i18n("Run xcowsay in daemon mode."),
        i18n("Size of the cow (small, med, large)."),
        i18n("Keep daemon attached to terminal."),
@@ -181,14 +184,15 @@ int main(int argc, char **argv)
    parse_config_file();
    
    int c, index = 0, failure = 0;
-   const char *spec = "hvdrt:f:";
+   const char *spec = "hvd:rt:f:";
+   const char *dream_file = NULL;
    while ((c = getopt_long(argc, argv, spec, long_options, &index)) != -1) {
       switch (c) {
       case 0:
          // Set a flag
          break;
       case 'd':
-         
+         dream_file = optarg;
          break;
       case 'c':
          set_string_option("cow_size", optarg);
@@ -226,8 +230,11 @@ int main(int argc, char **argv)
    }
    else {
       cowsay_init(&argc, &argv);
-      
-      if (optind == argc) {
+
+      if (dream_file != NULL) {
+         printf("Dream %s\n", dream_file);
+      }
+      else if (optind == argc) {
          read_from_stdin();
       }
       else {
