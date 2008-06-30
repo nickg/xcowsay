@@ -136,14 +136,6 @@ void cowsay_init(int *argc, char ***argv)
    xcowsay.cow_pixbuf = load_cow();
 }
 
-static char *copy_string(const char *s)
-{
-   char *copy = malloc(strlen(s)+1);
-   g_assert(copy);
-   strcpy(copy, s);
-   return copy;
-}
-
 static int count_words(const char *s)
 {
    bool last_was_space = false;
@@ -161,7 +153,7 @@ static int count_words(const char *s)
 
 static void normal_setup(const char *text, bool debug)
 {
-   char *text_copy = copy_string(text);
+   char *text_copy = strdup(text);
    
    // Trim any trailing newline
    size_t len = strlen(text_copy);
