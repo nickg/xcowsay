@@ -131,17 +131,10 @@ void add_bool_option(const char *name, bool bval)
    add_option(name, optBool, u);
 }
 
-static char *copy_string(const char *s)
-{
-   char *copy = malloc(strlen(s)+1);
-   strcpy(copy, s);
-   return copy;
-}
-
 void add_string_option(const char *name, const char *sval)
 {
    option_value_t u;
-   u.sval = copy_string(sval);
+   u.sval = strdup(sval);
    add_option(name, optString, u);
 }
 
@@ -164,5 +157,5 @@ void set_string_option(const char *name, const char *sval)
    option_t *opt = get_option(name);
    assert_string(opt);
    free(opt->u.sval);
-   opt->u.sval = copy_string(sval);
+   opt->u.sval = strdup(sval);
 }
