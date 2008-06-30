@@ -58,7 +58,7 @@ static option_t *get_option(const char *name)
       if (strcmp(name, it->opt.name) == 0)
          return &it->opt;
    }
-   fprintf(stderr, "Internal Error: Invalid option %s\n", name);
+   fprintf(stderr, "Internal Error: Invalid option '%s'\n", name);
    exit(EXIT_FAILURE);
 }
 
@@ -66,7 +66,7 @@ static option_t *get_option(const char *name)
 static void assert_string(const option_t *opt)
 {
    if (optString != opt->type) {
-      fprintf(stderr, "Error: Option %s is not of type string\n", opt->name);
+      fprintf(stderr, "Error: Option '%s' is not of type string\n", opt->name);
       exit(EXIT_FAILURE);
    }
 }
@@ -74,7 +74,7 @@ static void assert_string(const option_t *opt)
 static void assert_int(const option_t *opt)
 {
    if (optInt != opt->type) {
-      fprintf(stderr, "Error: Option %s is not of type integer\n", opt->name);
+      fprintf(stderr, "Error: Option '%s' is not of type integer\n", opt->name);
       exit(EXIT_FAILURE);
    }
 }
@@ -82,7 +82,7 @@ static void assert_int(const option_t *opt)
 static void assert_bool(const option_t *opt)
 {
    if (optBool != opt->type) {
-      fprintf(stderr, "Error: Option %s is not of type Boolean\n", opt->name);
+      fprintf(stderr, "Error: Option '%s' is not of type Boolean\n", opt->name);
       exit(EXIT_FAILURE);
    }
 }
