@@ -23,7 +23,7 @@
 #include <gtk/gtk.h>
 #include <gtk/gtkwindow.h>
 
-#ifndef WITHOUT_DBUS
+#ifdef WITH_DBUS
 #include <dbus/dbus-glib-bindings.h>
 #define XCOWSAY_PATH "/uk/me/doof/Cowsay"
 #define XCOWSAY_NAMESPACE "uk.me.doof.Cowsay"
@@ -257,7 +257,7 @@ void display_cow(bool debug, const char *text, bool run_main, cowmode_t mode)
    xcowsay.bubble_pixbuf = NULL;
 }
 
-#ifdef WITHOUT_DBUS
+#ifndef WITH_DBUS
 
 bool try_dbus(bool debug, const char *text, cowmode_t mode)
 {
@@ -297,7 +297,7 @@ bool try_dbus(bool debug, const char *text, cowmode_t mode)
    return true;
 }
 
-#endif /* #ifdef WITHOUT_DBUS */       
+#endif /* #ifndef WITH_DBUS */       
 
 void display_cow_or_invoke_daemon(bool debug, const char *text, cowmode_t mode)
 {

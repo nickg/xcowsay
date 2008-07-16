@@ -23,7 +23,7 @@
 
 #include "xcowsayd.h"
 
-#ifndef WITHOUT_DBUS
+#ifdef WITH_DBUS
 
 #include <dbus/dbus-glib-bindings.h>
 
@@ -250,7 +250,7 @@ void run_cowsay_daemon(bool debug, int argc, char **argv)
    exit(EXIT_SUCCESS);
 }
 
-#else /* #ifndef WITHOUT_DBUS */
+#else /* #ifdef WITH_DBUS */
 
 void run_cowsay_daemon(bool debug, int argc, char **argv)
 {
@@ -259,4 +259,4 @@ void run_cowsay_daemon(bool debug, int argc, char **argv)
    exit(EXIT_FAILURE);
 }
 
-#endif /* #ifndef WITHOUT_DBUS */
+#endif /* #ifdef WITH_DBUS */
