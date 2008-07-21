@@ -26,12 +26,11 @@ AC_CHECK_FUNCS([strtol])
 modules="gtk+-2.0 gdk-pixbuf-2.0"
 xcowsayd_modules="$modules dbus-glib-1 gthread-2.0"
 AC_ARG_ENABLE(dbus,
-        [AS_HELP_STRING([--disable-dbus], [Do not build DBus daemon.])],
-        [if test "$enableval" != "no" ; then
+        [AS_HELP_STRING([--enable-dbus], [Build the DBus daemon.])],
+        [if test "$enableval" = "yes" ; then
            modules="$xcowsayd_modules"
          fi
-         CFLAGS="$CFLAGS -DWITHOUT_DBUS"],
-        [modules="$xcowsayd_modules"])
+         CFLAGS="$CFLAGS -DWITH_DBUS"])
 
 PKG_CHECK_MODULES(XCOWSAY, $modules)
 

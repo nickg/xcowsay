@@ -23,7 +23,7 @@
 #include <gtk/gtk.h>
 #include <gtk/gtkwindow.h>
 
-#ifndef WITHOUT_DBUS
+#ifdef WITH_DBUS
 #include <dbus/dbus-glib-bindings.h>
 #define XCOWSAY_PATH "/uk/me/doof/Cowsay"
 #define XCOWSAY_NAMESPACE "uk.me.doof.Cowsay"
@@ -136,14 +136,6 @@ void cowsay_init(int *argc, char ***argv)
    xcowsay.cow_pixbuf = load_cow();
 }
 
-static char *copy_string(const char *s)
-{
-   char *copy = malloc(strlen(s)+1);
-   g_assert(copy);
-   strcpy(copy, s);
-   return copy;
-}
-
 static int count_words(const char *s)
 {
    bool last_was_space = false;
@@ -161,7 +153,7 @@ static int count_words(const char *s)
 
 static void normal_setup(const char *text, bool debug)
 {
-   char *text_copy = copy_string(text);
+   char *text_copy = strdup(text);
    
    // Trim any trailing newline
    size_t len = strlen(text_copy);
@@ -265,7 +257,7 @@ void display_cow(bool debug, const char *text, bool run_main, cowmode_t mode)
    xcowsay.bubble_pixbuf = NULL;
 }
 
-#ifdef WITHOUT_DBUS
+#ifndef WITH_DBUS
 
 bool try_dbus(bool debug, const char *text, cowmode_t mode)
 {
@@ -305,7 +297,7 @@ bool try_dbus(bool debug, const char *text, cowmode_t mode)
    return true;
 }
 
-#endif /* #ifdef WITHOUT_DBUS */       
+#endif /* #ifndef WITH_DBUS */       
 
 void display_cow_or_invoke_daemon(bool debug, const char *text, cowmode_t mode)
 {
