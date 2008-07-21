@@ -12,5 +12,4 @@ EXTRA_DIST = xcowfortune
 
 localedir = $(datadir)/locale
 
-# Add -DSHOW_FPS here to show FPS in title bar
 DEFS = -DLOCALEDIR=\"$(localedir)\" -DDATADIR=\"$(pkgdatadir)\" @DEFS@
