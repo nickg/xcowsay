@@ -29,10 +29,21 @@
 
 #define LEFT_BUF       5   // Amount of pixels to leave after cow's tail
 #define TIP_WIDTH      20  // Length of the triangle bit on the speech bubble
+#define THINK_WIDTH    100 // Spaces for thinking circles
 #define CORNER_RADIUS  30  // Radius of corners on the speech bubble
 #define CORNER_DIAM    CORNER_RADIUS*2
 #define BUBBLE_BORDER  5   // Pixels to leave free around edge of bubble
 #define MIN_TIP_HEIGHT 15
+
+// These next ones control the size and position of the "thinking circles"
+// (or whatever you call them)
+#define BIG_KIRCLE_X      80
+#define BIG_KIRCLE_Y      20
+#define BIG_KIRCLE_DIAM   30
+
+#define SMALL_KIRCLE_X    20
+#define SMALL_KIRCLE_Y    50
+#define SMALL_KIRCLE_DIAM 15
 
 typedef struct {
    int width, height;
@@ -40,7 +51,9 @@ typedef struct {
    GdkGC *gc;
 } bubble_t;
 
-static void bubble_init(bubble_t *b)
+typedef enum { NORMAL, THOUGHT } bubble_style_t;
+
+static void bubble_init(bubble_t *b, bubble_style_t style)
 {
    GdkColor black, white, bright_green;
    GdkColormap *colormap;
@@ -65,7 +78,7 @@ static void bubble_init(bubble_t *b)
    b->height -= BUBBLE_BORDER;
 
    // Space between cow and bubble
-   int middle = TIP_WIDTH;
+   int middle = style == NORMAL ? TIP_WIDTH : THINK_WIDTH;
 
    // Draw the white corners
    gdk_gc_set_foreground(b->gc, &white);
@@ -93,28 +106,42 @@ static void bubble_init(bubble_t *b)
                       b->width - middle - BUBBLE_BORDER*2,
                       b->height - BUBBLE_BORDER - CORNER_DIAM);
 
-   // The points on the tip part
-   int tip_compute_offset = (b->height - BUBBLE_BORDER - CORNER_DIAM)/3;
-   int tip_offset[3] = { tip_compute_offset, tip_compute_offset, tip_compute_offset };
-   if (tip_compute_offset < MIN_TIP_HEIGHT) {
-      int new_offset = (b->height - BUBBLE_BORDER - CORNER_DIAM - MIN_TIP_HEIGHT)/2;
-      tip_offset[0] = new_offset;
-      tip_offset[1] = MIN_TIP_HEIGHT;
-      tip_offset[2] = new_offset;
+   if (style == NORMAL) {
+      // The points on the tip part
+      int tip_compute_offset = (b->height - BUBBLE_BORDER - CORNER_DIAM)/3;
+      int tip_offset[3] = { tip_compute_offset, tip_compute_offset, tip_compute_offset };
+      if (tip_compute_offset < MIN_TIP_HEIGHT) {
+         int new_offset = (b->height - BUBBLE_BORDER - CORNER_DIAM - MIN_TIP_HEIGHT)/2;
+         tip_offset[0] = new_offset;
+         tip_offset[1] = MIN_TIP_HEIGHT;
+         tip_offset[2] = new_offset;
+      }
+      
+      tip_points[0].x = middle + BUBBLE_BORDER;
+      tip_points[0].y = BUBBLE_BORDER + CORNER_RADIUS;
+      tip_points[1].x = middle + BUBBLE_BORDER;
+      tip_points[1].y = BUBBLE_BORDER + CORNER_RADIUS + tip_offset[0];
+      tip_points[2].x = BUBBLE_BORDER;
+      tip_points[2].y = BUBBLE_BORDER + CORNER_RADIUS + tip_offset[0] + tip_offset[1]/2;
+      tip_points[3].x = middle + BUBBLE_BORDER;
+      tip_points[3].y = BUBBLE_BORDER + CORNER_RADIUS + tip_offset[0] + tip_offset[1];
+      tip_points[4].x = middle + BUBBLE_BORDER;
+      tip_points[4].y = b->height - CORNER_RADIUS;
+      
+      gdk_draw_polygon(b->pixmap, b->gc, TRUE, tip_points, 5);
    }
-   
-   tip_points[0].x = middle + BUBBLE_BORDER;
-   tip_points[0].y = BUBBLE_BORDER + CORNER_RADIUS;
-   tip_points[1].x = middle + BUBBLE_BORDER;
-   tip_points[1].y = BUBBLE_BORDER + CORNER_RADIUS + tip_offset[0];
-   tip_points[2].x = BUBBLE_BORDER;
-   tip_points[2].y = BUBBLE_BORDER + CORNER_RADIUS + tip_offset[0] + tip_offset[1]/2;
-   tip_points[3].x = middle + BUBBLE_BORDER;
-   tip_points[3].y = BUBBLE_BORDER + CORNER_RADIUS + tip_offset[0] + tip_offset[1];
-   tip_points[4].x = middle + BUBBLE_BORDER;
-   tip_points[4].y = b->height - CORNER_RADIUS;
+   else {
+      // Draw two think kircles
+      gdk_draw_arc(b->pixmap, b->gc, TRUE,
+                   BIG_KIRCLE_X,
+                   BIG_KIRCLE_Y, BIG_KIRCLE_DIAM,
+                   BIG_KIRCLE_DIAM, 0, 360*64);
 
-   gdk_draw_polygon(b->pixmap, b->gc, TRUE, tip_points, 5);
+      gdk_draw_arc(b->pixmap, b->gc, TRUE,
+                   SMALL_KIRCLE_X,
+                   SMALL_KIRCLE_Y, SMALL_KIRCLE_DIAM,
+                   SMALL_KIRCLE_DIAM, 0, 360*64);
+   }
 
    // Draw the black rounded corners
    gdk_gc_set_line_attributes(b->gc, 4, GDK_LINE_SOLID,
@@ -132,8 +159,6 @@ static void bubble_init(bubble_t *b)
    gdk_draw_arc(b->pixmap, b->gc, FALSE,
                 b->width - CORNER_DIAM - BUBBLE_BORDER,
                 BUBBLE_BORDER, CORNER_DIAM, CORNER_DIAM, 0*64, 90*64);
-   
-   gdk_draw_lines(b->pixmap, b->gc, tip_points, 5);
 
    // Draw the top, bottom, and right sides (easy as they're straight!)
    gdk_draw_line(b->pixmap, b->gc,
@@ -146,11 +171,21 @@ static void bubble_init(bubble_t *b)
    gdk_draw_line(b->pixmap, b->gc,
                  BUBBLE_BORDER + middle + CORNER_RADIUS, b->height,
                  b->width - CORNER_RADIUS, b->height);
+   
+   if (style == NORMAL)
+      gdk_draw_lines(b->pixmap, b->gc, tip_points, 5);
+   else
+      gdk_draw_line(b->pixmap, b->gc,
+                    BUBBLE_BORDER + middle,
+                    CORNER_RADIUS + BUBBLE_BORDER,
+                    BUBBLE_BORDER + middle,
+                    b->height - CORNER_RADIUS);
 }
 
-static void bubble_size_from_content(bubble_t *b, int c_width, int c_height)
+static void bubble_size_from_content(bubble_t *b, bubble_style_t style,
+                                     int c_width, int c_height)
 {
-   int middle = TIP_WIDTH;
+   int middle = style == NORMAL ? TIP_WIDTH : THINK_WIDTH;
    b->width = 2*BUBBLE_BORDER + CORNER_DIAM + middle + c_width;
    b->height = BUBBLE_BORDER + CORNER_DIAM + c_height;
 }
@@ -166,9 +201,9 @@ static GdkPixbuf *bubble_tidy(bubble_t *b)
    return pixbuf;
 }
 
-static int bubble_content_left()
+static int bubble_content_left(bubble_style_t style)
 {
-   int middle = TIP_WIDTH;
+   int middle = style == NORMAL ? TIP_WIDTH : THINK_WIDTH;
    return BUBBLE_BORDER + middle + CORNER_RADIUS;
 }
 
@@ -188,15 +223,15 @@ GdkPixbuf *make_dream_bubble(const char *file, int *p_width, int *p_height)
       exit(1);
    }
    
-   bubble_size_from_content(&bubble, gdk_pixbuf_get_width(image),
+   bubble_size_from_content(&bubble, THOUGHT, gdk_pixbuf_get_width(image),
                             gdk_pixbuf_get_height(image));
    *p_width = bubble.width;
    *p_height = bubble.height;
 
-   bubble_init(&bubble);
+   bubble_init(&bubble, THOUGHT);
 
    gdk_draw_pixbuf(bubble.pixmap, bubble.gc, image, 0, 0,
-                   bubble_content_left(), bubble_content_top(),
+                   bubble_content_left(THOUGHT), bubble_content_top(),
                    -1, -1, GDK_RGB_DITHER_NONE, 0, 0);
    
    gdk_pixbuf_unref(image);
@@ -229,15 +264,15 @@ GdkPixbuf *make_text_bubble(char *text, int *p_width, int *p_height)
    pango_layout_set_text(layout, stripped, -1);
    pango_layout_get_pixel_size(layout, &text_width, &text_height);
    
-   bubble_size_from_content(&bubble, text_width, text_height);
+   bubble_size_from_content(&bubble, NORMAL, text_width, text_height);
    *p_width = bubble.width;
    *p_height = bubble.height;
    
-   bubble_init(&bubble);
+   bubble_init(&bubble, NORMAL);
    
    // Render the text
    gdk_draw_layout(bubble.pixmap, bubble.gc,
-                   bubble_content_left(), bubble_content_top(), layout);
+                   bubble_content_left(NORMAL), bubble_content_top(), layout);
 
    // Make sure to free the Pango objects
    g_object_unref(pango_context);
