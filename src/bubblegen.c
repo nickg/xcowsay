@@ -38,7 +38,7 @@
 
 // These next ones control the size and position of the "thinking circles"
 // (or whatever you call them)
-#define BIG_KIRCLE_X      40
+#define BIG_KIRCLE_X      38
 #define BIG_KIRCLE_Y      70
 #define BIG_KIRCLE_DIAM   35
 

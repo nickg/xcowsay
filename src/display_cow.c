@@ -221,6 +221,8 @@ void display_cow(bool debug, const char *text, bool run_main, cowmode_t mode)
       + xcowsay.bubble_width;
    int total_height = max(shape_height(xcowsay.cow), xcowsay.bubble_height);
 
+   int bubble_off = max((xcowsay.bubble_height - shape_height(xcowsay.cow))/2, 0);
+
    GdkScreen *screen = gdk_screen_get_default();
    int area_w = gdk_screen_get_width(screen) - total_width;
    int area_h = gdk_screen_get_height(screen) - total_height;
@@ -231,8 +233,8 @@ void display_cow(bool debug, const char *text, bool run_main, cowmode_t mode)
       area_w = 1;
    if (area_h < 1)
       area_h = 1;
-   
-   move_shape(xcowsay.cow, rand()%area_w, rand()%area_h);
+
+   move_shape(xcowsay.cow, rand()%area_w, bubble_off + rand()%area_h);
    show_shape(xcowsay.cow);
 
    xcowsay.bubble = make_shape_from_pixbuf(xcowsay.bubble_pixbuf);   
