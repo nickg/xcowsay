@@ -1,0 +1,34 @@
+     Changes since 1.0
+     =================
+
+- Added a new option --dream which displays an image instead
+  of text. 
+
+- Added a new --think mode which displays a thought bubble
+  instead of the usual speech bubble
+
+- Added new wrapper scripts xcowdream and xcowthink as 
+  shortcuts for the above.
+
+- Added a new Portuguese translation (courtesy of Vinícius 
+  Moreira de Oliveira)
+
+- Made --disable-dbus the default configure option as not 
+  many people seem to be using the daemon. Hopefully this
+  will be replaced by the GNOME applet soon anyway.
+
+- Removed the xcowat script as it was pretty useless.
+
+- You can now click on the bubble as well as the cow to close
+  the window.
+
+- Fixed a bug where the cow could appear off the left edge
+  of the screen in some circumstances. (Although this will
+  still occur if the cow and bubble are wider than the screen.)
+
+- Fixed a separate bug where the bubble could appear cut off
+  at the top of the screen.
+
+- Fixed various bugs with the daemon mode.
+
+- A few other bug fixes ;-)

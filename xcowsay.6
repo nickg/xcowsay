@@ -89,7 +89,16 @@ Font for the speech bubble text. Accepts Pango font strings. The
 corresponding config file option is
 .IR font .
 .TP
-.B "-d, --daemon"
+.BI "-d " file ", --dream=" file
+Display an image instead of text in the cow's bubble. The
+.I dream_time 
+config file option sets the numer of milliseconds to display the
+image for. The default is 10 seconds.
+.TP
+.B "--think"
+Display a thought bubble instead of a speech bubble.
+.TP
+.B "--daemon"
 Run xcowsay in daemon mode if DBus support has been enabled. See the
 description for more information.
 .TP
