@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: pt_BR\n"
 "Report-Msgid-Bugs-To: nick@cakesniffer.co.uk\n"
-"POT-Creation-Date: 2008-05-23 21:10+0100\n"
+"POT-Creation-Date: 2008-08-29 20:51+0100\n"
 "PO-Revision-Date: 2008-05-23 22:57-0300\n"
 "Last-Translator: Phantom X <megaphantomx@bol.com.br>\n"
 "Language-Team: Português do Brasil <pt@li.org>\n"
@@ -17,52 +17,65 @@ msgstr ""
 "X-Generator: KBabel 1.11.4\n"
 "Plural-Forms:  nplurals=2; plural=(n > 1);\n"
 
-#: src/display_cow.c:89
+#: src/display_cow.c:87
 #, c-format
 msgid "Failed to load cow image: %s\n"
 msgstr "Falhou ai carregar imagem da vaca: %s\n"
 
-#: src/display_cow.c:114
-msgid "Warning: Failed to parse Pango attributes\n"
-msgstr "Atenção: Falhou ao recuperar atributos do Pango\n"
+#: src/xcowsay.c:100
+msgid "Usage"
+msgstr ""
 
-#: src/xcowsay.c:94
+#: src/xcowsay.c:101
 msgid "Display a cow on your desktop with MESSAGE or standard input."
 msgstr "Exibir uma vaca no seu desktop com MENSAGEM ou entrada padrão."
 
-#: src/xcowsay.c:95
+#: src/xcowsay.c:102
+msgid "Options"
+msgstr ""
+
+#: src/xcowsay.c:103
 msgid "Display this message and exit."
 msgstr "Exibir esta mensagem e sair."
 
-#: src/xcowsay.c:96
+#: src/xcowsay.c:104
 msgid "Print version information."
 msgstr "Imprimir na tela informação sobre versão."
 
-#: src/xcowsay.c:97
+#: src/xcowsay.c:105
 msgid "Number of seconds to display message for"
 msgstr "Número de segundos para exibir mensagem"
 
-#: src/xcowsay.c:98
+#: src/xcowsay.c:106
 msgid "Number of milliseconds to delay per word."
 msgstr "Número de milisegundos de atraso por palavra."
 
-#: src/xcowsay.c:99
+#: src/xcowsay.c:107
 msgid "Set message font (Pango format)."
 msgstr "Configurar fonte da mensagem (formato Pango)."
 
-#: src/xcowsay.c:100
+#: src/xcowsay.c:108
+#, fuzzy
+msgid "Display an image instead of text."
+msgstr "Exibir esta mensagem e sair."
+
+#: src/xcowsay.c:109
+msgid "Display a thought bubble rather than a speech bubble."
+msgstr ""
+
+#: src/xcowsay.c:110
 msgid "Run xcowsay in daemon mode."
 msgstr "Executar xcowsay no modo daemon."
 
-#: src/xcowsay.c:101
+#: src/xcowsay.c:111
 msgid "Size of the cow (small, med, large)."
 msgstr "Tamanho da vaca (small, med, large)."
 
-#: src/xcowsay.c:102
+#: src/xcowsay.c:112
 msgid "Keep daemon attached to terminal."
 msgstr "Manter o daemon anexado ao terminal."
 
-#: src/xcowsay.c:103
+#: src/xcowsay.c:113
 msgid ""
 "Default values for these options can be specified in the xcowsay config\n"
 "file. See the man page for more information."
@@ -70,7 +83,7 @@ msgstr ""
 "Valores padrão para estas opções podem ser especificados no arquivo\n"
 "de configuração do xcowsay. Veja a página de manual para mais informação."
 
-#: src/xcowsay.c:105
+#: src/xcowsay.c:115
 msgid ""
 "If the display_time option is not set the display time will be calcuated\n"
 "from the reading_speed parameter multiplied by the word count."
@@ -78,11 +91,14 @@ msgstr ""
 "Se a opção display_time não estiver configurada, o tempo de exibição será\n"
 "calculado do parâmetro reading_speed multiplicado pelo número de palavras."
 
-#: src/xcowsay.c:108
+#: src/xcowsay.c:118
 msgid "Report bugs to nick@cakesniffer.co.uk"
 msgstr "Reportar bugs para nick@cakesniffer.co.uk"
 
-#: src/xcowsay.c:134
+#: src/xcowsay.c:144
 #, c-format
 msgid "Error: %s is not a valid integer\n"
 msgstr "Erro: %s não é um inteiro válido\n"
+
+#~ msgid "Warning: Failed to parse Pango attributes\n"
+#~ msgstr "Atenção: Falhou ao recuperar atributos do Pango\n"

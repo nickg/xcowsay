@@ -1,3 +1,9 @@
+xcowsay (1.1rc1) unstable; urgency=low
+
+  * Beta release of xcowsay 1.1
+
+ -- Nick Gasson <nick@cakesniffer.co.uk>  Fri, 29 Aug 2008 21:04:00 +0000
+
 xcowsay (1.0) unstable; urgency=low
 
   * Finished xcowsay 1.0

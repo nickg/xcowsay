@@ -3,15 +3,13 @@ Section: games
 Priority: optional
 Maintainer: Nick Gasson <nick@cakesniffer.co.uk>
 Build-Depends: debhelper (>= 5), autotools-dev,
-               libgtk2.0-dev, libdbus-glib-1-dev,
-               libdbus-1-dev, libglib2.0-dev
+               libgtk2.0-dev, libglib2.0-dev
 Standards-Version: 3.7.2
 
 Package: xcowsay
 Architecture: any
 Depends: ${shlibs:Depends}, ${misc:Depends}, 
-         libgtk2.0-0, libdbus-glib-1-2,
-         libdbus-1-3, libglib2.0-0
+         libgtk2.0-0, libglib2.0-0
 Description: Graphical configurable talking cow
  A graphical configurable talking cow. It's a GTK+ version of the 
  classic cowsay Perl script. It displays a cute pop-up cow on your 
