@@ -29,7 +29,7 @@
 
 #define LEFT_BUF       5   // Amount of pixels to leave after cow's tail
 #define TIP_WIDTH      20  // Length of the triangle bit on the speech bubble
-#define THINK_WIDTH    100 // Spaces for thinking circles
+#define THINK_WIDTH    80 // Spaces for thinking circles
 #define CORNER_RADIUS  30  // Radius of corners on the speech bubble
 #define CORNER_DIAM    CORNER_RADIUS*2
 #define BUBBLE_BORDER  5   // Pixels to leave free around edge of bubble
@@ -37,13 +37,13 @@
 
 // These next ones control the size and position of the "thinking circles"
 // (or whatever you call them)
-#define BIG_KIRCLE_X      80
-#define BIG_KIRCLE_Y      20
-#define BIG_KIRCLE_DIAM   30
+#define BIG_KIRCLE_X      40
+#define BIG_KIRCLE_Y      70
+#define BIG_KIRCLE_DIAM   35
 
-#define SMALL_KIRCLE_X    20
-#define SMALL_KIRCLE_Y    50
-#define SMALL_KIRCLE_DIAM 15
+#define SMALL_KIRCLE_X    5
+#define SMALL_KIRCLE_Y    40
+#define SMALL_KIRCLE_DIAM 20
 
 typedef struct {
    int width, height;
@@ -134,12 +134,25 @@ static void bubble_init(bubble_t *b, bubble_style_t style)
       // Draw two think kircles
       gdk_draw_arc(b->pixmap, b->gc, TRUE,
                    BIG_KIRCLE_X,
-                   BIG_KIRCLE_Y, BIG_KIRCLE_DIAM,
+                   b->height/2 - BIG_KIRCLE_Y, BIG_KIRCLE_DIAM,
                    BIG_KIRCLE_DIAM, 0, 360*64);
 
       gdk_draw_arc(b->pixmap, b->gc, TRUE,
                    SMALL_KIRCLE_X,
-                   SMALL_KIRCLE_Y, SMALL_KIRCLE_DIAM,
+                   b->height/2 - SMALL_KIRCLE_Y, SMALL_KIRCLE_DIAM,
+                   SMALL_KIRCLE_DIAM, 0, 360*64);
+      
+      gdk_gc_set_line_attributes(b->gc, 4, GDK_LINE_SOLID,
+                                 GDK_CAP_ROUND, GDK_JOIN_ROUND);
+      gdk_gc_set_foreground(b->gc, &black);
+      gdk_draw_arc(b->pixmap, b->gc, FALSE,
+                   BIG_KIRCLE_X,
+                   b->height/2 - BIG_KIRCLE_Y, BIG_KIRCLE_DIAM,
+                   BIG_KIRCLE_DIAM, 0, 360*64);
+
+      gdk_draw_arc(b->pixmap, b->gc, FALSE,
+                   SMALL_KIRCLE_X,
+                   b->height/2 - SMALL_KIRCLE_Y, SMALL_KIRCLE_DIAM,
                    SMALL_KIRCLE_DIAM, 0, 360*64);
    }
 
