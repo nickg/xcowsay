@@ -31,6 +31,7 @@
 typedef enum {
    COWMODE_NORMAL,
    COWMODE_DREAM,
+   COWMODE_THINK,
 } cowmode_t;
 
 // Show a cow with the given string and clean up afterwards

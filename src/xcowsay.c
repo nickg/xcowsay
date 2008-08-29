@@ -47,6 +47,7 @@
 
 static int daemon_flag = 0;
 static int debug = 0;
+static int think_flag = 0;
 
 static struct option long_options[] = {
    {"help", no_argument, 0, 'h'},
@@ -54,6 +55,7 @@ static struct option long_options[] = {
    {"time", required_argument, 0, 't'},
    {"font", required_argument, 0, 'f'},
    {"dream", required_argument, 0, 'd'},
+   {"think", no_argument, &think_flag, 1},
    {"cow-size", required_argument, 0, 'c'},
    {"reading-speed", required_argument, 0, 'r'},
    {"daemon", no_argument, &daemon_flag, 1},
@@ -61,7 +63,7 @@ static struct option long_options[] = {
    {0, 0, 0, 0}
 };
 
-static void read_from_stdin(void)
+static void read_from_stdin(cowmode_t mode)
 {
    char *data = malloc(MAX_STDIN);
    size_t n = fread(data, 1, MAX_STDIN, stdin);
@@ -71,7 +73,7 @@ static void read_from_stdin(void)
    }
    data[n] = '\0';
 
-   display_cow_or_invoke_daemon(debug, data, COWMODE_NORMAL);
+   display_cow_or_invoke_daemon(debug, data, mode);
    free(data);
 }
 
@@ -87,6 +89,7 @@ static void usage()
        " -r, --reading-speed=N\t%s\n"
        " -f, --font=FONT\t%s\n"
        " -d, --dream=FILE\t%s\n"
+       "     --think\t\t%s\n"
        "     --daemon\t\t%s\n"
        "     --cow-size=SIZE\t%s\n"
        "     --debug\t\t%s\n\n"
@@ -102,6 +105,7 @@ static void usage()
        i18n("Number of milliseconds to delay per word."),
        i18n("Set message font (Pango format)."),
        i18n("Display an image instead of text."),
+       i18n("Display a thought bubble rather than a speech bubble."),
        i18n("Run xcowsay in daemon mode."),
        i18n("Size of the cow (small, med, large)."),
        i18n("Keep daemon attached to terminal."),
@@ -225,6 +229,8 @@ int main(int argc, char **argv)
 
    srand((unsigned)time(NULL));
 
+   cowmode_t mode = think_flag ? COWMODE_THINK : COWMODE_NORMAL;
+
    if (daemon_flag) {
       run_cowsay_daemon(debug, argc, argv);
    }
@@ -237,11 +243,11 @@ int main(int argc, char **argv)
          display_cow_or_invoke_daemon(debug, dream_file, COWMODE_DREAM);
       }
       else if (optind == argc) {
-         read_from_stdin();
+         read_from_stdin(mode);
       }
       else {
          char *str = cat_from_index(optind, argc, argv);
-         display_cow_or_invoke_daemon(debug, str, COWMODE_NORMAL);
+         display_cow_or_invoke_daemon(debug, str, mode);
          free(str);
       }
    }

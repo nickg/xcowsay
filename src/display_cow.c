@@ -34,7 +34,7 @@
 #include "settings.h"
 #include "i18n.h"
 
-GdkPixbuf *make_text_bubble(char *text, int *p_width, int *p_height);
+GdkPixbuf *make_text_bubble(char *text, int *p_width, int *p_height, cowmode_t mode);
 GdkPixbuf *make_dream_bubble(const char *file, int *p_width, int *p_height);
 
 #define TICK_TIMEOUT   100
@@ -151,7 +151,7 @@ static int count_words(const char *s)
    return words;
 }
 
-static void normal_setup(const char *text, bool debug)
+static void normal_setup(const char *text, bool debug, cowmode_t mode)
 {
    char *text_copy = strdup(text);
    
@@ -184,7 +184,7 @@ static void normal_setup(const char *text, bool debug)
    }
    
    xcowsay.bubble_pixbuf = make_text_bubble(text_copy, &xcowsay.bubble_width,
-                                            &xcowsay.bubble_height);
+                                            &xcowsay.bubble_height, mode);
    free(text_copy);
 }
 
@@ -203,7 +203,8 @@ void display_cow(bool debug, const char *text, bool run_main, cowmode_t mode)
 {
    switch (mode) {
    case COWMODE_NORMAL:
-      normal_setup(text, debug);
+   case COWMODE_THINK:
+      normal_setup(text, debug, mode);
       break;
    case COWMODE_DREAM:
       dream_setup(text, debug);

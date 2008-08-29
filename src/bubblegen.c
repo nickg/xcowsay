@@ -24,6 +24,7 @@
 #include <gdk-pixbuf/gdk-pixbuf.h>
 
 #include "floating_shape.h"
+#include "display_cow.h"
 #include "settings.h"
 #include "i18n.h"
 
@@ -252,7 +253,7 @@ GdkPixbuf *make_dream_bubble(const char *file, int *p_width, int *p_height)
    return bubble_tidy(&bubble);
 }
 
-GdkPixbuf *make_text_bubble(char *text, int *p_width, int *p_height)
+GdkPixbuf *make_text_bubble(char *text, int *p_width, int *p_height, cowmode_t mode)
 {
    bubble_t bubble;
    int text_width, text_height;
@@ -276,12 +277,14 @@ GdkPixbuf *make_text_bubble(char *text, int *p_width, int *p_height)
    pango_layout_set_font_description(layout, font);
    pango_layout_set_text(layout, stripped, -1);
    pango_layout_get_pixel_size(layout, &text_width, &text_height);
+
+   bubble_style_t style = mode == COWMODE_NORMAL ? NORMAL : THOUGHT;   
    
-   bubble_size_from_content(&bubble, NORMAL, text_width, text_height);
+   bubble_size_from_content(&bubble, style, text_width, text_height);
    *p_width = bubble.width;
    *p_height = bubble.height;
    
-   bubble_init(&bubble, NORMAL);
+   bubble_init(&bubble, style);
    
    // Render the text
    gdk_draw_layout(bubble.pixmap, bubble.gc,
