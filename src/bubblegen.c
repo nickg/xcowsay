@@ -288,7 +288,7 @@ GdkPixbuf *make_text_bubble(char *text, int *p_width, int *p_height, cowmode_t m
    
    // Render the text
    gdk_draw_layout(bubble.pixmap, bubble.gc,
-                   bubble_content_left(NORMAL), bubble_content_top(), layout);
+                   bubble_content_left(mode), bubble_content_top(), layout);
 
    // Make sure to free the Pango objects
    g_object_unref(pango_context);
