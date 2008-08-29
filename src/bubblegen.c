@@ -46,6 +46,9 @@
 #define SMALL_KIRCLE_Y    40
 #define SMALL_KIRCLE_DIAM 20
 
+// Min distance from top of the big kircle to the top of the bubble
+#define KIRCLE_TOP_MIN  10
+
 typedef struct {
    int width, height;
    GdkPixmap *pixmap;
@@ -132,15 +135,25 @@ static void bubble_init(bubble_t *b, bubble_style_t style)
       gdk_draw_polygon(b->pixmap, b->gc, TRUE, tip_points, 5);
    }
    else {
+      // Incrementally move the top kircle down so it's within the
+      // bubble's border
+      int big_y = BIG_KIRCLE_Y;
+      int small_y = SMALL_KIRCLE_Y;
+      
+      while (big_y + KIRCLE_TOP_MIN > b->height/2) {
+         big_y /= 2;
+         small_y /= 2;
+      }
+      
       // Draw two think kircles
       gdk_draw_arc(b->pixmap, b->gc, TRUE,
                    BIG_KIRCLE_X,
-                   b->height/2 - BIG_KIRCLE_Y, BIG_KIRCLE_DIAM,
+                   b->height/2 - big_y, BIG_KIRCLE_DIAM,
                    BIG_KIRCLE_DIAM, 0, 360*64);
 
       gdk_draw_arc(b->pixmap, b->gc, TRUE,
                    SMALL_KIRCLE_X,
-                   b->height/2 - SMALL_KIRCLE_Y, SMALL_KIRCLE_DIAM,
+                   b->height/2 - small_y, SMALL_KIRCLE_DIAM,
                    SMALL_KIRCLE_DIAM, 0, 360*64);
       
       gdk_gc_set_line_attributes(b->gc, 4, GDK_LINE_SOLID,
@@ -148,12 +161,12 @@ static void bubble_init(bubble_t *b, bubble_style_t style)
       gdk_gc_set_foreground(b->gc, &black);
       gdk_draw_arc(b->pixmap, b->gc, FALSE,
                    BIG_KIRCLE_X,
-                   b->height/2 - BIG_KIRCLE_Y, BIG_KIRCLE_DIAM,
+                   b->height/2 - big_y, BIG_KIRCLE_DIAM,
                    BIG_KIRCLE_DIAM, 0, 360*64);
 
       gdk_draw_arc(b->pixmap, b->gc, FALSE,
                    SMALL_KIRCLE_X,
-                   b->height/2 - SMALL_KIRCLE_Y, SMALL_KIRCLE_DIAM,
+                   b->height/2 - small_y, SMALL_KIRCLE_DIAM,
                    SMALL_KIRCLE_DIAM, 0, 360*64);
    }
 
