@@ -42,6 +42,7 @@
 #define DEF_READING_SPEED 250   // Human average is apparently 200-250 WPM (=5 WPS)
 #define DEF_COW_SIZE      "med"
 #define DEF_IMAGE_BASE    "cow"
+#define DEF_DREAM_TIME    10000
 
 #define MAX_STDIN 4096   // Maximum chars to read from stdin
 
@@ -181,6 +182,7 @@ int main(int argc, char **argv)
    add_int_option("min_display_time", DEF_MIN_TIME);
    add_int_option("max_display_time", DEF_MAX_TIME);
    add_int_option("reading_speed", DEF_READING_SPEED);
+   add_int_option("dream_time", DEF_DREAM_TIME);
    add_string_option("font", DEF_FONT);
    add_string_option("cow_size", DEF_COW_SIZE);
    add_string_option("image_base", DEF_IMAGE_BASE);

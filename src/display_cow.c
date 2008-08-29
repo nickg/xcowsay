@@ -192,8 +192,9 @@ static void dream_setup(const char *file, bool debug)
 {
    debug_msg("Dreaming file: %s\n", file);
 
-   // TODO: calculate display time
-   xcowsay.display_time = 10000;
+   xcowsay.display_time = get_int_option("display_time");
+   if (xcowsay.display_time < 0)
+      xcowsay.display_time = get_int_option("dream_time");
 
    xcowsay.bubble_pixbuf = make_dream_bubble(file, &xcowsay.bubble_width,
                                              &xcowsay.bubble_height);   
