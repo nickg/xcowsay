@@ -1,5 +1,5 @@
 bin_PROGRAMS = xcowsay
-bin_SCRIPTS = xcowfortune xcowdream
+bin_SCRIPTS = xcowfortune xcowdream xcowthink
 
 AM_CFLAGS = $(XCOWSAY_CFLAGS) 
 LDADD = $(XCOWSAY_LIBS)
