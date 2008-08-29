@@ -57,6 +57,8 @@ typedef struct {
 
 static xcowsay_t xcowsay;
 
+static gboolean tick(gpointer data);
+
 static cowstate_t next_state(cowstate_t state)
 {
    switch (state) {
@@ -88,6 +90,27 @@ static GdkPixbuf *load_cow()
    return pixbuf;
 }
 
+static gboolean cow_clicked(GtkWidget *widget, GdkEventButton *event, gpointer data)
+{
+   if (csDisplay == xcowsay.state) {
+      xcowsay.transition_timeout = 0;
+      tick(NULL);
+   }
+   return true;
+}
+
+/*
+ * Set up a shape to call cow_clicked when it's clicked.
+ */
+static void close_when_clicked(float_shape_t *shape)
+{
+   GdkEventMask events = gdk_window_get_events(shape_window(shape)->window);
+   events |= GDK_BUTTON_PRESS_MASK;
+   gdk_window_set_events(shape_window(shape)->window, events);
+   g_signal_connect(G_OBJECT(shape_window(shape)), "button-press-event",
+                    G_CALLBACK(cow_clicked), NULL);
+}
+
 static gboolean tick(gpointer data)
 {
    xcowsay.transition_timeout -= TICK_TIMEOUT;
@@ -99,6 +122,7 @@ static gboolean tick(gpointer data)
          exit(EXIT_FAILURE);
       case csDisplay:
          show_shape(xcowsay.bubble);
+         close_when_clicked(xcowsay.bubble);
          xcowsay.transition_timeout = xcowsay.display_time;
          break;
       case csLeadOut:
@@ -115,15 +139,6 @@ static gboolean tick(gpointer data)
    }
    
    return (xcowsay.state != csCleanup);
-}
-
-static gboolean cow_clicked(GtkWidget *widget, GdkEventButton *event, gpointer data)
-{
-   if (csDisplay == xcowsay.state) {
-      xcowsay.transition_timeout = 0;
-      tick(NULL);
-   }
-   return true;
 }
 
 void cowsay_init(int *argc, char ***argv)
@@ -248,12 +263,8 @@ void display_cow(bool debug, const char *text, bool run_main, cowmode_t mode)
    xcowsay.transition_timeout = get_int_option("lead_in_time");
    g_timeout_add(TICK_TIMEOUT, tick, NULL);
 
-   GdkEventMask events = gdk_window_get_events(shape_window(xcowsay.cow)->window);
-   events |= GDK_BUTTON_PRESS_MASK;
-   gdk_window_set_events(shape_window(xcowsay.cow)->window, events);
-   g_signal_connect(G_OBJECT(shape_window(xcowsay.cow)), "button-press-event",
-                    G_CALLBACK(cow_clicked), NULL);
-
+   close_when_clicked(xcowsay.cow);
+   
    if (run_main)
       gtk_main();
 
