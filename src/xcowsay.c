@@ -36,10 +36,10 @@
 #define DEF_LEAD_IN_TIME  250
 #define DEF_DISPLAY_TIME  CALCULATE_DISPLAY_TIME
 #define DEF_LEAD_OUT_TIME LEAD_IN_TIME
-#define DEF_MIN_TIME      2000
+#define DEF_MIN_TIME      3000
 #define DEF_MAX_TIME      30000
 #define DEF_FONT          "Bitstream Vera Sans 14"
-#define DEF_READING_SPEED 250   // Human average is apparently 200-250 WPM (=5 WPS)
+#define DEF_READING_SPEED 400   // Human average is apparently 200-250 WPM (=5 WPS)
 #define DEF_COW_SIZE      "med"
 #define DEF_IMAGE_BASE    "cow"
 #define DEF_DREAM_TIME    10000
