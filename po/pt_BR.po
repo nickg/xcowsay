@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: pt_BR\n"
 "Report-Msgid-Bugs-To: nick@cakesniffer.co.uk\n"
 "POT-Creation-Date: 2008-08-30 10:33+0100\n"
-"PO-Revision-Date: 2008-05-23 22:57-0300\n"
+"PO-Revision-Date: 2008-08-30 16:39-0300\n"
 "Last-Translator: Phantom X <megaphantomx@bol.com.br>\n"
 "Language-Team: Português do Brasil <pt@li.org>\n"
 "MIME-Version: 1.0\n"
@@ -20,11 +20,11 @@ msgstr ""
 #: src/display_cow.c:87
 #, c-format
 msgid "Failed to load cow image: %s\n"
-msgstr "Falhou ai carregar imagem da vaca: %s\n"
+msgstr "Falha ao carregar imagem da vaca: %s\n"
 
 #: src/xcowsay.c:100
 msgid "Usage"
-msgstr ""
+msgstr "Uso"
 
 #: src/xcowsay.c:101
 msgid "Display a cow on your desktop with MESSAGE or standard input."
@@ -32,7 +32,7 @@ msgstr "Exibir uma vaca no seu desktop com MENSAGEM ou entrada padrão."
 
 #: src/xcowsay.c:102
 msgid "Options"
-msgstr ""
+msgstr "Opções"
 
 #: src/xcowsay.c:103
 msgid "Display this message and exit."
@@ -55,13 +55,12 @@ msgid "Set message font (Pango format)."
 msgstr "Configurar fonte da mensagem (formato Pango)."
 
 #: src/xcowsay.c:108
-#, fuzzy
 msgid "Display an image instead of text."
-msgstr "Exibir esta mensagem e sair."
+msgstr "Exibir uma imagem em vez de texto."
 
 #: src/xcowsay.c:109
 msgid "Display a thought bubble rather than a speech bubble."
-msgstr ""
+msgstr "Exibir um balão de pensamento em vez de um balão de fala."
 
 #: src/xcowsay.c:110
 msgid "Run xcowsay in daemon mode."
@@ -92,14 +91,10 @@ msgstr ""
 "calculado do parâmetro reading_speed multiplicado pelo número de palavras."
 
 #: src/xcowsay.c:118
-#, fuzzy
 msgid "Report bugs to nick@nickg.me.uk"
-msgstr "Reportar bugs para nick@cakesniffer.co.uk"
+msgstr "Reportar bugs para nick@nickg.me.uk"
 
 #: src/xcowsay.c:144
 #, c-format
 msgid "Error: %s is not a valid integer\n"
 msgstr "Erro: %s não é um inteiro válido\n"
-
-#~ msgid "Warning: Failed to parse Pango attributes\n"
-#~ msgstr "Atenção: Falhou ao recuperar atributos do Pango\n"
