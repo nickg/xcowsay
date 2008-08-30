@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: pt_BR\n"
 "Report-Msgid-Bugs-To: nick@cakesniffer.co.uk\n"
-"POT-Creation-Date: 2008-08-29 20:51+0100\n"
+"POT-Creation-Date: 2008-08-30 10:33+0100\n"
 "PO-Revision-Date: 2008-05-23 22:57-0300\n"
 "Last-Translator: Phantom X <megaphantomx@bol.com.br>\n"
 "Language-Team: Português do Brasil <pt@li.org>\n"
@@ -92,7 +92,8 @@ msgstr ""
 "calculado do parâmetro reading_speed multiplicado pelo número de palavras."
 
 #: src/xcowsay.c:118
-msgid "Report bugs to nick@cakesniffer.co.uk"
+#, fuzzy
+msgid "Report bugs to nick@nickg.me.uk"
 msgstr "Reportar bugs para nick@cakesniffer.co.uk"
 
 #: src/xcowsay.c:144

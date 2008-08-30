@@ -5,7 +5,7 @@ It was downloaded from: http://www.nickg.me.uk/files/xcowsay-0.6.tar.gz
 
 Upstream Author(s): 
 
-    Nick Gasson <nick@cakesniffer.co.uk>
+    Nick Gasson <nick@nickg.me.uk>
 
 Copyright: 
 
@@ -29,5 +29,5 @@ License:
     On Debian systems, the complete text of the GNU General Public
     License can be found in the file `/usr/share/common-licenses/GPL-3'.
 
-The Debian packaging is (C) 2008, Nick Gasson <nick@cakesniffer.co.uk> and
+The Debian packaging is (C) 2008, Nick Gasson <nick@nickg.me.uk> and
 is licensed under the GPL, see `/usr/share/common-licenses/GPL'.

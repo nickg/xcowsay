@@ -115,7 +115,7 @@ static void usage()
        i18n("If the display_time option is not set the display time will "
             "be calcuated\nfrom the reading_speed parameter multiplied by "
             "the word count."),
-       i18n("Report bugs to nick@cakesniffer.co.uk")
+       i18n("Report bugs to nick@nickg.me.uk")
        );
 }
 

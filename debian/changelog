@@ -1,3 +1,9 @@
+xcowsay (1.1) unstable; urgency=low
+   
+  * Initial release of xcowsay 1.1
+
+ -- Nick Gasson <nick@nickg.me.uk>  Sat, 30 Aug 2008 10:35:00 +0000
+
 xcowsay (1.1rc1) unstable; urgency=low
 
   * Beta release of xcowsay 1.1
