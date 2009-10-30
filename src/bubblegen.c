@@ -62,8 +62,11 @@ static void bubble_init(bubble_t *b, bubble_style_t style)
    GdkColor black, white, bright_green;
    GdkColormap *colormap;
    GdkPoint tip_points[5];
-   
-   b->pixmap = gdk_pixmap_new(NULL, b->width, b->height, 24);
+   GdkVisual *root_visual;
+
+   root_visual = gdk_visual_get_system();
+   b->pixmap = gdk_pixmap_new(NULL, b->width, b->height, root_visual->depth);
+   g_assert(b->pixmap);
    b->gc = gdk_gc_new(b->pixmap);
    
    colormap = gdk_colormap_get_system();
