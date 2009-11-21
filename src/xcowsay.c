@@ -43,6 +43,7 @@
 #define DEF_COW_SIZE      "med"
 #define DEF_IMAGE_BASE    "cow"
 #define DEF_DREAM_TIME    10000
+#define DEF_ALT_IMAGE     ""
 
 #define MAX_STDIN 4096   // Maximum chars to read from stdin
 
@@ -60,6 +61,7 @@ static struct option long_options[] = {
    {"cow-size", required_argument, 0, 'c'},
    {"reading-speed", required_argument, 0, 'r'},
    {"daemon", no_argument, &daemon_flag, 1},
+   {"image", required_argument, 0, 'i'},
    {"debug", no_argument, &debug, 1},
    {0, 0, 0, 0}
 };
@@ -80,49 +82,51 @@ static void read_from_stdin(cowmode_t mode)
 
 static void usage()
 {
-   printf
-      ("%s: xcowsay [OPTION]... [MESSAGE]...\n"
-       "%s\n\n"
-       "%s:\n"
-       " -h, --help\t\t%s\n"
-       " -v, --version\t\t%s\n"
-       " -t, --time=SECONDS\t%s\n"
-       " -r, --reading-speed=N\t%s\n"
-       " -f, --font=FONT\t%s\n"
-       " -d, --dream=FILE\t%s\n"
-       "     --think\t\t%s\n"
-       "     --daemon\t\t%s\n"
-       "     --cow-size=SIZE\t%s\n"
-       "     --debug\t\t%s\n\n"
-       "%s\n\n"
-       "%s\n\n"
-       "%s\n",
-       i18n("Usage"),
-       i18n("Display a cow on your desktop with MESSAGE or standard input."),
-       i18n("Options"),
-       i18n("Display this message and exit."),
-       i18n("Print version information."),
-       i18n("Number of seconds to display message for"),
-       i18n("Number of milliseconds to delay per word."),
-       i18n("Set message font (Pango format)."),
-       i18n("Display an image instead of text."),
-       i18n("Display a thought bubble rather than a speech bubble."),
-       i18n("Run xcowsay in daemon mode."),
-       i18n("Size of the cow (small, med, large)."),
-       i18n("Keep daemon attached to terminal."),
-       i18n("Default values for these options can be specified in the "
-            "xcowsay config\nfile. See the man page for more information."),
-       i18n("If the display_time option is not set the display time will "
-            "be calcuated\nfrom the reading_speed parameter multiplied by "
-            "the word count."),
-       i18n("Report bugs to nick@nickg.me.uk")
-       );
+   printf(
+      "%s: xcowsay [OPTION]... [MESSAGE]...\n"
+      "%s\n\n"
+      "%s:\n"
+      " -h, --help\t\t%s\n"
+      " -v, --version\t\t%s\n"
+      " -t, --time=SECONDS\t%s\n"
+      " -r, --reading-speed=N\t%s\n"
+      " -f, --font=FONT\t%s\n"
+      " -d, --dream=FILE\t%s\n"
+      "     --think\t\t%s\n"
+      "     --daemon\t\t%s\n"
+      "     --cow-size=SIZE\t%s\n"
+      "     --image=FILE\t%s\n"
+      "     --debug\t\t%s\n\n"
+      "%s\n\n"
+      "%s\n\n"
+      "%s\n",
+      i18n("Usage"),
+      i18n("Display a cow on your desktop with MESSAGE or standard input."),
+      i18n("Options"),
+      i18n("Display this message and exit."),
+      i18n("Print version information."),
+      i18n("Number of seconds to display message for"),
+      i18n("Number of milliseconds to delay per word."),
+      i18n("Set message font (Pango format)."),
+      i18n("Display an image instead of text."),
+      i18n("Display a thought bubble rather than a speech bubble."),
+      i18n("Run xcowsay in daemon mode."),
+      i18n("Size of the cow (small, med, large)."),
+      i18n("Use a different image instead of the cow."),
+      i18n("Keep daemon attached to terminal."),
+      i18n("Default values for these options can be specified in the "
+         "xcowsay config\nfile.  See the man page for more information."),
+      i18n("If the display_time option is not set the display time will "
+         "be calcuated\nfrom the reading_speed parameter multiplied by "
+         "the word count.  Set the\ndisplay time to zero to display the "
+         " cow indefinitely until it is clicked\non."),
+      i18n("Report bugs to nick@nickg.me.uk"));
 }
 
 static void version()
 {
    static const char *copy =
-      "Copyright (C) 2008-2009 Nick Gasson\n"
+      "Copyright (C) 2008-2009  Nick Gasson\n"
       "This program comes with ABSOLUTELY NO WARRANTY. This is free software, and\n"
       "you are welcome to redistribute it under certain conditions. See the GNU\n"
       "General Public Licence for details.";
@@ -186,6 +190,7 @@ int main(int argc, char **argv)
    add_string_option("font", DEF_FONT);
    add_string_option("cow_size", DEF_COW_SIZE);
    add_string_option("image_base", DEF_IMAGE_BASE);
+   add_string_option("alt_image", DEF_ALT_IMAGE);
    
    parse_config_file();
    
@@ -217,7 +222,10 @@ int main(int argc, char **argv)
          break;
       case 'f':
          set_string_option("font", optarg);
-         break;         
+         break;
+      case 'i':
+         set_string_option("alt_image", optarg);
+         break;
       case '?':
          // getopt_long already printed an error message
          failure = 1;

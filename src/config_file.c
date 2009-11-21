@@ -91,7 +91,8 @@ static token_t next_token(FILE *f, strbuf_t* sbuf, int *lineno, jmp_buf *escape)
             return tEQUALS;
          else if ('#' == next)
             skip_to_eol = true;
-         else if (isalpha(next) || isdigit(next) || '_' == next)
+         else if (isalpha(next) || isdigit(next) || '_' == next
+            || '/' == next || '.' == next || '-' == next)
             push_char(sbuf, next);
          else {
             fprintf(stderr, "Illegal character in xcowsayrc: %c\n", next);

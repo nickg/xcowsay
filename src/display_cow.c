@@ -74,19 +74,26 @@ static cowstate_t next_state(cowstate_t state)
    }
 }
 
-// TODO: Change this to use the actual max path length...
-#define MAX_COW_PATH 256
 static GdkPixbuf *load_cow()
 {
-   char cow_path[MAX_COW_PATH];
-   snprintf(cow_path, MAX_COW_PATH, "%s/%s_%s.png", DATADIR,
-            get_string_option("image_base"), get_string_option("cow_size"));
+   char *cow_path;
+
+   const char *alt_image = get_string_option("alt_image");
+
+   if (*alt_image)
+      cow_path = strdup(alt_image);
+   else
+      asprintf(&cow_path, "%s/%s_%s.png", DATADIR,
+         get_string_option("image_base"),
+         get_string_option("cow_size"));
    
    GdkPixbuf *pixbuf = gdk_pixbuf_new_from_file(cow_path, NULL);
    if (NULL == pixbuf) {
       fprintf(stderr, i18n("Failed to load cow image: %s\n"), cow_path);
       exit(EXIT_FAILURE);
    }
+
+   free(cow_path);   
    return pixbuf;
 }
 
