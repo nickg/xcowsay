@@ -58,7 +58,7 @@ static option_t *get_option(const char *name)
       if (strcmp(name, it->opt.name) == 0)
          return &it->opt;
    }
-   fprintf(stderr, "Internal Error: Invalid option '%s'\n", name);
+   fprintf(stderr, "Invalid option '%s'\n", name);
    exit(EXIT_FAILURE);
 }
 

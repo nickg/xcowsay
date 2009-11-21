@@ -163,7 +163,9 @@ void parse_config_file(void)
       token_t tok;
       int lineno = 1;
       for (;;) {
-         tok = next_token(frc, opt_buf, &lineno, &escape);
+         while ((tok = next_token(frc, opt_buf, &lineno, &escape))
+            == tNEWLINE) 
+            expect(tNEWLINE, tok, true, lineno, &escape);
          expect(tTOKEN, tok, true, lineno, &escape);
 
          tok = next_token(frc, dummy_buf, &lineno, &escape);
