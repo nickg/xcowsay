@@ -247,8 +247,18 @@ void display_cow(bool debug, const char *text, bool run_main, cowmode_t mode)
    int bubble_off = max((xcowsay.bubble_height - shape_height(xcowsay.cow))/2, 0);
 
    GdkScreen *screen = gdk_screen_get_default();
-   int area_w = gdk_screen_get_width(screen) - total_width;
-   int area_h = gdk_screen_get_height(screen) - total_height;
+
+   gint n_monitors = gdk_screen_get_n_monitors(screen);
+
+   gint pick = get_int_option("monitor");
+   if (pick < 0 || pick >= n_monitors)
+      pick = rand() % n_monitors;
+   
+   GdkRectangle geom;
+   gdk_screen_get_monitor_geometry(screen, pick, &geom);
+
+   int area_w = geom.width - total_width;
+   int area_h = geom.height - total_height;
 
    // Fit the cow on the screen as best as we can
    // The area can't be be zero or we'd get an FPE
@@ -257,7 +267,9 @@ void display_cow(bool debug, const char *text, bool run_main, cowmode_t mode)
    if (area_h < 1)
       area_h = 1;
 
-   move_shape(xcowsay.cow, rand()%area_w, bubble_off + rand()%area_h);
+   move_shape(xcowsay.cow,
+      geom.x + rand()%area_w,
+      geom.y + bubble_off + rand()%area_h);
    show_shape(xcowsay.cow);
 
    xcowsay.bubble = make_shape_from_pixbuf(xcowsay.bubble_pixbuf);   

@@ -62,6 +62,7 @@ static struct option long_options[] = {
    {"reading-speed", required_argument, 0, 'r'},
    {"daemon", no_argument, &daemon_flag, 1},
    {"image", required_argument, 0, 'i'},
+   {"monitor", required_argument, 0, 'm'},
    {"debug", no_argument, &debug, 1},
    {0, 0, 0, 0}
 };
@@ -96,6 +97,7 @@ static void usage()
       "     --daemon\t\t%s\n"
       "     --cow-size=SIZE\t%s\n"
       "     --image=FILE\t%s\n"
+      "     --monitor=N\t%s\n"
       "     --debug\t\t%s\n\n"
       "%s\n\n"
       "%s\n\n"
@@ -113,6 +115,7 @@ static void usage()
       i18n("Run xcowsay in daemon mode."),
       i18n("Size of the cow (small, med, large)."),
       i18n("Use a different image instead of the cow."),
+      i18n("Display cow on monitor N."),
       i18n("Keep daemon attached to terminal."),
       i18n("Default values for these options can be specified in the "
          "xcowsay config\nfile.  See the man page for more information."),
@@ -191,6 +194,7 @@ int main(int argc, char **argv)
    add_string_option("cow_size", DEF_COW_SIZE);
    add_string_option("image_base", DEF_IMAGE_BASE);
    add_string_option("alt_image", DEF_ALT_IMAGE);
+   add_int_option("monitor", -1);
    
    parse_config_file();
    
@@ -225,6 +229,9 @@ int main(int argc, char **argv)
          break;
       case 'i':
          set_string_option("alt_image", optarg);
+         break;
+      case 'm':
+         set_int_option("monitor", parse_int_option(optarg));
          break;
       case '?':
          // getopt_long already printed an error message
