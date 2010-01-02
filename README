@@ -7,4 +7,7 @@ make install
 To enable the daemon you must enable DBus support by running
 configure with --enable-dbus
 
+You will need to install the `fortune' package for xcowfortune
+to work.
+
 Check out the man page xcowsay(6) for the documentation.
