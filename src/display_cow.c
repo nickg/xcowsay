@@ -267,9 +267,21 @@ void display_cow(bool debug, const char *text, bool run_main, cowmode_t mode)
    if (area_h < 1)
       area_h = 1;
 
+   int cow_x = get_int_option("at_x");
+   if (cow_x < 0)
+      cow_x = rand() % area_w;
+   else if (cow_x >= area_w)
+      cow_x = area_w - 1;
+   
+   int cow_y = get_int_option("at_y");
+   if (cow_y < 0)
+      cow_y = rand() % area_h;
+   else if (cow_y >= area_h)
+      cow_y = area_h - 1;
+
    move_shape(xcowsay.cow,
-      geom.x + rand()%area_w,
-      geom.y + bubble_off + rand()%area_h);
+      geom.x + cow_x,
+      geom.y + bubble_off + cow_y);
    show_shape(xcowsay.cow);
 
    xcowsay.bubble = make_shape_from_pixbuf(xcowsay.bubble_pixbuf);   

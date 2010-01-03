@@ -63,6 +63,7 @@ static struct option long_options[] = {
    {"daemon", no_argument, &daemon_flag, 1},
    {"image", required_argument, 0, 'i'},
    {"monitor", required_argument, 0, 'm'},
+   {"at", required_argument, 0, 'a'},
    {"debug", no_argument, &debug, 1},
    {0, 0, 0, 0}
 };
@@ -98,6 +99,7 @@ static void usage()
       "     --cow-size=SIZE\t%s\n"
       "     --image=FILE\t%s\n"
       "     --monitor=N\t%s\n"
+      "     --at=X,Y\t\t%s\n"
       "     --debug\t\t%s\n\n"
       "%s\n\n"
       "%s\n\n"
@@ -116,13 +118,14 @@ static void usage()
       i18n("Size of the cow (small, med, large)."),
       i18n("Use a different image instead of the cow."),
       i18n("Display cow on monitor N."),
+      i18n("Force the cow to appear at screen location (X,Y)."),
       i18n("Keep daemon attached to terminal."),
       i18n("Default values for these options can be specified in the "
          "xcowsay config\nfile.  See the man page for more information."),
       i18n("If the display_time option is not set the display time will "
          "be calcuated\nfrom the reading_speed parameter multiplied by "
          "the word count.  Set the\ndisplay time to zero to display the "
-         " cow indefinitely until it is clicked\non."),
+         "cow until it is clicked on."),
       i18n("Report bugs to nick@nickg.me.uk"));
 }
 
@@ -149,6 +152,30 @@ static int parse_int_option(const char *optarg)
       return r;
    else {
       fprintf(stderr, i18n("Error: %s is not a valid integer\n"), optarg);
+      exit(EXIT_FAILURE);
+   }
+}
+
+static void parse_position_option(const char *optarg, int *x, int *y)
+{
+   const char *failmsg = i18n("Error: failed to parse '%s' as position\n");
+   
+   char *comma = strchr(optarg, ',');
+   if (comma == NULL) {
+      fprintf(stderr, failmsg, optarg);
+      exit(EXIT_FAILURE);
+   }
+
+   char *endptr;
+   *x = strtol(optarg, &endptr, 10);
+   if (endptr != comma || endptr == optarg) {
+      fprintf(stderr, failmsg, optarg);
+      exit(EXIT_FAILURE);
+   }
+
+   *y = strtol(comma + 1, &endptr, 10);
+   if (*endptr != '\0') {
+      fprintf(stderr, failmsg, optarg);
       exit(EXIT_FAILURE);
    }
 }
@@ -195,6 +222,8 @@ int main(int argc, char **argv)
    add_string_option("image_base", DEF_IMAGE_BASE);
    add_string_option("alt_image", DEF_ALT_IMAGE);
    add_int_option("monitor", -1);
+   add_int_option("at_x", -1);
+   add_int_option("at_y", -1);
    
    parse_config_file();
    
@@ -232,6 +261,15 @@ int main(int argc, char **argv)
          break;
       case 'm':
          set_int_option("monitor", parse_int_option(optarg));
+         break;
+      case 'a':
+         {
+            int x, y;
+            parse_position_option(optarg, &x, &y);
+            set_int_option("at_x", x);
+            set_int_option("at_y", y);
+            break;
+         }
          break;
       case '?':
          // getopt_long already printed an error message
