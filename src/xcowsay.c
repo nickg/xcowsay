@@ -268,7 +268,6 @@ int main(int argc, char **argv)
             parse_position_option(optarg, &x, &y);
             set_int_option("at_x", x);
             set_int_option("at_y", y);
-            break;
          }
          break;
       case '?':
