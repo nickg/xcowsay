@@ -14,6 +14,9 @@
 	* src/config_file.c (config_file_name): Support parsing the
 	additional config file.
 
+	* src/config_file.c (next_token): Fix parsing config files where
+	there is no whitespace between tokens.
+
 2010-01-03  Nick Gasson  <nick@nickg.me.uk>
 
 	* src/xcowsay.c (main): Add --at option to specify cow location

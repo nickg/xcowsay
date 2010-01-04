@@ -87,17 +87,19 @@ static token_t next_token(FILE *f, strbuf_t* sbuf, int *lineno, jmp_buf *escape)
          }
       }
       else if (!skip_to_eol) {
-         if (isspace(next)) {
-            if (has_chars(sbuf))
-               return tTOKEN;
+         if (isalpha(next) || isdigit(next) || '_' == next
+            || '/' == next || '.' == next || '-' == next)
+            push_char(sbuf, next);
+         else if (has_chars(sbuf)) {
+            ungetc(next, f);
+            return tTOKEN;
          }
+         else if (isspace(next))
+            ;  // Skip
          else if ('=' == next)
             return tEQUALS;
          else if ('#' == next)
             skip_to_eol = true;
-         else if (isalpha(next) || isdigit(next) || '_' == next
-            || '/' == next || '.' == next || '-' == next)
-            push_char(sbuf, next);
          else {
             fprintf(stderr, "Illegal character in xcowsayrc: %c\n", next);
             longjmp(*escape, 3);
