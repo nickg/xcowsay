@@ -1,3 +1,10 @@
+2010-01-04  Nick Gasson  <nick@nickg.me.uk>
+
+	* src/xcowsay.c (main): Add --bubble-at option to change
+	relative location of speech bubble.
+	* src/display_cow.c (display_cow): Use bubble_x and bubble_y
+	config variables to alter relative location of bubble.
+
 2010-01-03  Nick Gasson  <nick@nickg.me.uk>
 
 	* src/xcowsay.c (main): Add --at option to specify cow location
@@ -6,7 +13,7 @@
 	as X,Y pairs.
 	* src/display_cow.c (display_cow): Now recognises the at_x and
 	at_y config variables to force cow to appear at a particular
-	position. 
+	position.
 
 2010-01-02  Nick Gasson  <nick@nickg.me.uk>
 

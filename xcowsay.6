@@ -103,7 +103,7 @@ Run xcowsay in daemon mode if DBus support has been enabled. See the
 description for more information.
 .TP
 .BI "--cow-size=" size
-Size of the cow image. Current choices are 
+Size of the cow image.  Current choices are 
 .BR small ", " med ", or " large .
 The corresponding config file option is
 .IR cow_size .
@@ -117,7 +117,20 @@ option is
 Make the cow appear on monitor N.
 .TP
 .BI "--at=" X,Y
-Force that cow to appear at screen location (X,Y).
+Force that cow to appear at screen location (X,Y).  The config file options
+are
+.I at_x
+and 
+.IR at_y .
+.TP
+.BI "--bubble-at=" X,Y
+Change position of bubble relative to where it would normally appear.  This
+is most useful when combined with the 
+.I alt_image
+option to create your own characters.  The config file options are
+.I bubble_x 
+and 
+.IR bubble_y .
 .TP
 .B "--debug"
 Print messages about what

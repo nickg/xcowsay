@@ -38,7 +38,6 @@ GdkPixbuf *make_text_bubble(char *text, int *p_width, int *p_height, cowmode_t m
 GdkPixbuf *make_dream_bubble(const char *file, int *p_width, int *p_height);
 
 #define TICK_TIMEOUT   100
-#define BUBBLE_XOFFSET 5  // Distance from cow to bubble
 
 #define max(a, b) ((a) > (b) ? (a) : (b))
 
@@ -239,8 +238,9 @@ void display_cow(bool debug, const char *text, bool run_main, cowmode_t mode)
    
    g_assert(xcowsay.cow_pixbuf);
    xcowsay.cow = make_shape_from_pixbuf(xcowsay.cow_pixbuf);
-   
-   int total_width = shape_width(xcowsay.cow) + BUBBLE_XOFFSET
+
+   int total_width = shape_width(xcowsay.cow)
+      + get_int_option("bubble_x")
       + xcowsay.bubble_width;
    int total_height = max(shape_height(xcowsay.cow), xcowsay.bubble_height);
 
@@ -285,9 +285,11 @@ void display_cow(bool debug, const char *text, bool run_main, cowmode_t mode)
    show_shape(xcowsay.cow);
 
    xcowsay.bubble = make_shape_from_pixbuf(xcowsay.bubble_pixbuf);   
-   int bx = shape_x(xcowsay.cow) + shape_width(xcowsay.cow) + BUBBLE_XOFFSET;
+   int bx = shape_x(xcowsay.cow) + shape_width(xcowsay.cow)
+      + get_int_option("bubble_x");
    int by = shape_y(xcowsay.cow)
-      + (shape_height(xcowsay.cow) - shape_height(xcowsay.bubble))/2;
+      + (shape_height(xcowsay.cow) - shape_height(xcowsay.bubble))/2
+      + get_int_option("bubble_y");
    move_shape(xcowsay.bubble, bx, by);
    
    xcowsay.state = csLeadIn;

@@ -44,6 +44,7 @@
 #define DEF_IMAGE_BASE    "cow"
 #define DEF_DREAM_TIME    10000
 #define DEF_ALT_IMAGE     ""
+#define DEF_BUBBLE_X      5  // Distance from cow to bubble
 
 #define MAX_STDIN 4096   // Maximum chars to read from stdin
 
@@ -63,6 +64,7 @@ static struct option long_options[] = {
    {"daemon", no_argument, &daemon_flag, 1},
    {"image", required_argument, 0, 'i'},
    {"monitor", required_argument, 0, 'm'},
+   {"bubble-at", required_argument, 0, 'b'},
    {"at", required_argument, 0, 'a'},
    {"debug", no_argument, &debug, 1},
    {0, 0, 0, 0}
@@ -100,6 +102,7 @@ static void usage()
       "     --image=FILE\t%s\n"
       "     --monitor=N\t%s\n"
       "     --at=X,Y\t\t%s\n"
+      "     --bubble-at=X,Y\t%s\n"
       "     --debug\t\t%s\n\n"
       "%s\n\n"
       "%s\n\n"
@@ -119,6 +122,7 @@ static void usage()
       i18n("Use a different image instead of the cow."),
       i18n("Display cow on monitor N."),
       i18n("Force the cow to appear at screen location (X,Y)."),
+      i18n("Change relative position of bubble."),
       i18n("Keep daemon attached to terminal."),
       i18n("Default values for these options can be specified in the "
          "xcowsay config\nfile.  See the man page for more information."),
@@ -224,6 +228,8 @@ int main(int argc, char **argv)
    add_int_option("monitor", -1);
    add_int_option("at_x", -1);
    add_int_option("at_y", -1);
+   add_int_option("bubble_x", DEF_BUBBLE_X);
+   add_int_option("bubble_y", 0);
    
    parse_config_file();
    
@@ -268,6 +274,14 @@ int main(int argc, char **argv)
             parse_position_option(optarg, &x, &y);
             set_int_option("at_x", x);
             set_int_option("at_y", y);
+         }
+         break;
+      case 'b':
+         {
+            int x, y;
+            parse_position_option(optarg, &x, &y);
+            set_int_option("bubble_x", x);
+            set_int_option("bubble_y", y);
          }
          break;
       case '?':
