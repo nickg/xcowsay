@@ -1,5 +1,5 @@
 /*  bubblegen.c -- Generate various sorts of bubbles.
- *  Copyright (C) 2008  Nick Gasson
+ *  Copyright (C) 2008-2010  Nick Gasson
  *
  *  This program is free software: you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -269,7 +269,8 @@ GdkPixbuf *make_dream_bubble(const char *file, int *p_width, int *p_height)
    return bubble_tidy(&bubble);
 }
 
-GdkPixbuf *make_text_bubble(char *text, int *p_width, int *p_height, cowmode_t mode)
+GdkPixbuf *make_text_bubble(char *text, int *p_width,
+   int *p_height, cowmode_t mode)
 {
    bubble_t bubble;
    int text_width, text_height;
@@ -282,8 +283,10 @@ GdkPixbuf *make_text_bubble(char *text, int *p_width, int *p_height, cowmode_t m
    PangoAttrList *pango_attrs = NULL;
 
    char *stripped;
-   if (!pango_parse_markup(text, -1, 0, &pango_attrs, &stripped, NULL, NULL)) {
-      fprintf(stderr, i18n("Warning: Failed to parse Pango attributes\n"));
+   if (!pango_parse_markup(text, -1, 0, &pango_attrs,
+         &stripped, NULL, NULL)) {
+
+      // This isn't fatal as the the text may contain angled brackets, etc.
       stripped = text;
    }
    else {
@@ -304,7 +307,7 @@ GdkPixbuf *make_text_bubble(char *text, int *p_width, int *p_height, cowmode_t m
    
    // Render the text
    gdk_draw_layout(bubble.pixmap, bubble.gc,
-                   bubble_content_left(mode), bubble_content_top(), layout);
+      bubble_content_left(mode), bubble_content_top(), layout);
 
    // Make sure to free the Pango objects
    g_object_unref(pango_context);

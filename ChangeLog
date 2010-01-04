@@ -17,6 +17,10 @@
 	* src/config_file.c (next_token): Fix parsing config files where
 	there is no whitespace between tokens.
 
+	* src/bubblegen.c (make_text_bubble): Don't print a warning when
+	we can't parse Pango attributes.  This may arise from valid
+	input e.g. '1 < 0'.
+
 2010-01-03  Nick Gasson  <nick@nickg.me.uk>
 
 	* src/xcowsay.c (main): Add --at option to specify cow location
