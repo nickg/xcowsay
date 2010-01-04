@@ -1,5 +1,5 @@
 /*  display_cow.c -- Display a cow in a popup window.
- *  Copyright (C) 2008  Nick Gasson
+ *  Copyright (C) 2008-2010  Nick Gasson
  *
  *  This program is free software: you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by

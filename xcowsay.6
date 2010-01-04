@@ -46,9 +46,13 @@ request and returns immediately. Otherwise
 will block until the cow has disappeared.
 
 .SH CONFIGURATION FILE
-xcowsay reads a configuration file on startup. Currently the file must
-be named .xcowsayrc in your home directory, a system-wide config file
-might be added in a later release.
+xcowsay reads a configuration file on startup.  The configuration file
+can be stored in the XDG compliant location 
+.I $XDG_CONFIG_HOME/xcowsayrc
+(which will default to
+.IR $HOME/.config/xcowsayrc )
+or in your home directory at
+.IR $HOME/.xcowsayrc .
 
 The configuration file consists of 'option = value' pairs, one per line.  The
 valid keys are given in the next section. For example, the following line sets

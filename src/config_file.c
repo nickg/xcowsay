@@ -1,5 +1,5 @@
 /*  config_file.c -- Config file parser.
- *  Copyright (C) 2008  Nick Gasson
+ *  Copyright (C) 2008-2010  Nick Gasson
  *
  *  This program is free software: you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -21,6 +21,10 @@
 #include <assert.h>
 #include <setjmp.h>
 #include <string.h>
+
+#include <sys/types.h>
+#include <sys/stat.h>
+#include <unistd.h>
 
 #include "config_file.h"
 #include "settings.h"
@@ -141,16 +145,53 @@ static bool is_bool_option(const char *s, bool *bval)
       return false;
 }
 
-void parse_config_file(void)
+static char *config_file_name(void)
 {
-   char fname[FILENAME_MAX];
+   // There are two possible locations for the config file:
+   // - $XDG_CONFIG_HOME/xcowsayrc
+   // - $HOME/.xcowsayrc
+   // We prefer the XDG compliant one
+   // Need to free the result of this function
+
+   char *fname = NULL;
+   
    const char *home = getenv("HOME");
    if (NULL == home)
       return;
+   
+   const char *xdg_config_home = getenv("XDG_CONFIG_HOME");
+   if (xdg_config_home == NULL || *xdg_config_home == '\0') {
+      // Defaults to $HOME/.config
+      asprintf(&fname, "%s/.config/xcowsayrc", home);
+   }
+   else
+      asprintf(&fname, "%s/xcowsayrc", xdg_config_home);
 
-   snprintf(fname, FILENAME_MAX, "%s/.xcowsayrc", home);
+   struct stat dummy;
+   if (stat(fname, &dummy) == 0)
+      return fname;
+
+   free(fname);
+
+   // Try the home directory
+   asprintf(&fname, "%s/.xcowsayrc", home);
+   if (stat(fname, &dummy) == 0)
+      return fname;
+
+   free(fname);
+   return NULL;
+}
+
+void parse_config_file(void)
+{
+   char *fname = config_file_name();
+   printf("config file name = %s\n", fname);
+   if (fname == NULL)
+      return;
 
    FILE *frc = fopen(fname, "r");
+   free(fname);
+   
    if (NULL == frc)
       return;
    

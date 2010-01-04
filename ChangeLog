@@ -5,6 +5,10 @@
 	* src/display_cow.c (display_cow): Use bubble_x and bubble_y
 	config variables to alter relative location of bubble.
 
+	* src/config_file.c (parse_config_file): Allow the config file
+	to be placed in $XDG_CONFIG_HOME/xcowsayrc as well as
+	$HOME/.xcowsayrc.
+
 2010-01-03  Nick Gasson  <nick@nickg.me.uk>
 
 	* src/xcowsay.c (main): Add --at option to specify cow location
