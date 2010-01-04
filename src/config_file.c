@@ -156,7 +156,7 @@ static char *config_file_name(void)
    // We prefer them in the above order
    // Need to free the result of this function
 
-   char *fname = get_string_option("alt_config_file");
+   const char *fname = get_string_option("alt_config_file");
    if (*fname)
       return strdup(fname); // We always free the result
    
@@ -190,7 +190,6 @@ static char *config_file_name(void)
 void parse_config_file(void)
 {
    char *fname = config_file_name();
-   printf("config file name = %s\n", fname);
    if (fname == NULL)
       return;
 
