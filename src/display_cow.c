@@ -334,8 +334,23 @@ bool try_dbus(bool debug, const char *text, cowmode_t mode)
                                      XCOWSAY_PATH, XCOWSAY_NAMESPACE);
    g_assert(proxy);
 
+   const char *method = NULL;
+   switch (mode) {
+   case COWMODE_NORMAL:
+      method = "ShowCow";
+      break;
+   case COWMODE_THINK:
+      method = "Think";
+      break;
+   case COWMODE_DREAM:
+      method = "Dream";
+      break;
+   default:
+      g_assert(false);
+   }  
+   
    error = NULL;
-   if (!dbus_g_proxy_call(proxy, "ShowCow", &error, G_TYPE_STRING, text,
+   if (!dbus_g_proxy_call(proxy, method, &error, G_TYPE_STRING, text,
                           G_TYPE_INVALID, G_TYPE_INVALID)) {
       debug_err("ShowCow failed: %s\n", error->message);
       g_error_free(error);

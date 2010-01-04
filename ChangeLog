@@ -21,6 +21,12 @@
 	we can't parse Pango attributes.  This may arise from valid
 	input e.g. '1 < 0'.
 
+	* src/xcowsayd.c (cow_display_thread, wait_for_request)
+	(enqueue_request): Store the cow mode in request objects inside
+	the daemon.
+	(cowsay_think): New DBus method to implement
+	uk.me.doof.Cowsay.Think
+	
 2010-01-03  Nick Gasson  <nick@nickg.me.uk>
 
 	* src/xcowsay.c (main): Add --at option to specify cow location

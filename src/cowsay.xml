@@ -6,10 +6,16 @@
 
   <interface name="uk.me.doof.Cowsay">
     <annotation name="org.freedesktop.DBus.GLib.CSymbol" value="cowsay"/>
+    
     <method name="ShowCow">
       <!-- This is optional, and in this case is redunundant -->
       <annotation name="org.freedesktop.DBus.GLib.CSymbol" value="cowsay_show_cow"/>
       <arg type="s" name="mess" direction="in" />
     </method>
+
+    <method name="Think">
+      <arg type="s" name="mess" direction="in" />
+    </method>
+    
   </interface>
 </node>

@@ -107,13 +107,14 @@ G_END_DECLS
 #include <dbus/dbus-glib.h>
 static const DBusGMethodInfo dbus_glib_cowsay_methods[] = {
   { (GCallback) cowsay_show_cow, dbus_glib_marshal_cowsay_BOOLEAN__STRING_POINTER, 0 },
+  { (GCallback) cowsay_think, dbus_glib_marshal_cowsay_BOOLEAN__STRING_POINTER, 38 },
 };
 
 const DBusGObjectInfo dbus_glib_cowsay_object_info = {
   0,
   dbus_glib_cowsay_methods,
-  1,
-"uk.me.doof.Cowsay\0ShowCow\0S\0mess\0I\0s\0\0\0",
+  2,
+"uk.me.doof.Cowsay\0ShowCow\0S\0mess\0I\0s\0\0uk.me.doof.Cowsay\0Think\0S\0mess\0I\0s\0\0\0",
 "\0",
 "\0"
 };

@@ -43,6 +43,7 @@ static void cowsayd_init(Cowsay *server);
 static void cowsayd_class_init(CowsayClass *class);
 
 static gboolean cowsay_show_cow(Cowsay *obj, const gchar *mess, GError **error);
+static gboolean cowsay_think(Cowsay *obj, const gchar *mess, GError **error);
 
 G_DEFINE_TYPE(Cowsay, cowsayd, G_TYPE_OBJECT);
 
@@ -51,6 +52,7 @@ G_DEFINE_TYPE(Cowsay, cowsayd, G_TYPE_OBJECT);
 typedef struct _cowsay_queue_t {
    struct _cowsay_queue_t *next;
    char *message;
+   cowmode_t mode;
 } cowsay_queue_t;
 
 static cowsay_queue_t *requests = NULL;
@@ -64,11 +66,12 @@ static GCond *display_complete = NULL;
 #define REQUEST_READY_WAIT g_cond_wait(request_ready, queue_lock)
 #define REQUEST_READY_SIGNAL g_cond_signal(request_ready)
 
-static void enqueue_request(const char *mess)
+static void enqueue_request(const char *mess, cowmode_t mode)
 {
    cowsay_queue_t *req = (cowsay_queue_t*)malloc(sizeof(cowsay_queue_t));
    req->next = NULL;
    req->message = malloc(strlen(mess)+1);
+   req->mode = mode;
    g_assert(req->message);
    strcpy(req->message, mess);
 
@@ -88,18 +91,17 @@ static void enqueue_request(const char *mess)
    QUEUE_MUTEX_UNLOCK;   
 }
 
-static const char *wait_for_request(void)
+static void wait_for_request(const char** mess, cowmode_t *mode)
 {
-   const char *r = NULL;
    QUEUE_MUTEX_LOCK;
    {
       while (NULL == requests) {
          REQUEST_READY_WAIT;
       }
-      r = requests->message;
+      *mess = requests->message;
+      *mode = requests->mode;
    }
    QUEUE_MUTEX_UNLOCK;
-   return r;
 }
 
 static void request_complete()
@@ -122,14 +124,16 @@ static gpointer cow_display_thread(gpointer data)
    debug_msg("In the cow display thread\n");
 
    for (;;) {
-      const char *mess = wait_for_request();
+      const char *mess;
+      cowmode_t mode;
+      wait_for_request(&mess, &mode);
       debug_msg("Processing request: %s\n", mess);
 
       // We need to wrap the GTK+ stuff in gdk_threads_X since
       // GTK assumes it is being called from the main thread
       // (and it isn't here)
       gdk_threads_enter();
-      display_cow(debug, mess, false, COWMODE_NORMAL);
+      display_cow(debug, mess, false, mode);
       gdk_threads_leave();
 
       g_cond_wait(display_complete, display_lock);
@@ -187,7 +191,14 @@ static void cowsayd_init(Cowsay *server)
 static gboolean cowsay_show_cow(Cowsay *obj, const gchar *mess, GError **error)
 {
    printf("cowsay_show_cow mess=%s\n", mess);
-   enqueue_request(mess);
+   enqueue_request(mess, COWMODE_NORMAL);
+   return true;
+}
+
+static gboolean cowsay_think(Cowsay *obj, const gchar *mess, GError **error)
+{
+   printf("cowsay_think mess=%s\n", mess);
+   enqueue_request(mess, COWMODE_THINK);
    return true;
 }
 
