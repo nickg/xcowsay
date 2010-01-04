@@ -147,13 +147,16 @@ static bool is_bool_option(const char *s, bool *bval)
 
 static char *config_file_name(void)
 {
-   // There are two possible locations for the config file:
+   // There are three possible locations for the config file:
+   // - Specifed on the command line with --config
    // - $XDG_CONFIG_HOME/xcowsayrc
    // - $HOME/.xcowsayrc
-   // We prefer the XDG compliant one
+   // We prefer them in the above order
    // Need to free the result of this function
 
-   char *fname = NULL;
+   char *fname = get_string_option("alt_config_file");
+   if (*fname)
+      return strdup(fname); // We always free the result
    
    const char *home = getenv("HOME");
    if (NULL == home)

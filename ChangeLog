@@ -9,6 +9,11 @@
 	to be placed in $XDG_CONFIG_HOME/xcowsayrc as well as
 	$HOME/.xcowsayrc.
 
+	* src/xcowsay.c (main): Add --config option to specify and
+	additional config file to parse.
+	* src/config_file.c (config_file_name): Support parsing the
+	additional config file.
+
 2010-01-03  Nick Gasson  <nick@nickg.me.uk>
 
 	* src/xcowsay.c (main): Add --at option to specify cow location
