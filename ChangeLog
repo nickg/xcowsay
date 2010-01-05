@@ -1,5 +1,7 @@
 2010-01-05  Nick Gasson  <nick@nickg.me.uk>
 
+	* xcowsay 1.2 released!
+
 	* src/cowsayd.c (cowsay_dream): New DBus method to implement
 	uk.me.doof.Cowsay.Dream
 	* src/xcowsay.c (main): Make dream path absolute for daemon and
