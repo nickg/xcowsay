@@ -156,14 +156,15 @@ static char *config_file_name(void)
    // We prefer them in the above order
    // Need to free the result of this function
 
-   const char *fname = get_string_option("alt_config_file");
-   if (*fname)
-      return strdup(fname); // We always free the result
+   const char *alt_config_file = get_string_option("alt_config_file");
+   if (*alt_config_file)
+      return strdup(alt_config_file); // We always free the result
    
    const char *home = getenv("HOME");
    if (NULL == home)
       return;
-   
+
+   char *fname = NULL;
    const char *xdg_config_home = getenv("XDG_CONFIG_HOME");
    if (xdg_config_home == NULL || *xdg_config_home == '\0') {
       // Defaults to $HOME/.config
