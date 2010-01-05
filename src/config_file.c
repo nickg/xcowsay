@@ -15,6 +15,11 @@
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+#ifdef HAVE_CONFIG_H
+#include "config.h"
+#endif
+
+#define _GNU_SOURCE
 #include <stdio.h>
 #include <stdlib.h>
 #include <ctype.h>
@@ -162,7 +167,7 @@ static char *config_file_name(void)
    
    const char *home = getenv("HOME");
    if (NULL == home)
-      return;
+      return NULL;
 
    char *fname = NULL;
    const char *xdg_config_home = getenv("XDG_CONFIG_HOME");

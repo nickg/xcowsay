@@ -153,7 +153,7 @@ static void cowsayd_init(Cowsay *server)
 {
    GError *error = NULL;
    DBusGProxy *driver_proxy;
-   int request_ret;
+   guint request_ret;
 
    // Initialise the DBus connection
    server->connection = dbus_g_bus_get(DBUS_BUS_SESSION, &error);
@@ -247,7 +247,6 @@ void run_cowsay_daemon(bool debug, int argc, char **argv)
    cowsay_init(&argc, &argv);
 
    g_type_init();
-   Cowsay *server = g_object_new(cowsayd_get_type(), NULL);
 
    GThread *displ = g_thread_create(cow_display_thread, (gpointer)&debug, FALSE, NULL);
    g_assert(displ);
