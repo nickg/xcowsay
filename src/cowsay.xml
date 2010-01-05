@@ -16,6 +16,10 @@
     <method name="Think">
       <arg type="s" name="mess" direction="in" />
     </method>
-    
+
+    <method name="Dream">
+      <arg type="s" name="file" direction="in" />
+    </method>
+        
   </interface>
 </node>

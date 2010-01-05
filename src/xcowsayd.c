@@ -44,6 +44,7 @@ static void cowsayd_class_init(CowsayClass *class);
 
 static gboolean cowsay_show_cow(Cowsay *obj, const gchar *mess, GError **error);
 static gboolean cowsay_think(Cowsay *obj, const gchar *mess, GError **error);
+static gboolean cowsay_dream(Cowsay *obj, const gchar *file, GError **error);
 
 G_DEFINE_TYPE(Cowsay, cowsayd, G_TYPE_OBJECT);
 
@@ -202,6 +203,13 @@ static gboolean cowsay_think(Cowsay *obj, const gchar *mess, GError **error)
    return true;
 }
 
+static gboolean cowsay_dream(Cowsay *obj, const gchar *file, GError **error)
+{
+   printf("cowsay_dream file=%s\n", file);
+   enqueue_request(file, COWMODE_DREAM);
+   return true;
+}
+
 void run_cowsay_daemon(bool debug, int argc, char **argv)
 {
    if (!debug) {
@@ -247,7 +255,8 @@ void run_cowsay_daemon(bool debug, int argc, char **argv)
    cowsay_init(&argc, &argv);
 
    g_type_init();
-
+   Cowsay *server = g_object_new(cowsayd_get_type(), NULL);
+   
    GThread *displ = g_thread_create(cow_display_thread, (gpointer)&debug, FALSE, NULL);
    g_assert(displ);
 
@@ -256,6 +265,8 @@ void run_cowsay_daemon(bool debug, int argc, char **argv)
       gtk_main();
       g_cond_signal(display_complete);
    }
+
+   g_object_unref(server);
 
    exit(EXIT_SUCCESS);
 }

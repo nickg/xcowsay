@@ -108,13 +108,14 @@ G_END_DECLS
 static const DBusGMethodInfo dbus_glib_cowsay_methods[] = {
   { (GCallback) cowsay_show_cow, dbus_glib_marshal_cowsay_BOOLEAN__STRING_POINTER, 0 },
   { (GCallback) cowsay_think, dbus_glib_marshal_cowsay_BOOLEAN__STRING_POINTER, 38 },
+  { (GCallback) cowsay_dream, dbus_glib_marshal_cowsay_BOOLEAN__STRING_POINTER, 74 },
 };
 
 const DBusGObjectInfo dbus_glib_cowsay_object_info = {
   0,
   dbus_glib_cowsay_methods,
-  2,
-"uk.me.doof.Cowsay\0ShowCow\0S\0mess\0I\0s\0\0uk.me.doof.Cowsay\0Think\0S\0mess\0I\0s\0\0\0",
+  3,
+"uk.me.doof.Cowsay\0ShowCow\0S\0mess\0I\0s\0\0uk.me.doof.Cowsay\0Think\0S\0mess\0I\0s\0\0uk.me.doof.Cowsay\0Dream\0S\0file\0I\0s\0\0\0",
 "\0",
 "\0"
 };

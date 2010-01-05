@@ -1,3 +1,10 @@
+2010-01-05  Nick Gasson  <nick@nickg.me.uk>
+
+	* src/cowsayd.c (cowsay_dream): New DBus method to implement
+	uk.me.doof.Cowsay.Dream
+	* src/xcowsay.c (main): Make dream path absolute for daemon and
+	check file exists before going further.
+
 2010-01-04  Nick Gasson  <nick@nickg.me.uk>
 
 	* src/xcowsay.c (main): Add --bubble-at option to change
@@ -26,7 +33,7 @@
 	the daemon.
 	(cowsay_think): New DBus method to implement
 	uk.me.doof.Cowsay.Think
-	
+
 2010-01-03  Nick Gasson  <nick@nickg.me.uk>
 
 	* src/xcowsay.c (main): Add --at option to specify cow location

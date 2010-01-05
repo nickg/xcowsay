@@ -15,12 +15,18 @@
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+#define _GNU_SOURCE
 #include <stdio.h>
 #include <stdlib.h>
 #include <time.h>
 #include <getopt.h>
 #include <assert.h>
 #include <string.h>
+
+#include <sys/types.h>
+#include <sys/stat.h>
+#include <unistd.h>
+#include <errno.h>
 
 #include "display_cow.h"
 #include "settings.h"
@@ -314,9 +320,23 @@ int main(int argc, char **argv)
       cowsay_init(&argc, &argv);
 
       if (dream_file != NULL) {
-         // COWMODE_DREAM not in daemon yet
-         // TODO: need to make path absolute
-         display_cow_or_invoke_daemon(debug, dream_file, COWMODE_DREAM);
+         // Make path absolute
+         char *wd = getcwd(NULL, 0);
+         char *abs_path;
+
+         asprintf(&abs_path, "%s/%s", wd, dream_file);
+         free(wd);
+
+         struct stat dummy;
+         if (stat(abs_path, &dummy) != 0) {
+            fprintf(stderr, "Error: %s: %s\n", abs_path,
+               strerror(errno));
+            free(abs_path);
+            exit(EXIT_FAILURE);
+         }
+         
+         display_cow_or_invoke_daemon(debug, abs_path, COWMODE_DREAM);
+         free(abs_path);
       }
       else if (optind == argc) {
          read_from_stdin(mode);
