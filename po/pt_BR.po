@@ -3,13 +3,14 @@
 # This file is distributed under the same license as the PACKAGE package.
 #
 # Phantom X <megaphantomx@bol.com.br>, 2008.
+# Phantom X <megaphantomx at bol.com.br>, 2010.
 msgid ""
 msgstr ""
 "Project-Id-Version: pt_BR\n"
 "Report-Msgid-Bugs-To: nick@cakesniffer.co.uk\n"
 "POT-Creation-Date: 2010-01-05 07:50+0000\n"
-"PO-Revision-Date: 2008-08-30 16:39-0300\n"
-"Last-Translator: Phantom X <megaphantomx@bol.com.br>\n"
+"PO-Revision-Date: 2010-01-05 15:09-0200\n"
+"Last-Translator: Phantom X <megaphantomx at bol.com.br>\n"
 "Language-Team: Português do Brasil <pt@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -71,48 +72,46 @@ msgid "Size of the cow (small, med, large)."
 msgstr "Tamanho da vaca (small, med, large)."
 
 #: src/xcowsay.c:130
-#, fuzzy
 msgid "Use a different image instead of the cow."
-msgstr "Exibir uma imagem em vez de texto."
+msgstr "Usar uma imagem diferente em vez da vaca."
 
 #: src/xcowsay.c:131
 msgid "Display cow on monitor N."
-msgstr ""
+msgstr "Exibir vaca no monitor N."
 
 #: src/xcowsay.c:132
 msgid "Force the cow to appear at screen location (X,Y)."
-msgstr ""
+msgstr "Forçar a vaca a aparecer no local da tela (X,Y)."
 
 #: src/xcowsay.c:133
 msgid "Change relative position of bubble."
-msgstr ""
+msgstr "Modificar a posição relativa da bolha."
 
 #: src/xcowsay.c:134
 msgid "Specify alternative config file."
-msgstr ""
+msgstr "Especificar arquivo de configuração alternativo."
 
 #: src/xcowsay.c:135
 msgid "Keep daemon attached to terminal."
 msgstr "Manter o daemon anexado ao terminal."
 
 #: src/xcowsay.c:136
-#, fuzzy
 msgid ""
 "Default values for these options can be specified in the xcowsay config\n"
 "file.  See the man page for more information."
 msgstr ""
 "Valores padrão para estas opções podem ser especificados no arquivo\n"
-"de configuração do xcowsay. Veja a página de manual para mais informação."
+"de configuração. Veja a página de manual para mais informação."
 
 #: src/xcowsay.c:138
-#, fuzzy
 msgid ""
 "If the display_time option is not set the display time will be calcuated\n"
 "from the reading_speed parameter multiplied by the word count.  Set the\n"
 "display time to zero to display the cow until it is clicked on."
 msgstr ""
 "Se a opção display_time não estiver configurada, o tempo de exibição será\n"
-"calculado do parâmetro reading_speed multiplicado pelo número de palavras."
+"calculado do parâmetro reading_speed multiplicado pelo número de palavras. \n"
+"Configure para zero para exibir a vaca até que ela seja clicada."
 
 #: src/xcowsay.c:142
 msgid "Report bugs to nick@nickg.me.uk"
@@ -126,4 +125,4 @@ msgstr "Erro: %s não é um inteiro válido\n"
 #: src/xcowsay.c:174
 #, c-format
 msgid "Error: failed to parse '%s' as position\n"
-msgstr ""
+msgstr "Erro: falha ao analisar '%s' como posição\n"
