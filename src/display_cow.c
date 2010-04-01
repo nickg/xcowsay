@@ -254,7 +254,7 @@ void display_cow(bool debug, const char *text, bool run_main, cowmode_t mode)
 
    gint pick = get_int_option("monitor");
    if (pick < 0 || pick >= n_monitors)
-      pick = rand() % n_monitors;
+      pick = random() % n_monitors;
    
    GdkRectangle geom;
    gdk_screen_get_monitor_geometry(screen, pick, &geom);
@@ -271,13 +271,13 @@ void display_cow(bool debug, const char *text, bool run_main, cowmode_t mode)
 
    int cow_x = get_int_option("at_x");
    if (cow_x < 0)
-      cow_x = rand() % area_w;
+      cow_x = random() % area_w;
    else if (cow_x >= area_w)
       cow_x = area_w - 1;
    
    int cow_y = get_int_option("at_y");
    if (cow_y < 0)
-      cow_y = rand() % area_h;
+      cow_y = random() % area_h;
    else if (cow_y >= area_h)
       cow_y = area_h - 1;
 

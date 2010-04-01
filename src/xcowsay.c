@@ -309,7 +309,7 @@ int main(int argc, char **argv)
    if (failure)
       exit(EXIT_FAILURE);
 
-   srand((unsigned)time(NULL));
+   srandom((unsigned)time(NULL));
 
    cowmode_t mode = think_flag ? COWMODE_THINK : COWMODE_NORMAL;
 
