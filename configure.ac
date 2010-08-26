@@ -35,8 +35,8 @@ AC_ARG_ENABLE(dbus,
         [AS_HELP_STRING([--enable-dbus], [Build the DBus daemon.])],
         [if test "$enableval" = "yes" ; then
            modules="$xcowsayd_modules"
+           CFLAGS="$CFLAGS -DWITH_DBUS"
          fi
-         CFLAGS="$CFLAGS -DWITH_DBUS"
 	 AC_FUNC_FORK])
 
 PKG_CHECK_MODULES(XCOWSAY, $modules)
