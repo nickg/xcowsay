@@ -1,4 +1,4 @@
-AC_INIT([xcowsay], [1.2],
+AC_INIT([xcowsay], [1.3],
         [Nick Gasson <nick@nick.me.uk>],
         [xcowsay])
 AM_INIT_AUTOMAKE([-Wall])
