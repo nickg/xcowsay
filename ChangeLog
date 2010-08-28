@@ -1,3 +1,12 @@
+2010-08-28  Nick Gasson  <nick@nickg.me.uk>
+
+	* configure.ac: Fix bug where --disable-dbus would still define
+	WITH_DBUS.
+
+	* src/display_cow.c (normal_setup): time=0 means display
+	forever.
+	* xcowsay.6: Document new time=0 feature.
+
 2010-01-05  Nick Gasson  <nick@nickg.me.uk>
 
 	* xcowsay 1.2 released!

@@ -78,7 +78,6 @@ static cowstate_t next_state(cowstate_t state)
 static GdkPixbuf *load_cow()
 {
    char *cow_path;
-
    const char *alt_image = get_string_option("alt_image");
 
    if (*alt_image)
@@ -197,7 +196,11 @@ static void normal_setup(const char *text, bool debug, cowmode_t mode)
 
    int min_display = get_int_option("min_display_time");
    int max_display = get_int_option("max_display_time");
-   if (xcowsay.display_time < min_display) {
+   if (xcowsay.display_time == 0) {
+      xcowsay.display_time = INT_MAX;
+      debug_msg("Set display time to permanent\n");
+   }
+   else if (xcowsay.display_time < min_display) {
       xcowsay.display_time = min_display;
       debug_msg("Display time too short: clamped to %d\n", min_display);
    }
