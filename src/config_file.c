@@ -173,10 +173,12 @@ static char *config_file_name(void)
    const char *xdg_config_home = getenv("XDG_CONFIG_HOME");
    if (xdg_config_home == NULL || *xdg_config_home == '\0') {
       // Defaults to $HOME/.config
-      asprintf(&fname, "%s/.config/xcowsayrc", home);
+      if (asprintf(&fname, "%s/.config/xcowsayrc", home) == -1)
+         return NULL;
    }
    else
-      asprintf(&fname, "%s/xcowsayrc", xdg_config_home);
+      if (asprintf(&fname, "%s/xcowsayrc", xdg_config_home) == -1)
+         return NULL;
 
    struct stat dummy;
    if (stat(fname, &dummy) == 0)
@@ -185,7 +187,9 @@ static char *config_file_name(void)
    free(fname);
 
    // Try the home directory
-   asprintf(&fname, "%s/.xcowsayrc", home);
+   if (asprintf(&fname, "%s/.xcowsayrc", home) == -1)
+      return NULL;
+
    if (stat(fname, &dummy) == 0)
       return fname;
 
