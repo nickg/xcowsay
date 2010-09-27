@@ -57,6 +57,38 @@ typedef struct {
 
 typedef enum { NORMAL, THOUGHT } bubble_style_t;
 
+static void bubble_init_cairo(bubble_t *b, bubble_style_t style)
+{
+   cairo_t *cr;
+   GdkVisual *root_visual;
+
+   root_visual = gdk_visual_get_system();
+   b->pixmap = gdk_pixmap_new(NULL, b->width, b->height, root_visual->depth);
+   g_assert(b->pixmap);
+   b->gc = gdk_gc_new(b->pixmap);
+
+      
+   cr = gdk_cairo_create(b->pixmap);
+   g_assert(cr);
+
+   // Fill with transparency
+   cairo_set_source_rgb(cr, 0, 1, 1);
+   cairo_rectangle(cr, 0, 0, b->width, b->height);
+   cairo_fill(cr);
+
+#if 0
+cairo_set_line_width (cr, 0.1);
+cairo_set_source_rgb (cr, 0, 255, 0);
+cairo_rectangle (cr, 0.25, 0.25, 0.5, 0.5);
+cairo_stroke (cr);
+ #endif
+
+   b->width -= BUBBLE_BORDER;
+   b->height -= BUBBLE_BORDER;
+   
+   cairo_destroy(cr);
+}
+
 static void bubble_init(bubble_t *b, bubble_style_t style)
 {
    GdkColor black, white, bright_green;
@@ -83,7 +115,7 @@ static void bubble_init(bubble_t *b, bubble_style_t style)
    
    b->width -= BUBBLE_BORDER;
    b->height -= BUBBLE_BORDER;
-
+   
    // Space between cow and bubble
    int middle = style == NORMAL ? TIP_WIDTH : THINK_WIDTH;
 
@@ -303,7 +335,7 @@ GdkPixbuf *make_text_bubble(char *text, int *p_width,
    *p_width = bubble.width;
    *p_height = bubble.height;
    
-   bubble_init(&bubble, style);
+   bubble_init_cairo(&bubble, style);
    
    // Render the text
    gdk_draw_layout(bubble.pixmap, bubble.gc,
