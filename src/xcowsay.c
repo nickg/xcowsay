@@ -15,6 +15,10 @@
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+#ifdef HAVE_CONFIG_H
+#include "config.h"
+#endif
+
 #define _GNU_SOURCE
 #include <stdio.h>
 #include <stdlib.h>
@@ -33,10 +37,6 @@
 #include "xcowsayd.h"
 #include "config_file.h"
 #include "i18n.h"
-
-#ifdef HAVE_CONFIG_H
-#include "config.h"
-#endif
 
 // Default settings
 #define DEF_LEAD_IN_TIME  250

@@ -41,5 +41,11 @@ AC_ARG_ENABLE(dbus,
 
 PKG_CHECK_MODULES(XCOWSAY, $modules)
 
+# Not sure why autoconf doesn't define this itself
+pkgdatadir=$datadir/xcowsay
+
+AC_DEFINE_DIR([DATADIR], [pkgdatadir], [Location of data files])
+AC_DEFINE_DIR([LOCALEDIR], [localedir], [Location of locale files])
+
 AC_CONFIG_HEADERS([config.h])
 AC_OUTPUT([Makefile src/Makefile po/Makefile.in])
