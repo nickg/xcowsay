@@ -273,8 +273,8 @@ GdkPixbuf *make_dream_bubble(const char *file, int *p_width, int *p_height)
    return bubble_tidy(&bubble);
 }
 
-GdkPixbuf *make_text_bubble(char *text, int *p_width,
-   int *p_height, cowmode_t mode)
+GdkPixbuf *make_text_bubble(char *text, int *p_width, int *p_height,
+                            int max_width, cowmode_t mode)
 {
    bubble_t bubble;
    int text_width, text_height;
@@ -286,6 +286,17 @@ GdkPixbuf *make_text_bubble(char *text, int *p_width,
       pango_font_description_from_string(get_string_option("font"));
    PangoAttrList *pango_attrs = NULL;
 
+   // Adjust max width to account for bubble edges
+   max_width -= LEFT_BUF;
+   max_width -= TIP_WIDTH;
+   max_width -= 2 * BUBBLE_BORDER;
+   max_width -= CORNER_DIAM;
+
+   if (get_bool_option("wrap")) {
+      pango_layout_set_width(layout, max_width * PANGO_SCALE);
+      pango_layout_set_wrap(layout, PANGO_WRAP_WORD_CHAR);
+   }
+      
    char *stripped;
    if (!pango_parse_markup(text, -1, 0, &pango_attrs,
          &stripped, NULL, NULL)) {
