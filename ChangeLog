@@ -1,3 +1,8 @@
+2010-10-02  Nick Gasson  <nick@nickg.me.uk>
+
+	* xcowsay.6: Update bugs section: remove note about lack of word
+	wrapping; add comment that anti-aliasing is unlikely to happen.
+
 2010-09-29  Nick Gasson  <nick@nickg.me.uk>
 
 	* src/display_cow.c (normal_setup, display_cow): Calculate

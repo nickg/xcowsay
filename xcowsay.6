@@ -170,10 +170,7 @@ The xcowsay home page is <http://www.doof.me.uk/xcowsay>
 .SH "SEE ALSO"
 .BR cowsay (6)
 .SH BUGS
-There are a few issues I am aware of:
-.PP
 The cow and speech bubble have jagged edges which would be improved by
-anti-aliasing. 
-.PP
-Very long strings will disappear off the right-hand side of the
-screen.  This could be fixed e.g. by using Pango's word wrapping.
+anti-aliasing.  Unfortunately this isn't possible without a compositing
+window manager since X can only cut holes in windows using a binary
+mask, so I wouldn't expect this any time soon.
