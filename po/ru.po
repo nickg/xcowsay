@@ -1,0 +1,127 @@
+# Russian translations for xcowsay package
+# Copyright (C) 2010 Nick Gasson
+# This file is distributed under the same license as the xcowsay package.
+#  <kirin.yuri@ya.ru>, 2010.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: ru\n"
+"Report-Msgid-Bugs-To: nick@cakesniffer.co.uk\n"
+"POT-Creation-Date: 2010-01-05 07:50+0000\n"
+"PO-Revision-Date: 2010-02-03 10:25+0500\n"
+"Last-Translator:  <kirin.yuri@ya.ru>\n"
+"Language-Team: Russian\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%"
+"10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
+
+#: src/display_cow.c:93
+#, c-format
+msgid "Failed to load cow image: %s\n"
+msgstr "Ошибка при загрузке изображения: %s\n"
+
+#: src/xcowsay.c:118
+msgid "Usage"
+msgstr "Использование:"
+
+#: src/xcowsay.c:119
+msgid "Display a cow on your desktop with MESSAGE or standard input."
+msgstr "Отображает на рабочем столе  корову, 'произносящую' СООБЩЕНИЕ."
+
+#: src/xcowsay.c:120
+msgid "Options"
+msgstr "Параметры"
+
+#: src/xcowsay.c:121
+msgid "Display this message and exit."
+msgstr "Вывод этого сообщения."
+
+#: src/xcowsay.c:122
+msgid "Print version information."
+msgstr "Вывод номера версии."
+
+#: src/xcowsay.c:123
+msgid "Number of seconds to display message for"
+msgstr "Продолжительность отображения сообщения в секундах"
+
+#: src/xcowsay.c:124
+msgid "Number of milliseconds to delay per word."
+msgstr "Задержка между словами в миллисекундах."
+
+#: src/xcowsay.c:125
+msgid "Set message font (Pango format)."
+msgstr "Установить шрифт (формат Pango)."
+
+#: src/xcowsay.c:126
+msgid "Display an image instead of text."
+msgstr "Отобразить изображение вместо текста."
+
+#: src/xcowsay.c:127
+msgid "Display a thought bubble rather than a speech bubble."
+msgstr "Отобразить мысленный пузырь вместо словесного."
+
+#: src/xcowsay.c:128
+msgid "Run xcowsay in daemon mode."
+msgstr "Запустить xcowsay в режиме демона."
+
+#: src/xcowsay.c:129
+msgid "Size of the cow (small, med, large)."
+msgstr "Размер коровы (small, med, large)."
+
+#: src/xcowsay.c:130
+msgid "Use a different image instead of the cow."
+msgstr "Использовать другое изображение вместо коровы."
+
+#: src/xcowsay.c:131
+msgid "Display cow on monitor N."
+msgstr "Отобразить корову на мониторе N."
+
+#: src/xcowsay.c:132
+msgid "Force the cow to appear at screen location (X,Y)."
+msgstr "Указать координаты (X,Y) места обображения коровы."
+
+#: src/xcowsay.c:133
+msgid "Change relative position of bubble."
+msgstr "Изменить относительное положение пузыря."
+
+#: src/xcowsay.c:134
+msgid "Specify alternative config file."
+msgstr "Укзать альтернативный файл конфигурации."
+
+#: src/xcowsay.c:135
+msgid "Keep daemon attached to terminal."
+msgstr "Прикрепить демон к терминалу."
+
+#: src/xcowsay.c:136
+msgid ""
+"Default values for these options can be specified in the xcowsay config\n"
+"file.  See the man page for more information."
+msgstr ""
+"Настройки по-умолчанию можно указать в файле конфигурации.\n"
+"Подробности в странице руководства xcowsay (man xcowsay)."
+
+#: src/xcowsay.c:138
+msgid ""
+"If the display_time option is not set the display time will be calcuated\n"
+"from the reading_speed parameter multiplied by the word count.  Set the\n"
+"display time to zero to display the cow until it is clicked on."
+msgstr ""
+"Если параметр display_time не установлен, время отображения вычисляется\n"
+"как reading_speed умноженный на количество слов. При установке параметра\n"
+"display_time в ноль, корова отображается до первого щелчка мыши по ней."
+
+#: src/xcowsay.c:142
+msgid "Report bugs to nick@nickg.me.uk"
+msgstr "Об ошибках пишите на nick@nickg.me.uk"
+
+#: src/xcowsay.c:167
+#, c-format
+msgid "Error: %s is not a valid integer\n"
+msgstr "Ошибка: %s не является корректным целым числом\n"
+
+#: src/xcowsay.c:174
+#, c-format
+msgid "Error: failed to parse '%s' as position\n"
+msgstr "Ошибка: '%s' не является корректным значением координат\n"

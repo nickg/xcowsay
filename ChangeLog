@@ -1,6 +1,32 @@
+2010-09-29  Nick Gasson  <nick@nickg.me.uk>
+
+	* src/display_cow.c (normal_setup, display_cow): Calculate
+	maximum size of bubble to support word wrapping.
+	* src/bubblegen.c (make_text_bubble): Use Pango to word-wrap
+	text that is too wide to fit in the bubble.
+	* src/xcowsay.c (main): Add --no-wrap option to disable word
+	wrapping.
+	* xcowsay.6: Document new word wrapping feature.
+
+2010-09-28  Nick Gasson  <nick@nickg.me.uk>
+
+	* configure.ac: Place install prefix in config.h rather than on
+	the command line. This fixes a bug where code would not be
+	rebuilt if the prefix changed.
+
+2010-08-28  Nick Gasson  <nick@nickg.me.uk>
+
+	* configure.ac: Fix bug where --disable-dbus would still define
+	WITH_DBUS.
+
+	* src/display_cow.c (normal_setup): time=0 means display
+	forever.
+	* xcowsay.6: Document new time=0 feature.
+
 2010-04-01  Nick Gasson  <nick@nickg.me.uk>
 
-	* src/display_cow.c (display_cow): Use random(3) rather than rand(3)
+	* src/display_cow.c (display_cow): Use random(3) rather than
+	rand(3)
 
 2010-01-05  Nick Gasson  <nick@nickg.me.uk>
 

@@ -1,4 +1,4 @@
-AC_INIT([xcowsay], [1.2],
+AC_INIT([xcowsay], [1.3],
         [Nick Gasson <nick@nick.me.uk>],
         [xcowsay])
 AM_INIT_AUTOMAKE([-Wall])
@@ -36,11 +36,17 @@ AC_ARG_ENABLE(dbus,
         [AS_HELP_STRING([--enable-dbus], [Build the DBus daemon.])],
         [if test "$enableval" = "yes" ; then
            modules="$xcowsayd_modules"
+           CFLAGS="$CFLAGS -DWITH_DBUS"
          fi
-         CFLAGS="$CFLAGS -DWITH_DBUS"
 	 AC_FUNC_FORK])
 
 PKG_CHECK_MODULES(XCOWSAY, $modules)
+
+# Not sure why autoconf doesn't define this itself
+pkgdatadir=$datadir/xcowsay
+
+AC_DEFINE_DIR([DATADIR], [pkgdatadir], [Location of data files])
+AC_DEFINE_DIR([LOCALEDIR], [localedir], [Location of locale files])
 
 AC_CONFIG_HEADERS([config.h])
 AC_OUTPUT([Makefile src/Makefile po/Makefile.in])

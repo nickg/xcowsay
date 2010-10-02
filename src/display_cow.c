@@ -15,6 +15,10 @@
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+#ifdef HAVE_CONFIG_H
+#include "config.h"
+#endif
+
 #define _GNU_SOURCE
 #include <stdio.h>
 #include <stdlib.h>
@@ -36,7 +40,8 @@
 #include "settings.h"
 #include "i18n.h"
 
-GdkPixbuf *make_text_bubble(char *text, int *p_width, int *p_height, cowmode_t mode);
+GdkPixbuf *make_text_bubble(char *text, int *p_width, int *p_height,
+                            int max_width, cowmode_t mode);
 GdkPixbuf *make_dream_bubble(const char *file, int *p_width, int *p_height);
 
 #define TICK_TIMEOUT   100
@@ -54,6 +59,7 @@ typedef struct {
    cowstate_t state;
    int transition_timeout;
    int display_time;
+   int screen_width, screen_height;
 } xcowsay_t;
 
 static xcowsay_t xcowsay;
@@ -78,7 +84,6 @@ static cowstate_t next_state(cowstate_t state)
 static GdkPixbuf *load_cow()
 {
    char *cow_path;
-
    const char *alt_image = get_string_option("alt_image");
 
    if (*alt_image)
@@ -197,7 +202,11 @@ static void normal_setup(const char *text, bool debug, cowmode_t mode)
 
    int min_display = get_int_option("min_display_time");
    int max_display = get_int_option("max_display_time");
-   if (xcowsay.display_time < min_display) {
+   if (xcowsay.display_time == 0) {
+      xcowsay.display_time = INT_MAX;
+      debug_msg("Set display time to permanent\n");
+   }
+   else if (xcowsay.display_time < min_display) {
       xcowsay.display_time = min_display;
       debug_msg("Display time too short: clamped to %d\n", min_display);
    }
@@ -205,9 +214,13 @@ static void normal_setup(const char *text, bool debug, cowmode_t mode)
       xcowsay.display_time = max_display;
       debug_msg("Display time too long: clamped to %d\n", max_display);
    }
+
+   const int cow_width = shape_width(xcowsay.cow);
+   const int max_width = xcowsay.screen_width - cow_width;
    
-   xcowsay.bubble_pixbuf = make_text_bubble(text_copy, &xcowsay.bubble_width,
-                                            &xcowsay.bubble_height, mode);
+   xcowsay.bubble_pixbuf = make_text_bubble(
+      text_copy, &xcowsay.bubble_width, &xcowsay.bubble_height,
+      max_width, mode);
    free(text_copy);
 }
 
@@ -225,6 +238,23 @@ static void dream_setup(const char *file, bool debug)
 
 void display_cow(bool debug, const char *text, bool run_main, cowmode_t mode)
 {
+   GdkScreen *screen = gdk_screen_get_default();
+
+   gint n_monitors = gdk_screen_get_n_monitors(screen);
+
+   gint pick = get_int_option("monitor");
+   if (pick < 0 || pick >= n_monitors)
+      pick = random() % n_monitors;
+   
+   GdkRectangle geom;
+   gdk_screen_get_monitor_geometry(screen, pick, &geom);
+
+   xcowsay.screen_width = geom.width;
+   xcowsay.screen_height = geom.height;
+
+   g_assert(xcowsay.cow_pixbuf);
+   xcowsay.cow = make_shape_from_pixbuf(xcowsay.cow_pixbuf);
+
    switch (mode) {
    case COWMODE_NORMAL:
    case COWMODE_THINK:
@@ -238,9 +268,6 @@ void display_cow(bool debug, const char *text, bool run_main, cowmode_t mode)
       exit(1);
    }
    
-   g_assert(xcowsay.cow_pixbuf);
-   xcowsay.cow = make_shape_from_pixbuf(xcowsay.cow_pixbuf);
-
    int total_width = shape_width(xcowsay.cow)
       + get_int_option("bubble_x")
       + xcowsay.bubble_width;
@@ -248,19 +275,8 @@ void display_cow(bool debug, const char *text, bool run_main, cowmode_t mode)
 
    int bubble_off = max((xcowsay.bubble_height - shape_height(xcowsay.cow))/2, 0);
 
-   GdkScreen *screen = gdk_screen_get_default();
-
-   gint n_monitors = gdk_screen_get_n_monitors(screen);
-
-   gint pick = get_int_option("monitor");
-   if (pick < 0 || pick >= n_monitors)
-      pick = random() % n_monitors;
-   
-   GdkRectangle geom;
-   gdk_screen_get_monitor_geometry(screen, pick, &geom);
-
-   int area_w = geom.width - total_width;
-   int area_h = geom.height - total_height;
+   int area_w = xcowsay.screen_width - total_width;
+   int area_h = xcowsay.screen_height - total_height;
 
    // Fit the cow on the screen as best as we can
    // The area can't be be zero or we'd get an FPE

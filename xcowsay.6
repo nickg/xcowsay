@@ -80,6 +80,9 @@ Display the cow for
 .I time
 seconds. This overrides any value set for
 .IR reading_speed .
+Setting
+.I time
+to zero displays the cow until it is clicked.
 The corresponding config file option is
 .IR display_time .
 .TP
@@ -140,6 +143,16 @@ option to create your own characters.  The config file options are
 .I bubble_x 
 and 
 .IR bubble_y .
+.TP
+.B "--no-wrap"
+Disable word wrapping when the bubble is too wide to fit on the screen.
+The config file option
+.I wrap
+can be set to
+.I true
+or 
+.I false
+to set this explicitly.
 .TP
 .B "--debug"
 Print messages about what
