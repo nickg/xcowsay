@@ -61,17 +61,164 @@ typedef struct {
 
 typedef enum { NORMAL, THOUGHT } bubble_style_t;
 
-static void bubble_init(bubble_t *b, bubble_style_t style)
+static void bubble_init_left(bubble_t *b, bubble_style_t style)
 {
    GdkColor black, white, bright_green;
    GdkColormap *colormap;
    GdkPoint tip_points[5];
-   GdkVisual *root_visual;
+   
+   colormap = gdk_colormap_get_system();
+   gdk_color_black(colormap, &black);
+   gdk_color_white(colormap, &white);
 
-   root_visual = gdk_visual_get_system();
-   b->pixmap = gdk_pixmap_new(NULL, b->width, b->height, root_visual->depth);
-   g_assert(b->pixmap);
-   b->gc = gdk_gc_new(b->pixmap);
+   bright_green.red = 0;
+   bright_green.green = 65535;   // Bright green is alpha
+   bright_green.blue = 0;
+   gdk_gc_set_background(b->gc, &black);
+   gdk_gc_set_rgb_fg_color(b->gc, &bright_green);
+
+   gdk_draw_rectangle(b->pixmap, b->gc, TRUE, 0, 0, b->width, b->height);
+   
+   b->width -= BUBBLE_BORDER;
+   b->height -= BUBBLE_BORDER;
+
+   // Space between cow and bubble
+   int middle = style == NORMAL ? TIP_WIDTH : THINK_WIDTH;
+
+   // Draw the white corners
+   gdk_gc_set_foreground(b->gc, &white);
+   gdk_draw_arc(b->pixmap, b->gc, TRUE, BUBBLE_BORDER,
+                BUBBLE_BORDER, CORNER_DIAM, CORNER_DIAM, 90*64, 90*64);
+   gdk_draw_arc(b->pixmap, b->gc, TRUE, BUBBLE_BORDER,
+                b->height - CORNER_DIAM, CORNER_DIAM,
+                CORNER_DIAM, 180*64, 90*64);
+   gdk_draw_arc(b->pixmap, b->gc, TRUE,
+                b->width - CORNER_DIAM - BUBBLE_BORDER - middle,
+                b->height - CORNER_DIAM, CORNER_DIAM,
+                CORNER_DIAM, 270*64, 90*64);
+   gdk_draw_arc(b->pixmap, b->gc, TRUE,
+                b->width - CORNER_DIAM - BUBBLE_BORDER - middle,
+                BUBBLE_BORDER, CORNER_DIAM, CORNER_DIAM, 0*64, 90*64);
+
+   // Fill in the middle of the bubble
+   gdk_draw_rectangle(b->pixmap, b->gc, TRUE,
+                      CORNER_RADIUS + BUBBLE_BORDER,
+                      BUBBLE_BORDER,
+                      b->width - middle - BUBBLE_BORDER - CORNER_DIAM,
+                      b->height - BUBBLE_BORDER);
+   gdk_draw_rectangle(b->pixmap, b->gc, TRUE,
+                      BUBBLE_BORDER, BUBBLE_BORDER + CORNER_RADIUS,
+                      b->width - middle - BUBBLE_BORDER*2,
+                      b->height - BUBBLE_BORDER - CORNER_DIAM);
+
+   if (style == NORMAL) {
+      // The points on the tip part
+      int tip_compute_offset = (b->height - BUBBLE_BORDER - CORNER_DIAM)/3;
+      int tip_offset[3] = { tip_compute_offset, tip_compute_offset, tip_compute_offset };
+      if (tip_compute_offset < MIN_TIP_HEIGHT) {
+         int new_offset = (b->height - BUBBLE_BORDER - CORNER_DIAM - MIN_TIP_HEIGHT)/2;
+         tip_offset[0] = new_offset;
+         tip_offset[1] = MIN_TIP_HEIGHT;
+         tip_offset[2] = new_offset;
+      }
+      
+      tip_points[0].x = b->width - middle - BUBBLE_BORDER;
+      tip_points[0].y = BUBBLE_BORDER + CORNER_RADIUS;
+      tip_points[1].x = b->width - middle - BUBBLE_BORDER;
+      tip_points[1].y = BUBBLE_BORDER + CORNER_RADIUS + tip_offset[0];
+      tip_points[2].x = b->width - BUBBLE_BORDER;
+      tip_points[2].y = BUBBLE_BORDER + CORNER_RADIUS + tip_offset[0] + tip_offset[1]/2;
+      tip_points[3].x = b->width - middle - BUBBLE_BORDER;
+      tip_points[3].y = BUBBLE_BORDER + CORNER_RADIUS + tip_offset[0] + tip_offset[1];
+      tip_points[4].x = b->width - middle - BUBBLE_BORDER;
+      tip_points[4].y = b->height - CORNER_RADIUS;
+      
+      gdk_draw_polygon(b->pixmap, b->gc, TRUE, tip_points, 5);
+   }
+   else {
+      // Incrementally move the top kircle down so it's within the
+      // bubble's border
+      int big_y = BIG_KIRCLE_Y;
+      int small_y = SMALL_KIRCLE_Y;
+      
+      while (big_y + KIRCLE_TOP_MIN > b->height/2) {
+         big_y /= 2;
+         small_y /= 2;
+      }
+      
+
+      printf("width=%d big_x=%d small_x=%d\n",
+             b->width, BIG_KIRCLE_X, SMALL_KIRCLE_X);
+      
+      // Draw two think kircles
+      gdk_draw_arc(b->pixmap, b->gc, TRUE,
+                   b->width - BIG_KIRCLE_X - BIG_KIRCLE_DIAM,
+                   b->height/2 - big_y, BIG_KIRCLE_DIAM,
+                   BIG_KIRCLE_DIAM, 0, 360*64);
+
+      gdk_draw_arc(b->pixmap, b->gc, TRUE,
+                   b->width - SMALL_KIRCLE_X - SMALL_KIRCLE_DIAM,
+                   b->height/2 - small_y, SMALL_KIRCLE_DIAM,
+                   SMALL_KIRCLE_DIAM, 0, 360*64);
+      
+      gdk_gc_set_line_attributes(b->gc, 4, GDK_LINE_SOLID,
+                                 GDK_CAP_ROUND, GDK_JOIN_ROUND);
+      gdk_gc_set_foreground(b->gc, &black);
+      gdk_draw_arc(b->pixmap, b->gc, FALSE,
+                   b->width - BIG_KIRCLE_X - BIG_KIRCLE_DIAM,
+                   b->height/2 - big_y, BIG_KIRCLE_DIAM,
+                   BIG_KIRCLE_DIAM, 0, 360*64);
+
+      gdk_draw_arc(b->pixmap, b->gc, FALSE,
+                   b->width - SMALL_KIRCLE_X - SMALL_KIRCLE_DIAM,
+                   b->height/2 - small_y, SMALL_KIRCLE_DIAM,
+                   SMALL_KIRCLE_DIAM, 0, 360*64);
+   }
+   
+   // Draw the black rounded corners
+   gdk_gc_set_line_attributes(b->gc, 4, GDK_LINE_SOLID,
+                              GDK_CAP_ROUND, GDK_JOIN_ROUND);
+   gdk_gc_set_foreground(b->gc, &black);
+   gdk_draw_arc(b->pixmap, b->gc, FALSE, BUBBLE_BORDER,
+                BUBBLE_BORDER, CORNER_DIAM, CORNER_DIAM, 90*64, 90*64);
+   gdk_draw_arc(b->pixmap, b->gc, FALSE, BUBBLE_BORDER,
+                b->height - CORNER_DIAM, CORNER_DIAM,
+                CORNER_DIAM, 180*64, 90*64);
+   gdk_draw_arc(b->pixmap, b->gc, FALSE,
+                b->width - middle - CORNER_DIAM - BUBBLE_BORDER,
+                b->height - CORNER_DIAM, CORNER_DIAM,
+                CORNER_DIAM, 270*64, 90*64);
+   gdk_draw_arc(b->pixmap, b->gc, FALSE,
+                b->width - middle - CORNER_DIAM - BUBBLE_BORDER,
+                BUBBLE_BORDER, CORNER_DIAM, CORNER_DIAM, 0*64, 90*64);
+
+   // Draw the top, bottom, and left sides (easy as they're straight!)
+   gdk_draw_line(b->pixmap, b->gc,
+                 BUBBLE_BORDER,
+                 CORNER_RADIUS + BUBBLE_BORDER,
+                 BUBBLE_BORDER, b->height - CORNER_RADIUS);
+   gdk_draw_line(b->pixmap, b->gc,
+                 BUBBLE_BORDER + CORNER_RADIUS, BUBBLE_BORDER,
+                 b->width - CORNER_RADIUS - middle, BUBBLE_BORDER);
+   gdk_draw_line(b->pixmap, b->gc,
+                 BUBBLE_BORDER + CORNER_RADIUS, b->height,
+                 b->width - CORNER_RADIUS - middle, b->height);
+   
+   if (style == NORMAL)
+      gdk_draw_lines(b->pixmap, b->gc, tip_points, 5);
+   else
+      gdk_draw_line(b->pixmap, b->gc,
+                    BUBBLE_BORDER + middle,
+                    CORNER_RADIUS + BUBBLE_BORDER,
+                    BUBBLE_BORDER + middle,
+                    b->height - CORNER_RADIUS);
+}
+
+static void bubble_init_right(bubble_t *b, bubble_style_t style)
+{
+   GdkColor black, white, bright_green;
+   GdkColormap *colormap;
+   GdkPoint tip_points[5];
    
    colormap = gdk_colormap_get_system();
    gdk_color_black(colormap, &black);
@@ -214,6 +361,18 @@ static void bubble_init(bubble_t *b, bubble_style_t style)
                     CORNER_RADIUS + BUBBLE_BORDER,
                     BUBBLE_BORDER + middle,
                     b->height - CORNER_RADIUS);
+}
+
+static void bubble_init(bubble_t *b, bubble_style_t style)
+{
+   GdkVisual *root_visual;
+
+   root_visual = gdk_visual_get_system();
+   b->pixmap = gdk_pixmap_new(NULL, b->width, b->height, root_visual->depth);
+   g_assert(b->pixmap);
+   b->gc = gdk_gc_new(b->pixmap);
+
+   bubble_init_left(b, style);
 }
 
 static void bubble_size_from_content(bubble_t *b, bubble_style_t style,
