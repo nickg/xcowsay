@@ -372,7 +372,10 @@ static void bubble_init(bubble_t *b, bubble_style_t style)
    g_assert(b->pixmap);
    b->gc = gdk_gc_new(b->pixmap);
 
-   bubble_init_left(b, style);
+   if (get_bool_option("left"))
+      bubble_init_left(b, style);
+   else
+      bubble_init_right(b, style);
 }
 
 static void bubble_size_from_content(bubble_t *b, bubble_style_t style,

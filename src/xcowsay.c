@@ -73,6 +73,7 @@ static struct option long_options[] = {
    {"bubble-at", required_argument, 0, 'b'},
    {"at", required_argument, 0, 'a'},
    {"no-wrap", no_argument, 0, 'w'},
+   {"left", no_argument, 0, 'l'},
    {"config", required_argument, 0, 'o'},
    {"debug", no_argument, &debug, 1},
    {0, 0, 0, 0}
@@ -112,6 +113,7 @@ static void usage()
       "     --at=X,Y\t\t%s\n"
       "     --bubble-at=X,Y\t%s\n"
       "     --no-wrap\t\t%s\n"
+      "     --left\t\t%s\n"
       "     --config=FILE\t%s\n"
       "     --debug\t\t%s\n\n"
       "%s\n\n"
@@ -134,6 +136,7 @@ static void usage()
       i18n("Force the cow to appear at screen location (X,Y)."),
       i18n("Change relative position of bubble."),
       i18n("Disable wrapping if text cannot fit on screen."),
+      i18n("Make the bubble appear to the left of cow."),
       i18n("Specify alternative config file."),
       i18n("Keep daemon attached to terminal."),
       i18n("Default values for these options can be specified in the "
@@ -244,6 +247,7 @@ int main(int argc, char **argv)
    add_int_option("bubble_y", 0);
    add_string_option("alt_config_file", "");
    add_bool_option("wrap", true);
+   add_bool_option("left", false);
    
    parse_config_file();
    
@@ -304,6 +308,9 @@ int main(int argc, char **argv)
          break;
       case 'w':
          set_bool_option("wrap", false);
+         break;
+      case 'l':
+         set_bool_option("left", true);
          break;
       case '?':
          // getopt_long already printed an error message
