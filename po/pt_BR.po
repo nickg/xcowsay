@@ -8,94 +8,103 @@ msgid ""
 msgstr ""
 "Project-Id-Version: pt_BR\n"
 "Report-Msgid-Bugs-To: nick@cakesniffer.co.uk\n"
-"POT-Creation-Date: 2010-01-05 07:50+0000\n"
+"POT-Creation-Date: 2010-11-06 15:33+0000\n"
 "PO-Revision-Date: 2010-01-05 15:09-0200\n"
 "Last-Translator: Phantom X <megaphantomx at bol.com.br>\n"
 "Language-Team: Português do Brasil <pt@li.org>\n"
+"Language: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "X-Generator: KBabel 1.11.4\n"
 "Plural-Forms:  nplurals=2; plural=(n > 1);\n"
 
-#: src/display_cow.c:93
+#: src/display_cow.c:98
 #, c-format
 msgid "Failed to load cow image: %s\n"
 msgstr "Falha ao carregar imagem da vaca: %s\n"
 
-#: src/xcowsay.c:118
+#: src/xcowsay.c:122
 msgid "Usage"
 msgstr "Uso"
 
-#: src/xcowsay.c:119
+#: src/xcowsay.c:123
 msgid "Display a cow on your desktop with MESSAGE or standard input."
 msgstr "Exibir uma vaca no seu desktop com MENSAGEM ou entrada padrão."
 
-#: src/xcowsay.c:120
+#: src/xcowsay.c:124
 msgid "Options"
 msgstr "Opções"
 
-#: src/xcowsay.c:121
+#: src/xcowsay.c:125
 msgid "Display this message and exit."
 msgstr "Exibir esta mensagem e sair."
 
-#: src/xcowsay.c:122
+#: src/xcowsay.c:126
 msgid "Print version information."
 msgstr "Imprimir na tela informação sobre versão."
 
-#: src/xcowsay.c:123
+#: src/xcowsay.c:127
 msgid "Number of seconds to display message for"
 msgstr "Número de segundos para exibir mensagem"
 
-#: src/xcowsay.c:124
+#: src/xcowsay.c:128
 msgid "Number of milliseconds to delay per word."
 msgstr "Número de milisegundos de atraso por palavra."
 
-#: src/xcowsay.c:125
+#: src/xcowsay.c:129
 msgid "Set message font (Pango format)."
 msgstr "Configurar fonte da mensagem (formato Pango)."
 
-#: src/xcowsay.c:126
+#: src/xcowsay.c:130
 msgid "Display an image instead of text."
 msgstr "Exibir uma imagem em vez de texto."
 
-#: src/xcowsay.c:127
+#: src/xcowsay.c:131
+msgid "Make the bubble appear to the left of cow."
+msgstr ""
+
+#: src/xcowsay.c:132
 msgid "Display a thought bubble rather than a speech bubble."
 msgstr "Exibir um balão de pensamento em vez de um balão de fala."
 
-#: src/xcowsay.c:128
+#: src/xcowsay.c:133
 msgid "Run xcowsay in daemon mode."
 msgstr "Executar xcowsay no modo daemon."
 
-#: src/xcowsay.c:129
+#: src/xcowsay.c:134
 msgid "Size of the cow (small, med, large)."
 msgstr "Tamanho da vaca (small, med, large)."
 
-#: src/xcowsay.c:130
+#: src/xcowsay.c:135
 msgid "Use a different image instead of the cow."
 msgstr "Usar uma imagem diferente em vez da vaca."
 
-#: src/xcowsay.c:131
+#: src/xcowsay.c:136
 msgid "Display cow on monitor N."
 msgstr "Exibir vaca no monitor N."
 
-#: src/xcowsay.c:132
+#: src/xcowsay.c:137
 msgid "Force the cow to appear at screen location (X,Y)."
 msgstr "Forçar a vaca a aparecer no local da tela (X,Y)."
 
-#: src/xcowsay.c:133
+#: src/xcowsay.c:138
 msgid "Change relative position of bubble."
 msgstr "Modificar a posição relativa da bolha."
 
-#: src/xcowsay.c:134
+#: src/xcowsay.c:139
+msgid "Disable wrapping if text cannot fit on screen."
+msgstr ""
+
+#: src/xcowsay.c:140
 msgid "Specify alternative config file."
 msgstr "Especificar arquivo de configuração alternativo."
 
-#: src/xcowsay.c:135
+#: src/xcowsay.c:141
 msgid "Keep daemon attached to terminal."
 msgstr "Manter o daemon anexado ao terminal."
 
-#: src/xcowsay.c:136
+#: src/xcowsay.c:142
 msgid ""
 "Default values for these options can be specified in the xcowsay config\n"
 "file.  See the man page for more information."
@@ -103,7 +112,7 @@ msgstr ""
 "Valores padrão para estas opções podem ser especificados no arquivo\n"
 "de configuração. Veja a página de manual para mais informação."
 
-#: src/xcowsay.c:138
+#: src/xcowsay.c:144
 msgid ""
 "If the display_time option is not set the display time will be calcuated\n"
 "from the reading_speed parameter multiplied by the word count.  Set the\n"
@@ -113,16 +122,16 @@ msgstr ""
 "calculado do parâmetro reading_speed multiplicado pelo número de palavras. \n"
 "Configure para zero para exibir a vaca até que ela seja clicada."
 
-#: src/xcowsay.c:142
+#: src/xcowsay.c:148
 msgid "Report bugs to nick@nickg.me.uk"
 msgstr "Reportar bugs para nick@nickg.me.uk"
 
-#: src/xcowsay.c:167
+#: src/xcowsay.c:173
 #, c-format
 msgid "Error: %s is not a valid integer\n"
 msgstr "Erro: %s não é um inteiro válido\n"
 
-#: src/xcowsay.c:174
+#: src/xcowsay.c:180
 #, c-format
 msgid "Error: failed to parse '%s' as position\n"
 msgstr "Erro: falha ao analisar '%s' como posição\n"
