@@ -17,7 +17,7 @@ AM_GNU_GETTEXT([external])
 
 # Checks for header files.
 AC_HEADER_STDC
-AC_CHECK_HEADERS([fcntl.h libintl.h locale.h stdlib.h string.h])
+AC_CHECK_HEADERS([fcntl.h libintl.h locale.h stdlib.h string.h limits.h])
 
 # Checks for typedefs, structures, and compiler characteristics.
 AC_HEADER_STDBOOL
@@ -27,7 +27,7 @@ AC_TYPE_SIZE_T
 # Checks for library functions.
 AC_FUNC_MALLOC
 AC_CHECK_FUNCS([strtol setlocale strcasecmp strdup strchr \
-                getcwd strerror])
+                getcwd strerror realpath])
 
 # Check for pkg-config packages
 modules="gtk+-2.0 gdk-pixbuf-2.0"

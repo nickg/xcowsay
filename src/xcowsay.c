@@ -26,9 +26,9 @@
 #include <getopt.h>
 #include <assert.h>
 #include <string.h>
+#include <limits.h>
 
 #include <sys/types.h>
-#include <sys/stat.h>
 #include <unistd.h>
 #include <errno.h>
 
@@ -335,17 +335,14 @@ int main(int argc, char **argv)
 
       if (dream_file != NULL) {
          // Make path absolute
-         char *wd = getcwd(NULL, 0);
-         char *abs_path;
+         char *abs_path = realpath(dream_file, NULL);
+         if (abs_path == NULL) {
+            perror(dream_file);
+            exit(EXIT_FAILURE);
+         }
 
-         asprintf(&abs_path, "%s/%s", wd, dream_file);
-         free(wd);
-
-         struct stat dummy;
-         if (stat(abs_path, &dummy) != 0) {
-            fprintf(stderr, "Error: %s: %s\n", abs_path,
-               strerror(errno));
-            free(abs_path);
+         if (access(abs_path, R_OK) != 0) {
+            perror(abs_path);
             exit(EXIT_FAILURE);
          }
          
