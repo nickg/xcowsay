@@ -268,6 +268,8 @@ void display_cow(bool debug, const char *text, bool run_main, cowmode_t mode)
       exit(1);
    }
    
+   xcowsay.bubble = make_shape_from_pixbuf(xcowsay.bubble_pixbuf);   
+   
    int total_width = shape_width(xcowsay.cow)
       + get_int_option("bubble_x")
       + xcowsay.bubble_width;
@@ -297,19 +299,33 @@ void display_cow(bool debug, const char *text, bool run_main, cowmode_t mode)
    else if (cow_y >= area_h)
       cow_y = area_h - 1;
 
-   move_shape(xcowsay.cow,
-      geom.x + cow_x,
-      geom.y + bubble_off + cow_y);
-   show_shape(xcowsay.cow);
-
-   xcowsay.bubble = make_shape_from_pixbuf(xcowsay.bubble_pixbuf);   
-   int bx = shape_x(xcowsay.cow) + shape_width(xcowsay.cow)
-      + get_int_option("bubble_x");
-   int by = shape_y(xcowsay.cow)
-      + (shape_height(xcowsay.cow) - shape_height(xcowsay.bubble))/2
-      + get_int_option("bubble_y");
-   move_shape(xcowsay.bubble, bx, by);
-   
+   if (get_bool_option("left")) {
+      move_shape(xcowsay.cow,
+                 geom.x + cow_x + xcowsay.bubble_width,
+                 geom.y + bubble_off + cow_y);
+      show_shape(xcowsay.cow);
+      
+      int bx = shape_x(xcowsay.cow) - xcowsay.bubble_width
+         + get_int_option("bubble_x");
+      int by = shape_y(xcowsay.cow)
+         + (shape_height(xcowsay.cow) - shape_height(xcowsay.bubble))/2
+         + get_int_option("bubble_y");
+      move_shape(xcowsay.bubble, bx, by);
+   }
+   else {
+      move_shape(xcowsay.cow,
+                 geom.x + cow_x,
+                 geom.y + bubble_off + cow_y);
+      show_shape(xcowsay.cow);
+      
+      int bx = shape_x(xcowsay.cow) + shape_width(xcowsay.cow)
+         + get_int_option("bubble_x");
+      int by = shape_y(xcowsay.cow)
+         + (shape_height(xcowsay.cow) - shape_height(xcowsay.bubble))/2
+         + get_int_option("bubble_y");
+      move_shape(xcowsay.bubble, bx, by);
+   }
+      
    xcowsay.state = csLeadIn;
    xcowsay.transition_timeout = get_int_option("lead_in_time");
    g_timeout_add(TICK_TIMEOUT, tick, NULL);

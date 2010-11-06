@@ -1,3 +1,17 @@
+2010-11-06  Nick Gasson  <nick@nickg.me.uk>
+
+	* src/bubblegen.c (bubble_init_left): Fix rendering of
+	left-handed though bubbles.
+	* src/bubblegen.c (bubble_content_left): Align left-handed text
+	content correctly.
+
+2010-10-23  Nick Gasson  <nick@nickg.me.uk>
+
+	* src/bubblegen.c (bubble_init): Add a function to generate
+	left-handed bubbles.
+	* src/xcowsay.c (main): Add --left option to put bubble on
+	the left of the cow.
+
 2010-10-02  Nick Gasson  <nick@nickg.me.uk>
 
 	* xcowsay.6: Update bugs section: remove note about lack of word
