@@ -105,6 +105,7 @@ static void usage()
       " -r, --reading-speed=N\t%s\n"
       " -f, --font=FONT\t%s\n"
       " -d, --dream=FILE\t%s\n"
+      " -l, --left\t\t%s\n"
       "     --think\t\t%s\n"
       "     --daemon\t\t%s\n"
       "     --cow-size=SIZE\t%s\n"
@@ -113,7 +114,6 @@ static void usage()
       "     --at=X,Y\t\t%s\n"
       "     --bubble-at=X,Y\t%s\n"
       "     --no-wrap\t\t%s\n"
-      "     --left\t\t%s\n"
       "     --config=FILE\t%s\n"
       "     --debug\t\t%s\n\n"
       "%s\n\n"
@@ -128,6 +128,7 @@ static void usage()
       i18n("Number of milliseconds to delay per word."),
       i18n("Set message font (Pango format)."),
       i18n("Display an image instead of text."),
+      i18n("Make the bubble appear to the left of cow."),
       i18n("Display a thought bubble rather than a speech bubble."),
       i18n("Run xcowsay in daemon mode."),
       i18n("Size of the cow (small, med, large)."),
@@ -136,7 +137,6 @@ static void usage()
       i18n("Force the cow to appear at screen location (X,Y)."),
       i18n("Change relative position of bubble."),
       i18n("Disable wrapping if text cannot fit on screen."),
-      i18n("Make the bubble appear to the left of cow."),
       i18n("Specify alternative config file."),
       i18n("Keep daemon attached to terminal."),
       i18n("Default values for these options can be specified in the "
@@ -252,7 +252,7 @@ int main(int argc, char **argv)
    parse_config_file();
    
    int c, index = 0, failure = 0;
-   const char *spec = "hvd:rt:f:";
+   const char *spec = "hvld:rt:f:";
    const char *dream_file = NULL;
    while ((c = getopt_long(argc, argv, spec, long_options, &index)) != -1) {
       switch (c) {

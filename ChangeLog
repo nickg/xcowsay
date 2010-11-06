@@ -4,6 +4,8 @@
 	left-handed though bubbles.
 	* src/bubblegen.c (bubble_content_left): Align left-handed text
 	content correctly.
+	* src/xcowsay.c (main): Add -l option as short form of --left.
+	* xcowsay.6: Document --left option.
 
 	* src/xcowsay.c (main): Fix bug with absolute dream image
 	paths. Use realpath(3) to get canonical path.
