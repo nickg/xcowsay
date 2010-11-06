@@ -146,10 +146,6 @@ static void bubble_init_left(bubble_t *b, bubble_style_t style)
          small_y /= 2;
       }
       
-
-      printf("width=%d big_x=%d small_x=%d\n",
-             b->width, BIG_KIRCLE_X, SMALL_KIRCLE_X);
-      
       // Draw two think kircles
       gdk_draw_arc(b->pixmap, b->gc, TRUE,
                    b->width - BIG_KIRCLE_X - BIG_KIRCLE_DIAM,
@@ -208,9 +204,9 @@ static void bubble_init_left(bubble_t *b, bubble_style_t style)
       gdk_draw_lines(b->pixmap, b->gc, tip_points, 5);
    else
       gdk_draw_line(b->pixmap, b->gc,
-                    BUBBLE_BORDER + middle,
+                    b->width - THINK_WIDTH - BUBBLE_BORDER,
                     CORNER_RADIUS + BUBBLE_BORDER,
-                    BUBBLE_BORDER + middle,
+                    b->width - THINK_WIDTH - BUBBLE_BORDER,
                     b->height - CORNER_RADIUS);
 }
 
@@ -399,8 +395,13 @@ static GdkPixbuf *bubble_tidy(bubble_t *b)
 
 static int bubble_content_left(bubble_style_t style)
 {
-   int middle = style == NORMAL ? TIP_WIDTH : THINK_WIDTH;
-   return BUBBLE_BORDER + middle + CORNER_RADIUS;
+   if (get_bool_option("left")) {
+      return BUBBLE_BORDER + CORNER_RADIUS;
+   }
+   else {
+      const int middle = style == NORMAL ? TIP_WIDTH : THINK_WIDTH;
+      return BUBBLE_BORDER + middle + CORNER_RADIUS;
+   }
 }
 
 static int bubble_content_top()
