@@ -1,3 +1,7 @@
+2010-11-11  Nick Gasson  <nick@nickg.me.uk>
+   
+   * xcowsay 1.3 released!
+
 2010-11-06  Nick Gasson  <nick@nickg.me.uk>
 
 	* src/bubblegen.c (bubble_init_left): Fix rendering of
