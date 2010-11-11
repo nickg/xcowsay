@@ -9,7 +9,7 @@ msgstr ""
 "Project-Id-Version: pt_BR\n"
 "Report-Msgid-Bugs-To: nick@cakesniffer.co.uk\n"
 "POT-Creation-Date: 2010-11-06 15:33+0000\n"
-"PO-Revision-Date: 2010-01-05 15:09-0200\n"
+"PO-Revision-Date: 2010-11-06 16:39-0200\n"
 "Last-Translator: Phantom X <megaphantomx at bol.com.br>\n"
 "Language-Team: Português do Brasil <pt@li.org>\n"
 "Language: \n"
@@ -38,11 +38,11 @@ msgstr "Opções"
 
 #: src/xcowsay.c:125
 msgid "Display this message and exit."
-msgstr "Exibir esta mensagem e sair."
+msgstr "Exibe esta mensagem e sair."
 
 #: src/xcowsay.c:126
 msgid "Print version information."
-msgstr "Imprimir na tela informação sobre versão."
+msgstr "Imprime na tela informação sobre versão."
 
 #: src/xcowsay.c:127
 msgid "Number of seconds to display message for"
@@ -54,23 +54,23 @@ msgstr "Número de milisegundos de atraso por palavra."
 
 #: src/xcowsay.c:129
 msgid "Set message font (Pango format)."
-msgstr "Configurar fonte da mensagem (formato Pango)."
+msgstr "Configura fonte da mensagem (formato Pango)."
 
 #: src/xcowsay.c:130
 msgid "Display an image instead of text."
-msgstr "Exibir uma imagem em vez de texto."
+msgstr "Exibe uma imagem em vez de texto."
 
 #: src/xcowsay.c:131
 msgid "Make the bubble appear to the left of cow."
-msgstr ""
+msgstr "Faz a bolha aparecer à esquerda da vaca."
 
 #: src/xcowsay.c:132
 msgid "Display a thought bubble rather than a speech bubble."
-msgstr "Exibir um balão de pensamento em vez de um balão de fala."
+msgstr "Exibe um balão de pensamento em vez de um balão de fala."
 
 #: src/xcowsay.c:133
 msgid "Run xcowsay in daemon mode."
-msgstr "Executar xcowsay no modo daemon."
+msgstr "Executa xcowsay no modo daemon."
 
 #: src/xcowsay.c:134
 msgid "Size of the cow (small, med, large)."
@@ -78,31 +78,31 @@ msgstr "Tamanho da vaca (small, med, large)."
 
 #: src/xcowsay.c:135
 msgid "Use a different image instead of the cow."
-msgstr "Usar uma imagem diferente em vez da vaca."
+msgstr "Usr uma imagem diferente em vez da vaca."
 
 #: src/xcowsay.c:136
 msgid "Display cow on monitor N."
-msgstr "Exibir vaca no monitor N."
+msgstr "Exibe vaca no monitor N."
 
 #: src/xcowsay.c:137
 msgid "Force the cow to appear at screen location (X,Y)."
-msgstr "Forçar a vaca a aparecer no local da tela (X,Y)."
+msgstr "Força a vaca a aparecer no local da tela (X,Y)."
 
 #: src/xcowsay.c:138
 msgid "Change relative position of bubble."
-msgstr "Modificar a posição relativa da bolha."
+msgstr "Modifica a posição relativa da bolha."
 
 #: src/xcowsay.c:139
 msgid "Disable wrapping if text cannot fit on screen."
-msgstr ""
+msgstr "Desabilita quebra se o texto não couber na tela."
 
 #: src/xcowsay.c:140
 msgid "Specify alternative config file."
-msgstr "Especificar arquivo de configuração alternativo."
+msgstr "Especifica arquivo de configuração alternativo."
 
 #: src/xcowsay.c:141
 msgid "Keep daemon attached to terminal."
-msgstr "Manter o daemon anexado ao terminal."
+msgstr "Mantém o daemon anexado ao terminal."
 
 #: src/xcowsay.c:142
 msgid ""
@@ -124,7 +124,7 @@ msgstr ""
 
 #: src/xcowsay.c:148
 msgid "Report bugs to nick@nickg.me.uk"
-msgstr "Reportar bugs para nick@nickg.me.uk"
+msgstr "Reporte bugs para nick@nickg.me.uk"
 
 #: src/xcowsay.c:173
 #, c-format
@@ -135,3 +135,4 @@ msgstr "Erro: %s não é um inteiro válido\n"
 #, c-format
 msgid "Error: failed to parse '%s' as position\n"
 msgstr "Erro: falha ao analisar '%s' como posição\n"
+
