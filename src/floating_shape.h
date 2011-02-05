@@ -19,7 +19,6 @@
 #define INC_FLOATING_SHAPE_H
 
 #include <gtk/gtk.h>
-#include <gtk/gtkwindow.h>
 
 /*
  * A widget type thing which used the XShape extension.

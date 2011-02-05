@@ -21,7 +21,6 @@
 #include <stdbool.h>
 
 #include <gtk/gtk.h>
-#include <gtk/gtkwindow.h>
 
 #define CALCULATE_DISPLAY_TIME -1   // Work out display time from word count
 

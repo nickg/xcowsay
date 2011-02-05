@@ -27,7 +27,6 @@
 #include <ctype.h>
 
 #include <gtk/gtk.h>
-#include <gtk/gtkwindow.h>
 
 #ifdef WITH_DBUS
 #include <dbus/dbus-glib-bindings.h>
