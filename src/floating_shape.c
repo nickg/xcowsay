@@ -128,8 +128,8 @@ void show_shape(float_shape_t *shape)
    gtk_window_move(GTK_WINDOW(shape->window), shape->x, shape->y);
    gtk_window_resize(GTK_WINDOW(shape->window), shape->width, shape->height);
    gtk_widget_show_all(shape->window);
-                                         
-   gdk_window_set_back_pixmap(shape->window->window, NULL, TRUE);
+ 
+   gdk_window_set_back_pixmap(gtk_widget_get_window(shape->window), NULL, TRUE);
 }
 
 void hide_shape(float_shape_t *shape)
