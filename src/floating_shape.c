@@ -1,5 +1,5 @@
 /*  floating_shape.c -- Low-ish level window creation and management.
- *  Copyright (C) 2008  Nick Gasson
+ *  Copyright (C) 2008, 2011  Nick Gasson
  *
  *  This program is free software: you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -44,11 +44,22 @@ static void get_alpha_mask(float_shape_t *shape)
    int rowstride, nchannels, x, y;
    guchar *pixels, *p;
    bool bright_green, has_alpha;
+   gboolean ok;
 
    colormap = gdk_colormap_get_system();
-   gdk_color_black(colormap, &black);
-   gdk_color_white(colormap, &white);
 
+   black.red = 0;
+   black.green = 0;
+   black.blue = 0;
+   ok = gdk_colormap_alloc_color(colormap, &black, FALSE, TRUE);
+   g_assert(ok);
+
+   white.red = 0xffff;
+   white.green = 0xffff;
+   white.blue = 0xffff;
+   ok = gdk_colormap_alloc_color(colormap, &white, FALSE, TRUE);
+   g_assert(ok);
+   
    shape->mask_bitmap =
       (GdkDrawable*)gdk_pixmap_new(NULL, shape->width, shape->height, 1);
    gc = gdk_gc_new(shape->mask_bitmap);

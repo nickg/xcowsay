@@ -61,16 +61,30 @@ typedef struct {
 
 typedef enum { NORMAL, THOUGHT } bubble_style_t;
 
+static void get_colour(guint16 r, guint16 g, guint16 b, GdkColor *c)
+{
+   GdkColormap *colormap;
+   gboolean ok;
+
+   colormap = gdk_colormap_get_system();
+
+   c->red = r;
+   c->green = g;
+   c->blue = b;
+   
+   ok = gdk_colormap_alloc_color(colormap, c, FALSE, TRUE);
+   g_assert(ok);
+}
+
 static void bubble_init_left(bubble_t *b, bubble_style_t style)
 {
    GdkColor black, white, bright_green;
-   GdkColormap *colormap;
    GdkPoint tip_points[5];
-   
-   colormap = gdk_colormap_get_system();
-   gdk_color_black(colormap, &black);
-   gdk_color_white(colormap, &white);
 
+   get_colour(0, 0, 0, &black);
+   get_colour(0xffff, 0xffff, 0xffff, &white);
+   get_colour(0, 0xffff, 0, &bright_green);
+   
    bright_green.red = 0;
    bright_green.green = 65535;   // Bright green is alpha
    bright_green.blue = 0;
@@ -213,12 +227,10 @@ static void bubble_init_left(bubble_t *b, bubble_style_t style)
 static void bubble_init_right(bubble_t *b, bubble_style_t style)
 {
    GdkColor black, white, bright_green;
-   GdkColormap *colormap;
    GdkPoint tip_points[5];
-   
-   colormap = gdk_colormap_get_system();
-   gdk_color_black(colormap, &black);
-   gdk_color_white(colormap, &white);
+
+   get_colour(0, 0, 0, &black);
+   get_colour(0xffff, 0xffff, 0xffff, &white);
 
    bright_green.red = 0;
    bright_green.green = 65535;   // Bright green is alpha
