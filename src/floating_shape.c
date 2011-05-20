@@ -134,7 +134,7 @@ void show_shape(float_shape_t *shape)
 
 void hide_shape(float_shape_t *shape)
 {
-   gtk_widget_hide_all(shape->window);
+   gtk_widget_hide(shape->window);
 }
 
 void move_shape(float_shape_t *shape, int x, int y)
