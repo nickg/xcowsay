@@ -76,13 +76,19 @@ static token_t next_token(FILE *f, strbuf_t* sbuf, int *lineno, jmp_buf *escape)
 {
    clear_buf(sbuf);
    bool skip_to_eol = false;
+   bool in_quotes = false;
    for (;;) {
       char next = fgetc(f);
       if (EOF == next)
          return (has_chars(sbuf) && !skip_to_eol) ? tTOKEN : tEOF;
       else if ('\n' == next) {
          skip_to_eol = false;
-         if (has_chars(sbuf)) {
+         if (in_quotes) {
+            fprintf(stderr, "xcowsayrc: line %d: Newline in quoted string",
+                    *lineno);
+            longjmp(*escape, 4);
+         }
+         else if (has_chars(sbuf)) {
             ungetc('\n', f);
             return tTOKEN;
          }
@@ -92,8 +98,10 @@ static token_t next_token(FILE *f, strbuf_t* sbuf, int *lineno, jmp_buf *escape)
          }
       }
       else if (!skip_to_eol) {
-         if (isalpha(next) || isdigit(next) || '_' == next
-            || '/' == next || '.' == next || '-' == next)
+         if (next == '"')
+            in_quotes = !in_quotes;
+         else if (isalpha(next) || isdigit(next) || '_' == next
+            || '/' == next || '.' == next || '-' == next || in_quotes)
             push_char(sbuf, next);
          else if (has_chars(sbuf)) {
             ungetc(next, f);
@@ -106,7 +114,8 @@ static token_t next_token(FILE *f, strbuf_t* sbuf, int *lineno, jmp_buf *escape)
          else if ('#' == next)
             skip_to_eol = true;
          else {
-            fprintf(stderr, "Illegal character in xcowsayrc: %c\n", next);
+            fprintf(stderr, "xcowsayrc: line %d: Illegal character: %c\n",
+                    *lineno, next);
             longjmp(*escape, 3);
          }
       }
@@ -220,7 +229,7 @@ void parse_config_file(void)
       int lineno = 1;
       for (;;) {
          while ((tok = next_token(frc, opt_buf, &lineno, &escape))
-            == tNEWLINE)
+                == tNEWLINE)
             expect(tNEWLINE, tok, true, lineno, &escape);
          expect(tTOKEN, tok, true, lineno, &escape);
 
