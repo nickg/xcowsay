@@ -164,7 +164,7 @@ static char *config_file_name(void)
    const char *alt_config_file = get_string_option("alt_config_file");
    if (*alt_config_file)
       return strdup(alt_config_file); // We always free the result
-   
+
    const char *home = getenv("HOME");
    if (NULL == home)
       return NULL;
@@ -205,28 +205,28 @@ void parse_config_file(void)
 
    FILE *frc = fopen(fname, "r");
    free(fname);
-   
+
    if (NULL == frc)
       return;
-   
+
    const int MAX_TOKEN = 256;
    strbuf_t *opt_buf = make_str_buf(MAX_TOKEN);
    strbuf_t *val_buf = make_str_buf(MAX_TOKEN);
    strbuf_t *dummy_buf = make_str_buf(0);
 
    jmp_buf escape;
-   if (setjmp(escape) == 0) {   
+   if (setjmp(escape) == 0) {
       token_t tok;
       int lineno = 1;
       for (;;) {
          while ((tok = next_token(frc, opt_buf, &lineno, &escape))
-            == tNEWLINE) 
+            == tNEWLINE)
             expect(tNEWLINE, tok, true, lineno, &escape);
          expect(tTOKEN, tok, true, lineno, &escape);
 
          tok = next_token(frc, dummy_buf, &lineno, &escape);
          expect(tEQUALS, tok, false, lineno, &escape);
-         
+
          tok = next_token(frc, val_buf, &lineno, &escape);
          expect(tTOKEN, tok, false, lineno, &escape);
 
@@ -247,6 +247,6 @@ void parse_config_file(void)
    free_str_buf(opt_buf);
    free_str_buf(val_buf);
    free_str_buf(dummy_buf);
-   
-   fclose(frc);   
+
+   fclose(frc);
 }
