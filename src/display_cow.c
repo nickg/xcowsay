@@ -91,14 +91,14 @@ static GdkPixbuf *load_cow()
       asprintf(&cow_path, "%s/%s_%s.png", DATADIR,
          get_string_option("image_base"),
          get_string_option("cow_size"));
-   
+
    GdkPixbuf *pixbuf = gdk_pixbuf_new_from_file(cow_path, NULL);
    if (NULL == pixbuf) {
       fprintf(stderr, i18n("Failed to load cow image: %s\n"), cow_path);
       exit(EXIT_FAILURE);
    }
 
-   free(cow_path);   
+   free(cow_path);
    return pixbuf;
 }
 
@@ -150,14 +150,14 @@ static gboolean tick(gpointer data)
          break;
       }
    }
-   
+
    return (xcowsay.state != csCleanup);
 }
 
 void cowsay_init(int *argc, char ***argv)
 {
    gtk_init(argc, argv);
-   
+
    xcowsay.cow = NULL;
    xcowsay.bubble = NULL;
    xcowsay.bubble_pixbuf = NULL;
@@ -182,12 +182,12 @@ static int count_words(const char *s)
 static void normal_setup(const char *text, bool debug, cowmode_t mode)
 {
    char *text_copy = strdup(text);
-   
+
    // Trim any trailing newline
    size_t len = strlen(text_copy);
    if ('\n' == text_copy[len-1])
       text_copy[len-1] = '\0';
-   
+
    // Count the words and work out the display time, if neccessary
    xcowsay.display_time = get_int_option("display_time");
    if (xcowsay.display_time < 0) {
@@ -217,7 +217,7 @@ static void normal_setup(const char *text, bool debug, cowmode_t mode)
 
    const int cow_width = shape_width(xcowsay.cow);
    const int max_width = xcowsay.screen_width - cow_width;
-   
+
    xcowsay.bubble_pixbuf = make_text_bubble(
       text_copy, &xcowsay.bubble_width, &xcowsay.bubble_height,
       max_width, mode);
@@ -233,7 +233,7 @@ static void dream_setup(const char *file, bool debug)
       xcowsay.display_time = get_int_option("dream_time");
 
    xcowsay.bubble_pixbuf = make_dream_bubble(file, &xcowsay.bubble_width,
-                                             &xcowsay.bubble_height);   
+                                             &xcowsay.bubble_height);
 }
 
 void display_cow(bool debug, const char *text, bool run_main, cowmode_t mode)
@@ -245,7 +245,7 @@ void display_cow(bool debug, const char *text, bool run_main, cowmode_t mode)
    gint pick = get_int_option("monitor");
    if (pick < 0 || pick >= n_monitors)
       pick = random() % n_monitors;
-   
+
    GdkRectangle geom;
    gdk_screen_get_monitor_geometry(screen, pick, &geom);
 
@@ -267,9 +267,9 @@ void display_cow(bool debug, const char *text, bool run_main, cowmode_t mode)
       fprintf(stderr, "Error: Unsupported cow mode %d\n", mode);
       exit(1);
    }
-   
-   xcowsay.bubble = make_shape_from_pixbuf(xcowsay.bubble_pixbuf);   
-   
+
+   xcowsay.bubble = make_shape_from_pixbuf(xcowsay.bubble_pixbuf);
+
    int total_width = shape_width(xcowsay.cow)
       + get_int_option("bubble_x")
       + xcowsay.bubble_width;
@@ -292,7 +292,7 @@ void display_cow(bool debug, const char *text, bool run_main, cowmode_t mode)
       cow_x = random() % area_w;
    else if (cow_x >= area_w)
       cow_x = area_w - 1;
-   
+
    int cow_y = get_int_option("at_y");
    if (cow_y < 0)
       cow_y = random() % area_h;
@@ -304,7 +304,7 @@ void display_cow(bool debug, const char *text, bool run_main, cowmode_t mode)
                  geom.x + cow_x + xcowsay.bubble_width,
                  geom.y + bubble_off + cow_y);
       show_shape(xcowsay.cow);
-      
+
       int bx = shape_x(xcowsay.cow) - xcowsay.bubble_width
          + get_int_option("bubble_x");
       int by = shape_y(xcowsay.cow)
@@ -317,7 +317,7 @@ void display_cow(bool debug, const char *text, bool run_main, cowmode_t mode)
                  geom.x + cow_x,
                  geom.y + bubble_off + cow_y);
       show_shape(xcowsay.cow);
-      
+
       int bx = shape_x(xcowsay.cow) + shape_width(xcowsay.cow)
          + get_int_option("bubble_x");
       int by = shape_y(xcowsay.cow)
@@ -325,13 +325,13 @@ void display_cow(bool debug, const char *text, bool run_main, cowmode_t mode)
          + get_int_option("bubble_y");
       move_shape(xcowsay.bubble, bx, by);
    }
-      
+
    xcowsay.state = csLeadIn;
    xcowsay.transition_timeout = get_int_option("lead_in_time");
    g_timeout_add(TICK_TIMEOUT, tick, NULL);
 
    close_when_clicked(xcowsay.cow);
-   
+
    if (run_main)
       gtk_main();
 
@@ -347,7 +347,7 @@ bool try_dbus(bool debug, const char *text, cowmode_t mode)
    return false;
 }
 
-#else 
+#else
 
 bool try_dbus(bool debug, const char *text, cowmode_t mode)
 {
@@ -381,8 +381,8 @@ bool try_dbus(bool debug, const char *text, cowmode_t mode)
       break;
    default:
       g_assert(false);
-   }  
-   
+   }
+
    error = NULL;
    if (!dbus_g_proxy_call(proxy, method, &error, G_TYPE_STRING, text,
                           G_TYPE_INVALID, G_TYPE_INVALID)) {
@@ -394,7 +394,7 @@ bool try_dbus(bool debug, const char *text, cowmode_t mode)
    return true;
 }
 
-#endif /* #ifndef WITH_DBUS */       
+#endif /* #ifndef WITH_DBUS */
 
 void display_cow_or_invoke_daemon(bool debug, const char *text, cowmode_t mode)
 {

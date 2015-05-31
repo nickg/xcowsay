@@ -155,12 +155,12 @@ static void version()
       "This program comes with ABSOLUTELY NO WARRANTY. This is free software, and\n"
       "you are welcome to redistribute it under certain conditions. See the GNU\n"
       "General Public Licence for details.";
-   
+
 #ifdef HAVE_CONFIG_H
    puts(PACKAGE_STRING);
 #endif
 
-   puts(copy);   
+   puts(copy);
 }
 
 static int parse_int_option(const char *optarg)
@@ -178,7 +178,7 @@ static int parse_int_option(const char *optarg)
 static void parse_position_option(const char *optarg, int *x, int *y)
 {
    const char *failmsg = i18n("Error: failed to parse '%s' as position\n");
-   
+
    char *comma = strchr(optarg, ',');
    if (comma == NULL) {
       fprintf(stderr, failmsg, optarg);
@@ -228,7 +228,7 @@ int main(int argc, char **argv)
    setlocale(LC_ALL, "");
    bindtextdomain(PACKAGE, LOCALEDIR);
    textdomain(PACKAGE);
-   
+
    add_int_option("lead_in_time", DEF_LEAD_IN_TIME);
    add_int_option("display_time", DEF_DISPLAY_TIME);
    add_int_option("lead_out_time", get_int_option("lead_in_time"));
@@ -248,9 +248,9 @@ int main(int argc, char **argv)
    add_string_option("alt_config_file", "");
    add_bool_option("wrap", true);
    add_bool_option("left", false);
-   
+
    parse_config_file();
-   
+
    int c, index = 0, failure = 0;
    const char *spec = "hvld:r:t:f:";
    const char *dream_file = NULL;
@@ -345,7 +345,7 @@ int main(int argc, char **argv)
             perror(abs_path);
             exit(EXIT_FAILURE);
          }
-         
+
          display_cow_or_invoke_daemon(debug, abs_path, COWMODE_DREAM);
          free(abs_path);
       }
@@ -358,6 +358,6 @@ int main(int argc, char **argv)
          free(str);
       }
    }
-   
+
    return EXIT_SUCCESS;
 }
