@@ -76,6 +76,7 @@ static struct option long_options[] = {
    {"left", no_argument, 0, 'l'},
    {"config", required_argument, 0, 'o'},
    {"debug", no_argument, &debug, 1},
+   {"release", no_argument, 0, 'R'},
    {0, 0, 0, 0}
 };
 
@@ -116,6 +117,7 @@ static void usage()
       "     --no-wrap\t\t%s\n"
       "     --config=FILE\t%s\n"
       "     --debug\t\t%s\n\n"
+      "     --release\t\t%s\n\n"
       "%s\n\n"
       "%s\n\n"
       "%s\n",
@@ -139,6 +141,7 @@ static void usage()
       i18n("Disable wrapping if text cannot fit on screen."),
       i18n("Specify alternative config file."),
       i18n("Keep daemon attached to terminal."),
+      i18n("Close window on release event instead of press."),
       i18n("Default values for these options can be specified in the "
          "xcowsay config\nfile.  See the man page for more information."),
       i18n("If the display_time option is not set the display time will "
@@ -248,6 +251,7 @@ int main(int argc, char **argv)
    add_string_option("alt_config_file", "");
    add_bool_option("wrap", true);
    add_bool_option("left", false);
+   add_string_option("close_event", "button-press-event");
 
    parse_config_file();
 
@@ -311,6 +315,9 @@ int main(int argc, char **argv)
          break;
       case 'l':
          set_bool_option("left", true);
+         break;
+      case 'R':
+         set_string_option("close_event", "button-release-event");
          break;
       case '?':
          // getopt_long already printed an error message

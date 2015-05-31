@@ -118,9 +118,10 @@ static void close_when_clicked(float_shape_t *shape)
 {
    GdkWindow *w = gtk_widget_get_window(shape_window(shape));
    GdkEventMask events = gdk_window_get_events(w);
-   events |= GDK_BUTTON_PRESS_MASK;
+   events |= GDK_BUTTON_PRESS_MASK | GDK_BUTTON_RELEASE_MASK;
    gdk_window_set_events(w, events);
-   g_signal_connect(G_OBJECT(shape_window(shape)), "button-press-event",
+   g_signal_connect(G_OBJECT(shape_window(shape)),
+                    get_string_option("close_event"),
                     G_CALLBACK(cow_clicked), NULL);
 }
 

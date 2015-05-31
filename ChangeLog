@@ -1,3 +1,10 @@
+2015-05-31  Nick Gasson  <nick@nickg.me.uk>
+
+	* src/display_cow.c (close_when_clicked): allow close event to
+	be specified in settings.
+	* src/xcowsay.c (main): add --release option to close window on
+	mouse button release.
+
 2012-11-19  Nick Gasson  <nick@nickg.me.uk>
 
 	* src/config_file.c (next_token): allow values with quotes
