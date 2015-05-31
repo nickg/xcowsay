@@ -18,3 +18,7 @@ install-sh
 build
 missing
 TAGS
+GPATH
+GRTAGS
+GTAGS
+configure.scan
