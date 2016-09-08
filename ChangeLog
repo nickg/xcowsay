@@ -1,3 +1,8 @@
+2016-09-08  Nick Gasson  <nick@nickg.me.uk>
+
+	* configure.ac: updated to GNU gettext 0.19 and removed
+	generated files from version control.
+
 2015-05-31  Nick Gasson  <nick@nickg.me.uk>
 
 	* src/display_cow.c (close_when_clicked): allow close event to
@@ -141,4 +146,3 @@
 	(ACLOCAL_AMFLAGS): New variable.
 	(EXTRA_DIST): Add config.rpath, m4/ChangeLog.
 	* configure.ac (AC_OUTPUT): Add po/Makefile.in.
-

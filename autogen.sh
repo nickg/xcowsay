@@ -1,3 +1,3 @@
-aclocal -I m4
-autoconf
-automake -a
+#!/bin/sh
+cd $(git rev-parse --show-toplevel)
+autoreconf --force --install -I m4

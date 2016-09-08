@@ -14,6 +14,7 @@ AC_PROG_MKDIR_P
 # Checks for libraries.
 
 AM_GNU_GETTEXT([external])
+AM_GNU_GETTEXT_VERSION([0.19])
 
 # Checks for header files.
 AC_HEADER_STDC
@@ -45,8 +46,8 @@ PKG_CHECK_MODULES(XCOWSAY, $modules)
 # Not sure why autoconf doesn't define this itself
 pkgdatadir=$datadir/xcowsay
 
-AC_DEFINE_DIR([DATADIR], [pkgdatadir], [Location of data files])
-AC_DEFINE_DIR([LOCALEDIR], [localedir], [Location of locale files])
+AX_DEFINE_DIR([DATADIR], [pkgdatadir], [Location of data files])
+AX_DEFINE_DIR([LOCALEDIR], [localedir], [Location of locale files])
 
 AC_CONFIG_HEADERS([config.h])
 AC_OUTPUT([Makefile src/Makefile po/Makefile.in])
