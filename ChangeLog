@@ -3,6 +3,9 @@
 	* configure.ac: updated to GNU gettext 0.19 and removed
 	generated files from version control.
 
+	* src/bubblegen.c (make_dream_bubble): fix warning about
+	deprecation of `gdk_pixbuf_unref`.
+
 2015-05-31  Nick Gasson  <nick@nickg.me.uk>
 
 	* src/display_cow.c (close_when_clicked): allow close event to

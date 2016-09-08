@@ -470,7 +470,7 @@ GdkPixbuf *make_dream_bubble(const char *file, int *p_width, int *p_height)
                    bubble_content_left(THOUGHT), bubble_content_top(),
                    -1, -1, GDK_RGB_DITHER_NONE, 0, 0);
 
-   gdk_pixbuf_unref(image);
+   g_object_unref(image);
 
    return bubble_tidy(&bubble);
 }
