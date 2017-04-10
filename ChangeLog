@@ -1,3 +1,8 @@
+2017-04-10  Nick Gasson  <nick@nickg.me.uk>
+
+	* src/xcowsay.c (main): patch from Tony Finch to make cow
+	location more random.
+
 2016-09-08  Nick Gasson  <nick@nickg.me.uk>
 
 	* configure.ac: updated to GNU gettext 0.19 and removed

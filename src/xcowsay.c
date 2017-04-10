@@ -29,6 +29,7 @@
 #include <limits.h>
 
 #include <sys/types.h>
+#include <sys/time.h>
 #include <unistd.h>
 #include <errno.h>
 
@@ -330,7 +331,9 @@ int main(int argc, char **argv)
    if (failure)
       exit(EXIT_FAILURE);
 
-   srandom((unsigned)time(NULL));
+   struct timeval tv;
+   gettimeofday(&tv, NULL);
+   srandom(tv.tv_sec ^ tv.tv_usec ^ getpid());
 
    cowmode_t mode = think_flag ? COWMODE_THINK : COWMODE_NORMAL;
 
