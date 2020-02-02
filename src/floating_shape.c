@@ -91,7 +91,12 @@ float_shape_t *make_shape_from_pixbuf(GdkPixbuf *pixbuf)
 
    screen = gtk_widget_get_screen(s->window);
    visual = gdk_screen_get_rgba_visual(screen);
-   g_assert(visual);
+
+   if (visual == NULL) {
+      fprintf(stderr, "Error: display does not support alpha channel\n");
+      exit(1);
+   }
+
    gtk_widget_set_visual(s->window, visual);
 
    g_signal_connect(G_OBJECT(s->window), "draw",
