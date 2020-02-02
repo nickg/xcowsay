@@ -1,5 +1,5 @@
 /*  display_cow.c -- Display a cow in a popup window.
- *  Copyright (C) 2008-2010  Nick Gasson
+ *  Copyright (C) 2008-2020  Nick Gasson
  *
  *  This program is free software: you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -157,6 +157,9 @@ static gboolean tick(gpointer data)
 
 void cowsay_init(int *argc, char ***argv)
 {
+   // Window positioning doesn't work on Wayland
+   setenv("GDK_BACKEND", "x11", 1);
+
    gtk_init(argc, argv);
 
    xcowsay.cow = NULL;

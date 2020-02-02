@@ -58,26 +58,11 @@
 
 typedef struct {
    int width, height;
-   GdkPixmap *pixmap;
+   cairo_surface_t *surface;
    cairo_t *cr;
 } bubble_t;
 
 typedef enum { NORMAL, THOUGHT } bubble_style_t;
-
-static void get_colour(guint16 r, guint16 g, guint16 b, GdkColor *c)
-{
-   GdkColormap *colormap;
-   gboolean ok;
-
-   colormap = gdk_colormap_get_system();
-
-   c->red = r;
-   c->green = g;
-   c->blue = b;
-
-   ok = gdk_colormap_alloc_color(colormap, c, FALSE, TRUE);
-   g_assert(ok);
-}
 
 static void bubble_corner_arcs(bubble_t *b, bubble_style_t style,
                                int corners[4][2])
@@ -115,13 +100,8 @@ static void bubble_corner_arcs(bubble_t *b, bubble_style_t style,
 
 static void bubble_init_cairo(bubble_t *b, cairo_t *cr, bubble_style_t style)
 {
-   GdkColor black, white, bright_green;
    GdkPoint tip_points[5];
    bool right = !get_bool_option("left");
-
-   get_colour(0, 0, 0, &black);
-   get_colour(0xffff, 0xffff, 0xffff, &white);
-   get_colour(0, 0xffff, 0, &bright_green);
 
    cairo_set_source_rgb(cr, 0.0, 1.0, 0.0);
    cairo_rectangle(cr, 0, 0, b->width, b->height);
@@ -300,11 +280,13 @@ static void bubble_init(bubble_t *b, bubble_style_t style)
    GdkVisual *root_visual;
 
    root_visual = gdk_visual_get_system();
-   b->pixmap = gdk_pixmap_new(NULL, b->width, b->height,
-                              gdk_visual_get_depth(root_visual));
-   g_assert(b->pixmap);
+   //b->pixmap = gdk_pixmap_new(NULL, b->width, b->height,
+   //                           gdk_visual_get_depth(root_visual));
+   b->surface = cairo_image_surface_create(CAIRO_FORMAT_RGB24,
+                                           b->width, b->height);
+   g_assert(b->surface);
 
-   b->cr = gdk_cairo_create(b->pixmap);
+   b->cr = cairo_create(b->surface);
 
    bubble_init_cairo(b, b->cr, style);
 }
@@ -320,11 +302,13 @@ static void bubble_size_from_content(bubble_t *b, bubble_style_t style,
 static GdkPixbuf *bubble_tidy(bubble_t *b)
 {
    GdkPixbuf *pixbuf =
-      gdk_pixbuf_get_from_drawable(NULL, b->pixmap, NULL,
-                                   0, 0, 0, 0,
-                                   b->width + BUBBLE_BORDER,
-                                   b->height + BUBBLE_BORDER);
-   g_object_unref(b->pixmap);
+      gdk_pixbuf_get_from_surface(b->surface, 0, 0, b->width + BUBBLE_BORDER, b->height + BUBBLE_BORDER);
+
+   //      gdk_pixbuf_get_from_drawable(NULL, b->pixmap, NULL,
+   //                                0, 0, 0, 0,
+   //                                b->width + BUBBLE_BORDER,
+   //                                b->height + BUBBLE_BORDER);
+   cairo_surface_destroy(b->surface);
    return pixbuf;
 }
 

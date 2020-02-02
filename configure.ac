@@ -31,7 +31,7 @@ AC_CHECK_FUNCS([strtol setlocale strcasecmp strdup strchr \
                 getcwd strerror realpath])
 
 # Check for pkg-config packages
-modules="gtk+-2.0 gdk-pixbuf-2.0"
+modules="gtk+-3.0 gdk-3.0"
 xcowsayd_modules="$modules dbus-glib-1 gthread-2.0"
 AC_ARG_ENABLE(dbus,
         [AS_HELP_STRING([--enable-dbus], [Build the DBus daemon.])],

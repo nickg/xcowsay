@@ -1,5 +1,5 @@
 /*  floating_shape.h -- Low-ish level window creation and management.
- *  Copyright (C) 2008  Nick Gasson
+ *  Copyright (C) 2008-2020  Nick Gasson
  *
  *  This program is free software: you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -27,7 +27,6 @@ typedef struct {
    GtkWidget *window;
    GtkWidget *image;
    GdkPixbuf *pixbuf;
-   GdkDrawable *mask_bitmap;
    int x, y, width, height;
 } float_shape_t;
 

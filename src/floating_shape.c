@@ -1,5 +1,5 @@
 /*  floating_shape.c -- Low-ish level window creation and management.
- *  Copyright (C) 2008-2019  Nick Gasson
+ *  Copyright (C) 2008-2020  Nick Gasson
  *
  *  This program is free software: you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -112,6 +112,7 @@ float_shape_t *make_shape_from_pixbuf(GdkPixbuf *pixbuf)
    gtk_window_set_title(GTK_WINDOW(s->window), "shape");
    gtk_window_set_skip_taskbar_hint(GTK_WINDOW(s->window), TRUE);
    gtk_window_set_keep_above(GTK_WINDOW(s->window), TRUE);
+   gtk_window_set_resizable(GTK_WINDOW(s->window), FALSE);
 
    s->image = gtk_image_new_from_pixbuf(pixbuf);
    gtk_container_add(GTK_CONTAINER(s->window), s->image);
@@ -127,11 +128,9 @@ float_shape_t *make_shape_from_pixbuf(GdkPixbuf *pixbuf)
 
 void show_shape(float_shape_t *shape)
 {
-   gtk_window_move(GTK_WINDOW(shape->window), shape->x, shape->y);
    gtk_window_resize(GTK_WINDOW(shape->window), shape->width, shape->height);
+   gtk_window_move(GTK_WINDOW(shape->window), shape->x, shape->y);
    gtk_widget_show_all(shape->window);
-
-   gdk_window_set_back_pixmap(gtk_widget_get_window(shape->window), NULL, TRUE);
 }
 
 void hide_shape(float_shape_t *shape)
