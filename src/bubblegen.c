@@ -349,7 +349,6 @@ GdkPixbuf *make_dream_bubble(const char *file, int *p_width, int *p_height)
    bubble_t bubble;
    GError *error = NULL;
    GdkPixbuf *image = gdk_pixbuf_new_from_file(file, &error);
-   cairo_t *cr;
 
    if (NULL == image) {
       fprintf(stderr, "Error: failed to load %s\n", file);

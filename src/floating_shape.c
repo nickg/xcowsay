@@ -1,5 +1,5 @@
 /*  floating_shape.c -- Low-ish level window creation and management.
- *  Copyright (C) 2008, 2011  Nick Gasson
+ *  Copyright (C) 2008-2019  Nick Gasson
  *
  *  This program is free software: you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -35,6 +35,7 @@ static void quit_callback(GtkWidget *widget, gpointer data)
    gtk_main_quit();
 }
 
+#if 0
 static void get_alpha_mask(float_shape_t *shape)
 {
    GdkColormap *colormap;
@@ -95,6 +96,7 @@ static void get_alpha_mask(float_shape_t *shape)
       }
    }
 }
+#endif
 
 float_shape_t *make_shape_from_pixbuf(GdkPixbuf *pixbuf)
 {
@@ -114,8 +116,8 @@ float_shape_t *make_shape_from_pixbuf(GdkPixbuf *pixbuf)
    s->image = gtk_image_new_from_pixbuf(pixbuf);
    gtk_container_add(GTK_CONTAINER(s->window), s->image);
 
-   get_alpha_mask(s);
-   gtk_widget_shape_combine_mask(s->window, s->mask_bitmap, 0, 0);
+   //get_alpha_mask(s);
+   //gtk_widget_shape_combine_mask(s->window, s->mask_bitmap, 0, 0);
 
    g_signal_connect(G_OBJECT(s->window), "destroy",
                     G_CALLBACK(quit_callback), NULL);
@@ -149,7 +151,7 @@ void destroy_shape(float_shape_t *shape)
    g_assert(shape);
 
    gtk_widget_destroy(shape->window);
-   g_object_unref(shape->mask_bitmap);
+   //g_object_unref(shape->mask_bitmap);
 
    free(shape);
 }
