@@ -238,18 +238,28 @@ static void bubble_init_cairo(bubble_t *b, cairo_t *cr, bubble_style_t style)
    // Draw the black rounded corners
    cairo_set_source_rgb(cr, 0.0, 0.0, 0.0);
 
+   // Top left
    cairo_arc(cr,
              (right ? middle : 0) + BUBBLE_BORDER + CORNER_RADIUS,
              BUBBLE_BORDER + CORNER_RADIUS,
              CORNER_RADIUS,
              M_PI, M_PI + (M_PI / 2.0));
 
+   // Top right
    cairo_arc(cr,
              b->width - (!right ? middle : 0) - CORNER_RADIUS - BUBBLE_BORDER,
              BUBBLE_BORDER + CORNER_RADIUS,
              CORNER_RADIUS,
              M_PI + (M_PI / 2.0), 2 * M_PI);
 
+   if (style == NORMAL && !right) {
+      cairo_move_to(cr, tip_points[0].x, tip_points[0].y);
+      for (int i = 1; i < 5; i++) {
+         cairo_line_to(cr, tip_points[i].x, tip_points[i].y);
+      }
+   }
+
+   // Bottom left
    cairo_arc(cr,
              b->width - (!right ? middle : 0) - CORNER_RADIUS - BUBBLE_BORDER,
              b->height - CORNER_RADIUS,
@@ -262,14 +272,15 @@ static void bubble_init_cairo(bubble_t *b, cairo_t *cr, bubble_style_t style)
              CORNER_RADIUS,
              M_PI / 2.0, M_PI);
 
-   if (style == NORMAL) {
+   if (style == NORMAL && right) {
       cairo_move_to(cr, tip_points[0].x, tip_points[0].y);
       for (int i = 1; i < 5; i++) {
          cairo_line_to(cr, tip_points[i].x, tip_points[i].y);
       }
    }
    else {
-      cairo_close_path(cr);
+      cairo_line_to(cr, (right ? middle : 0) + BUBBLE_BORDER,
+                    BUBBLE_BORDER + CORNER_RADIUS);
    }
 
    cairo_stroke(cr);
