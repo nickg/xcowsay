@@ -1,3 +1,8 @@
+2020-02-02  Nick Gasson	 <nick@nickg.me.uk>
+
+	* src/bubblegen.c (bubble_init): Merge `bubble_init_left' and
+	`bubble_init_right'.
+
 2017-04-10  Nick Gasson  <nick@nickg.me.uk>
 
 	* src/xcowsay.c (main): patch from Tony Finch to make cow
@@ -37,7 +42,7 @@
 2010-11-06  Nick Gasson  <nick@nickg.me.uk>
 
 	* src/bubblegen.c (bubble_init_left): Fix rendering of
-	left-handed though bubbles.
+	left-handed thought bubbles.
 	* src/bubblegen.c (bubble_content_left): Align left-handed text
 	content correctly.
 	* src/xcowsay.c (main): Add -l option as short form of --left.
