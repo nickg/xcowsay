@@ -62,3 +62,4 @@ po/insert-header.sin
 ABOUT-NLS
 config.h.in
 config.rpath
+compile_commands.json

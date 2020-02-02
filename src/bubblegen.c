@@ -1,5 +1,5 @@
 /*  bubblegen.c -- Generate various sorts of bubbles.
- *  Copyright (C) 2008-2010  Nick Gasson
+ *  Copyright (C) 2008-2019  Nick Gasson
  *
  *  This program is free software: you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -403,7 +403,8 @@ static void bubble_init(bubble_t *b, bubble_style_t style)
    GdkVisual *root_visual;
 
    root_visual = gdk_visual_get_system();
-   b->pixmap = gdk_pixmap_new(NULL, b->width, b->height, root_visual->depth);
+   b->pixmap = gdk_pixmap_new(NULL, b->width, b->height,
+                              gdk_visual_get_depth(root_visual));
    g_assert(b->pixmap);
    b->gc = gdk_gc_new(b->pixmap);
 
