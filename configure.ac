@@ -1,7 +1,19 @@
 AC_INIT([xcowsay], [1.4],
         [Nick Gasson <nick@nick.me.uk>],
         [xcowsay])
-AM_INIT_AUTOMAKE([-Wall])
+AC_PREREQ([2.63])
+
+dnl Automake 1.11 does not support the serial-tests option
+dnl Remove this when 1.11 no longer in common use
+m4_define([serial_tests], [
+  m4_esyscmd([
+    automake --version |
+      head -1 |
+      awk '{split ($NF,a,"."); if (a[1] == 1 && a[2] >= 12) { print "serial-tests" }}'
+  ])
+])
+
+AM_INIT_AUTOMAKE([1.11 -Wall -Wno-extra-portability color-tests] serial_tests)
 
 # Check for programs
 AC_PROG_CC

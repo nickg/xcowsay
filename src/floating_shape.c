@@ -39,15 +39,13 @@ static gboolean draw_shape(GtkWidget *widget, GdkEventExpose *event,
                            gpointer userdata)
 {
    float_shape_t *s = (float_shape_t *)userdata;
-
-   cairo_t *cr = gdk_cairo_create(gtk_widget_get_window(widget));
-
-   if (true /*supports_alpha*/)
-      cairo_set_source_rgba (cr, 1.0, 1.0, 1.0, 0.0); /* transparent */
-   else
-      cairo_set_source_rgb (cr, 1.0, 1.0, 1.0); /* opaque white */
-
+   cairo_t *cr;
    int width, height;
+
+   cr = gdk_cairo_create(gtk_widget_get_window(widget));
+
+   cairo_set_source_rgba (cr, 1.0, 1.0, 1.0, 0.0);
+
    gtk_window_get_size(GTK_WINDOW(widget), &width, &height);
 
    gdk_cairo_set_source_pixbuf(cr, s->pixbuf, 0, 0);
