@@ -25,7 +25,7 @@
 
 static float_shape_t *alloc_shape()
 {
-   float_shape_t *s = (float_shape_t*)malloc(sizeof(float_shape_t));
+   float_shape_t *s = (float_shape_t*)calloc(1, sizeof(float_shape_t));
    g_assert(s);
    return s;
 }
@@ -35,72 +35,46 @@ static void quit_callback(GtkWidget *widget, gpointer data)
    gtk_main_quit();
 }
 
-#if 0
-static void get_alpha_mask(float_shape_t *shape)
+static gboolean draw_shape(GtkWidget *widget, GdkEventExpose *event,
+                           gpointer userdata)
 {
-   GdkColormap *colormap;
-   GdkColor black;
-   GdkColor white;
-   GdkGC *gc;
-   int rowstride, nchannels, x, y;
-   guchar *pixels, *p;
-   bool bright_green, has_alpha;
-   gboolean ok;
+   float_shape_t *s = (float_shape_t *)userdata;
 
-   colormap = gdk_colormap_get_system();
+   cairo_t *cr = gdk_cairo_create(gtk_widget_get_window(widget));
 
-   black.red = 0;
-   black.green = 0;
-   black.blue = 0;
-   ok = gdk_colormap_alloc_color(colormap, &black, FALSE, TRUE);
-   g_assert(ok);
+   if (true /*supports_alpha*/)
+      cairo_set_source_rgba (cr, 1.0, 1.0, 1.0, 0.0); /* transparent */
+   else
+      cairo_set_source_rgb (cr, 1.0, 1.0, 1.0); /* opaque white */
 
-   white.red = 0xffff;
-   white.green = 0xffff;
-   white.blue = 0xffff;
-   ok = gdk_colormap_alloc_color(colormap, &white, FALSE, TRUE);
-   g_assert(ok);
+   int width, height;
+   gtk_window_get_size(GTK_WINDOW(widget), &width, &height);
 
-   shape->mask_bitmap =
-      (GdkDrawable*)gdk_pixmap_new(NULL, shape->width, shape->height, 1);
-   gc = gdk_gc_new(shape->mask_bitmap);
+   gdk_cairo_set_source_pixbuf(cr, s->pixbuf, 0, 0);
+   cairo_paint(cr);
 
-   gdk_gc_set_foreground(gc, &black);
-   gdk_gc_set_background(gc, &white);
-   gdk_draw_rectangle(shape->mask_bitmap, gc, TRUE, 0, 0,
-                      shape->width, shape->height);
-
-   nchannels = gdk_pixbuf_get_n_channels(shape->pixbuf);
-   g_assert(gdk_pixbuf_get_colorspace(shape->pixbuf) == GDK_COLORSPACE_RGB);
-   g_assert(gdk_pixbuf_get_bits_per_sample(shape->pixbuf) == 8);
-
-   has_alpha = gdk_pixbuf_get_has_alpha(shape->pixbuf);
-
-   rowstride = gdk_pixbuf_get_rowstride(shape->pixbuf);
-   pixels = gdk_pixbuf_get_pixels(shape->pixbuf);
-
-   gdk_gc_set_foreground(gc, &white);
-   gdk_gc_set_background(gc, &black);
-
-   for (y = 0; y < shape->height; y++) {
-      for (x = 0; x < shape->width; x++) {
-         p = pixels + y*rowstride + x*nchannels;
-         bright_green = 0 == p[0] && 255 == p[1] && 0 == p[2];
-         if (has_alpha) {
-            if (255 == p[3])  // p[3] is alpha channel
-               gdk_draw_point(shape->mask_bitmap, gc, x, y);
-         }
-         else if (!bright_green) {   // Bright green is alpha for RGB images
-            gdk_draw_point(shape->mask_bitmap, gc, x, y);
-         }
-      }
-   }
+   cairo_destroy(cr);
+   return FALSE;
 }
-#endif
+
+static void screen_changed(GtkWidget *widget, GdkScreen *screen,
+                           gpointer user_data)
+{
+   GdkVisual *visual;
+
+   visual = gdk_screen_get_rgba_visual(screen);
+   g_assert(visual);
+
+   gtk_widget_set_visual(widget, visual);
+}
 
 float_shape_t *make_shape_from_pixbuf(GdkPixbuf *pixbuf)
 {
-   float_shape_t *s = alloc_shape();
+   float_shape_t *s;
+   GdkScreen *screen;
+   GdkVisual *visual;
+
+   s = alloc_shape();
    s->x = 0;
    s->y = 0;
    s->pixbuf = pixbuf;
@@ -113,13 +87,19 @@ float_shape_t *make_shape_from_pixbuf(GdkPixbuf *pixbuf)
    gtk_window_set_skip_taskbar_hint(GTK_WINDOW(s->window), TRUE);
    gtk_window_set_keep_above(GTK_WINDOW(s->window), TRUE);
    gtk_window_set_resizable(GTK_WINDOW(s->window), FALSE);
+   gtk_window_set_default_size(GTK_WINDOW(s->window), s->width, s->height);
 
-   s->image = gtk_image_new_from_pixbuf(pixbuf);
-   gtk_container_add(GTK_CONTAINER(s->window), s->image);
+   gtk_widget_set_app_paintable(GTK_WIDGET(s->window), TRUE);
 
-   //get_alpha_mask(s);
-   //gtk_widget_shape_combine_mask(s->window, s->mask_bitmap, 0, 0);
+   screen = gtk_widget_get_screen(s->window);
+   visual = gdk_screen_get_rgba_visual(screen);
+   g_assert(visual);
+   gtk_widget_set_visual(s->window, visual);
 
+   g_signal_connect(G_OBJECT(s->window), "draw",
+                    G_CALLBACK(draw_shape), s);
+   g_signal_connect(G_OBJECT(s->window), "screen-changed",
+                    G_CALLBACK(screen_changed), s);
    g_signal_connect(G_OBJECT(s->window), "destroy",
                     G_CALLBACK(quit_callback), NULL);
 
@@ -150,7 +130,6 @@ void destroy_shape(float_shape_t *shape)
    g_assert(shape);
 
    gtk_widget_destroy(shape->window);
-   //g_object_unref(shape->mask_bitmap);
 
    free(shape);
 }

@@ -103,7 +103,7 @@ static void bubble_init_cairo(bubble_t *b, cairo_t *cr, bubble_style_t style)
    GdkPoint tip_points[5];
    bool right = !get_bool_option("left");
 
-   cairo_set_source_rgb(cr, 0.0, 1.0, 0.0);
+   cairo_set_source_rgba(cr, 0.0, 0.0, 0.0, 0.0);
    cairo_rectangle(cr, 0, 0, b->width, b->height);
    cairo_fill(cr);
 
@@ -277,12 +277,7 @@ static void bubble_init_cairo(bubble_t *b, cairo_t *cr, bubble_style_t style)
 
 static void bubble_init(bubble_t *b, bubble_style_t style)
 {
-   GdkVisual *root_visual;
-
-   root_visual = gdk_visual_get_system();
-   //b->pixmap = gdk_pixmap_new(NULL, b->width, b->height,
-   //                           gdk_visual_get_depth(root_visual));
-   b->surface = cairo_image_surface_create(CAIRO_FORMAT_RGB24,
+   b->surface = cairo_image_surface_create(CAIRO_FORMAT_ARGB32,
                                            b->width, b->height);
    g_assert(b->surface);
 

@@ -19,15 +19,16 @@
 #define INC_FLOATING_SHAPE_H
 
 #include <gtk/gtk.h>
+#include <stdbool.h>
 
 /*
  * A widget type thing which used the XShape extension.
  */
 typedef struct {
    GtkWidget *window;
-   GtkWidget *image;
    GdkPixbuf *pixbuf;
    int x, y, width, height;
+   bool has_rgba;
 } float_shape_t;
 
 float_shape_t *make_shape_from_pixbuf(GdkPixbuf *pixbuf);

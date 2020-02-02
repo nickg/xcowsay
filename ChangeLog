@@ -1,5 +1,9 @@
 2020-02-02  Nick Gasson	 <nick@nickg.me.uk>
 
+	* src/floating_shape.c (make_shape_from_pixbuf): Update to Gtk3.
+
+	* src/bubblegen.c (bubble_init_cairo): Use Cairo to draw bubble.
+
 	* src/bubblegen.c (bubble_init): Merge `bubble_init_left' and
 	`bubble_init_right'.
 
