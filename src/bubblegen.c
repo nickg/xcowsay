@@ -23,6 +23,7 @@
 #include <stdlib.h>
 #include <stdbool.h>
 #include <string.h>
+#include <math.h>
 
 #include <gtk/gtk.h>
 #include <gdk-pixbuf/gdk-pixbuf.h>
@@ -45,10 +46,12 @@
 #define BIG_KIRCLE_X      38
 #define BIG_KIRCLE_Y      70
 #define BIG_KIRCLE_DIAM   35
+#define BIG_KIRCLE_RADIUS (BIG_KIRCLE_DIAM / 2)
 
-#define SMALL_KIRCLE_X    5
-#define SMALL_KIRCLE_Y    40
-#define SMALL_KIRCLE_DIAM 20
+#define SMALL_KIRCLE_X      5
+#define SMALL_KIRCLE_Y      40
+#define SMALL_KIRCLE_DIAM   20
+#define SMALL_KIRCLE_RADIUS (SMALL_KIRCLE_DIAM / 2)
 
 // Min distance from top of the big kircle to the top of the bubble
 #define KIRCLE_TOP_MIN  10
@@ -56,7 +59,7 @@
 typedef struct {
    int width, height;
    GdkPixmap *pixmap;
-   GdkGC *gc;
+   cairo_t *cr;
 } bubble_t;
 
 typedef enum { NORMAL, THOUGHT } bubble_style_t;
@@ -83,46 +86,46 @@ static void bubble_corner_arcs(bubble_t *b, bubble_style_t style,
    int middle = (style == NORMAL ? TIP_WIDTH : THINK_WIDTH);
 
    if (get_bool_option("left")) {
-      corners[0][0] = BUBBLE_BORDER;
-      corners[0][1] = BUBBLE_BORDER;
+      corners[0][0] = BUBBLE_BORDER + CORNER_RADIUS;
+      corners[0][1] = BUBBLE_BORDER + CORNER_RADIUS;
 
-      corners[1][0] = BUBBLE_BORDER;
-      corners[1][1] = b->height - CORNER_DIAM;
+      corners[3][0] = BUBBLE_BORDER + CORNER_RADIUS;
+      corners[3][1] = b->height - CORNER_DIAM + CORNER_RADIUS;
 
-      corners[2][0] = b->width - CORNER_DIAM - BUBBLE_BORDER - middle;
-      corners[2][1] = b->height - CORNER_DIAM;
+      corners[2][0] = b->width - CORNER_DIAM - BUBBLE_BORDER - middle + CORNER_RADIUS;
+      corners[2][1] = b->height - CORNER_DIAM + CORNER_RADIUS;
 
-      corners[3][0] = b->width - CORNER_DIAM - BUBBLE_BORDER - middle;
-      corners[3][1] = BUBBLE_BORDER;
+      corners[1][0] = b->width - CORNER_DIAM - BUBBLE_BORDER - middle + CORNER_RADIUS;
+      corners[1][1] = BUBBLE_BORDER + CORNER_RADIUS;
    }
    else {
-      corners[0][0] = middle + BUBBLE_BORDER;
-      corners[0][1] = BUBBLE_BORDER;
+      corners[0][0] = middle + BUBBLE_BORDER + CORNER_RADIUS;
+      corners[0][1] = BUBBLE_BORDER + CORNER_RADIUS;
 
-      corners[1][0] = middle + BUBBLE_BORDER;
-      corners[1][1] = b->height - CORNER_DIAM;
+      corners[3][0] = middle + BUBBLE_BORDER + CORNER_RADIUS;
+      corners[3][1] = b->height - CORNER_DIAM + CORNER_RADIUS;
 
-      corners[2][0] = b->width - CORNER_DIAM - BUBBLE_BORDER;
-      corners[2][1] = b->height - CORNER_DIAM;
+      corners[2][0] = b->width - CORNER_DIAM - BUBBLE_BORDER + CORNER_RADIUS;
+      corners[2][1] = b->height - CORNER_DIAM + CORNER_RADIUS;
 
-      corners[3][0] = b->width - CORNER_DIAM - BUBBLE_BORDER;
-      corners[3][1] = BUBBLE_BORDER;
+      corners[1][0] = b->width - CORNER_DIAM - BUBBLE_BORDER + CORNER_RADIUS;
+      corners[1][1] = BUBBLE_BORDER + CORNER_RADIUS;
    }
 }
 
-static void bubble_init_shared(bubble_t *b, bubble_style_t style, bool right)
+static void bubble_init_cairo(bubble_t *b, cairo_t *cr, bubble_style_t style)
 {
    GdkColor black, white, bright_green;
    GdkPoint tip_points[5];
+   bool right = !get_bool_option("left");
 
    get_colour(0, 0, 0, &black);
    get_colour(0xffff, 0xffff, 0xffff, &white);
    get_colour(0, 0xffff, 0, &bright_green);
 
-   gdk_gc_set_background(b->gc, &black);
-   gdk_gc_set_rgb_fg_color(b->gc, &bright_green);
-
-   gdk_draw_rectangle(b->pixmap, b->gc, TRUE, 0, 0, b->width, b->height);
+   cairo_set_source_rgb(cr, 0.0, 1.0, 0.0);
+   cairo_rectangle(cr, 0, 0, b->width, b->height);
+   cairo_fill(cr);
 
    b->width -= BUBBLE_BORDER;
    b->height -= BUBBLE_BORDER;
@@ -134,27 +137,34 @@ static void bubble_init_shared(bubble_t *b, bubble_style_t style, bool right)
    int corners[4][2];
    bubble_corner_arcs(b, style, corners);
 
-   gdk_gc_set_foreground(b->gc, &white);
-   gdk_draw_arc(b->pixmap, b->gc, TRUE, corners[0][0], corners[0][1],
-                CORNER_DIAM, CORNER_DIAM, 90*64, 90*64);
-   gdk_draw_arc(b->pixmap, b->gc, TRUE, corners[1][0], corners[1][1],
-                CORNER_DIAM, CORNER_DIAM, 180*64, 90*64);
-   gdk_draw_arc(b->pixmap, b->gc, TRUE, corners[2][0], corners[2][1],
-                CORNER_DIAM, CORNER_DIAM, 270*64, 90*64);
-   gdk_draw_arc(b->pixmap, b->gc, TRUE, corners[3][0], corners[3][1],
-                CORNER_DIAM, CORNER_DIAM, 0*64, 90*64);
+   cairo_set_line_width(cr, 4.0);
+   cairo_set_line_cap(cr, CAIRO_LINE_CAP_ROUND);
+   cairo_set_line_join(cr, CAIRO_LINE_JOIN_ROUND);
+
+   cairo_set_source_rgb(cr, 1.0, 1.0, 1.0);
+
+   for (int i = 0; i < 4; i++) {
+      cairo_move_to(cr, corners[i][0], corners[i][1]);
+      cairo_arc(cr, corners[i][0], corners[i][1],
+                CORNER_RADIUS,
+                M_PI + i * (M_PI / 2.0),
+                M_PI + (i+1) * (M_PI / 2.0));
+      cairo_close_path(cr);
+      cairo_fill(cr);
+   }
 
    // Fill in the middle of the bubble
-   gdk_draw_rectangle(b->pixmap, b->gc, TRUE,
-                      CORNER_RADIUS + (right ? middle : 0) + BUBBLE_BORDER,
-                      BUBBLE_BORDER,
-                      b->width - middle - BUBBLE_BORDER - CORNER_DIAM,
-                      b->height - BUBBLE_BORDER);
-   gdk_draw_rectangle(b->pixmap, b->gc, TRUE,
-                      (right ? middle : 0) + BUBBLE_BORDER,
-                      BUBBLE_BORDER + CORNER_RADIUS,
-                      b->width - middle - BUBBLE_BORDER*2,
-                      b->height - BUBBLE_BORDER - CORNER_DIAM);
+   cairo_rectangle(cr,
+                   CORNER_RADIUS + (right ? middle : 0) + BUBBLE_BORDER,
+                   BUBBLE_BORDER,
+                   b->width - middle - BUBBLE_BORDER - CORNER_DIAM,
+                   b->height - BUBBLE_BORDER);
+   cairo_rectangle(cr,
+                   (right ? middle : 0) + BUBBLE_BORDER,
+                   BUBBLE_BORDER + CORNER_RADIUS,
+                   b->width - middle - BUBBLE_BORDER*2,
+                   b->height - BUBBLE_BORDER - CORNER_DIAM);
+   cairo_fill(cr);
 
    if (style == NORMAL) {
       // The points on the tip part
@@ -192,7 +202,13 @@ static void bubble_init_shared(bubble_t *b, bubble_style_t style, bool right)
          tip_points[4].y = b->height - CORNER_RADIUS;
       }
 
-      gdk_draw_polygon(b->pixmap, b->gc, TRUE, tip_points, 5);
+      cairo_move_to(cr, tip_points[0].x, tip_points[0].y);
+      for (int i = 1; i < 5; i++) {
+         cairo_line_to(cr, tip_points[i].x, tip_points[i].y);
+      }
+
+      cairo_close_path(cr);
+      cairo_fill(cr);
    }
    else {
       // Incrementally move the top kircle down so it's within the
@@ -206,72 +222,77 @@ static void bubble_init_shared(bubble_t *b, bubble_style_t style, bool right)
       }
 
       // Draw two think kircles
-      gdk_draw_arc(b->pixmap, b->gc, TRUE,
-                   right ? BIG_KIRCLE_X : b->width - BIG_KIRCLE_X - BIG_KIRCLE_DIAM,
-                   b->height/2 - big_y, BIG_KIRCLE_DIAM,
-                   BIG_KIRCLE_DIAM, 0, 360*64);
+      cairo_arc(cr,
+                (right ? BIG_KIRCLE_X + BIG_KIRCLE_RADIUS
+                 : b->width - BIG_KIRCLE_X - BIG_KIRCLE_RADIUS),
+                b->height/2 - big_y + BIG_KIRCLE_RADIUS, BIG_KIRCLE_RADIUS,
+                0, 2.0 * M_PI);
 
-      gdk_draw_arc(b->pixmap, b->gc, TRUE,
-                   right ? SMALL_KIRCLE_X : b->width - SMALL_KIRCLE_X - SMALL_KIRCLE_DIAM,
-                   b->height/2 - small_y, SMALL_KIRCLE_DIAM,
-                   SMALL_KIRCLE_DIAM, 0, 360*64);
+      cairo_arc(cr,
+                (right ? SMALL_KIRCLE_X + SMALL_KIRCLE_RADIUS
+                 : b->width - SMALL_KIRCLE_X - SMALL_KIRCLE_RADIUS),
+                b->height/2 - small_y + SMALL_KIRCLE_RADIUS, SMALL_KIRCLE_RADIUS,
+                0, 2.0 * M_PI);
 
-      gdk_gc_set_line_attributes(b->gc, 4, GDK_LINE_SOLID,
-                                 GDK_CAP_ROUND, GDK_JOIN_ROUND);
-      gdk_gc_set_foreground(b->gc, &black);
-      gdk_draw_arc(b->pixmap, b->gc, FALSE,
-                   right ? BIG_KIRCLE_X : b->width - BIG_KIRCLE_X - BIG_KIRCLE_DIAM,
-                   b->height/2 - big_y, BIG_KIRCLE_DIAM,
-                   BIG_KIRCLE_DIAM, 0, 360*64);
+      cairo_fill(cr);
 
-      gdk_draw_arc(b->pixmap, b->gc, FALSE,
-                   right ? SMALL_KIRCLE_X : b->width - SMALL_KIRCLE_X - SMALL_KIRCLE_DIAM,
-                   b->height/2 - small_y, SMALL_KIRCLE_DIAM,
-                   SMALL_KIRCLE_DIAM, 0, 360*64);
+      cairo_set_source_rgb(cr, 0.0, 0.0, 0.0);
+
+      cairo_arc(cr,
+                (right ? BIG_KIRCLE_X + BIG_KIRCLE_RADIUS
+                 : b->width - BIG_KIRCLE_X - BIG_KIRCLE_RADIUS),
+                b->height/2 - big_y + BIG_KIRCLE_RADIUS, BIG_KIRCLE_RADIUS,
+                0, 2.0 * M_PI);
+
+      cairo_stroke(cr);
+
+      cairo_arc(cr,
+                (right ? SMALL_KIRCLE_X + SMALL_KIRCLE_RADIUS
+                 : b->width - SMALL_KIRCLE_X - SMALL_KIRCLE_RADIUS),
+                b->height/2 - small_y + SMALL_KIRCLE_RADIUS, SMALL_KIRCLE_RADIUS,
+                0, 2.0 * M_PI);
+
+      cairo_stroke(cr);
    }
 
    // Draw the black rounded corners
-   gdk_gc_set_line_attributes(b->gc, 4, GDK_LINE_SOLID,
-                              GDK_CAP_ROUND, GDK_JOIN_ROUND);
-   gdk_gc_set_foreground(b->gc, &black);
-   gdk_draw_arc(b->pixmap, b->gc, FALSE, (right ? middle : 0) + BUBBLE_BORDER,
-                BUBBLE_BORDER, CORNER_DIAM, CORNER_DIAM, 90*64, 90*64);
-   gdk_draw_arc(b->pixmap, b->gc, FALSE, (right ? middle : 0) + BUBBLE_BORDER,
-                b->height - CORNER_DIAM, CORNER_DIAM,
-                CORNER_DIAM, 180*64, 90*64);
-   gdk_draw_arc(b->pixmap, b->gc, FALSE,
-                b->width - (!right ? middle : 0) - CORNER_DIAM - BUBBLE_BORDER,
-                b->height - CORNER_DIAM, CORNER_DIAM,
-                CORNER_DIAM, 270*64, 90*64);
-   gdk_draw_arc(b->pixmap, b->gc, FALSE,
-                b->width - (!right ? middle : 0) - CORNER_DIAM - BUBBLE_BORDER,
-                BUBBLE_BORDER, CORNER_DIAM, CORNER_DIAM, 0*64, 90*64);
+   cairo_set_source_rgb(cr, 0.0, 0.0, 0.0);
 
-   // Draw the top, bottom, and right sides (easy as they're straight!)
-   gdk_draw_line(b->pixmap, b->gc,
-                 right ? b->width - BUBBLE_BORDER : BUBBLE_BORDER,
-                 CORNER_RADIUS + BUBBLE_BORDER,
-                 right ? b->width - BUBBLE_BORDER : BUBBLE_BORDER,
-                 b->height - CORNER_RADIUS);
-   gdk_draw_line(b->pixmap, b->gc,
-                 BUBBLE_BORDER + (right ? middle : 0) + CORNER_RADIUS ,
-                 BUBBLE_BORDER,
-                 b->width - CORNER_RADIUS - (!right ? middle : 0),
-                 BUBBLE_BORDER);
-   gdk_draw_line(b->pixmap, b->gc,
-                 BUBBLE_BORDER + (right ? middle : 0) + CORNER_RADIUS,
-                 b->height,
-                 b->width - CORNER_RADIUS - (!right ? middle : 0),
-                 b->height);
+   cairo_arc(cr,
+             (right ? middle : 0) + BUBBLE_BORDER + CORNER_RADIUS,
+             BUBBLE_BORDER + CORNER_RADIUS,
+             CORNER_RADIUS,
+             M_PI, M_PI + (M_PI / 2.0));
 
-   if (style == NORMAL)
-      gdk_draw_lines(b->pixmap, b->gc, tip_points, 5);
-   else
-      gdk_draw_line(b->pixmap, b->gc,
-                    BUBBLE_BORDER + middle,
-                    CORNER_RADIUS + BUBBLE_BORDER,
-                    BUBBLE_BORDER + middle,
-                    b->height - CORNER_RADIUS);
+   cairo_arc(cr,
+             b->width - (!right ? middle : 0) - CORNER_RADIUS - BUBBLE_BORDER,
+             BUBBLE_BORDER + CORNER_RADIUS,
+             CORNER_RADIUS,
+             M_PI + (M_PI / 2.0), 2 * M_PI);
+
+   cairo_arc(cr,
+             b->width - (!right ? middle : 0) - CORNER_RADIUS - BUBBLE_BORDER,
+             b->height - CORNER_RADIUS,
+             CORNER_RADIUS,
+             0.0, (M_PI / 2.0));
+
+   cairo_arc(cr,
+             (right ? middle : 0) + BUBBLE_BORDER + CORNER_RADIUS,
+             b->height - CORNER_RADIUS,
+             CORNER_RADIUS,
+             M_PI / 2.0, M_PI);
+
+   if (style == NORMAL) {
+      cairo_move_to(cr, tip_points[0].x, tip_points[0].y);
+      for (int i = 1; i < 5; i++) {
+         cairo_line_to(cr, tip_points[i].x, tip_points[i].y);
+      }
+   }
+   else {
+      cairo_close_path(cr);
+   }
+
+   cairo_stroke(cr);
 }
 
 static void bubble_init(bubble_t *b, bubble_style_t style)
@@ -282,9 +303,10 @@ static void bubble_init(bubble_t *b, bubble_style_t style)
    b->pixmap = gdk_pixmap_new(NULL, b->width, b->height,
                               gdk_visual_get_depth(root_visual));
    g_assert(b->pixmap);
-   b->gc = gdk_gc_new(b->pixmap);
 
-   bubble_init_shared(b, style, !get_bool_option("left"));
+   b->cr = gdk_cairo_create(b->pixmap);
+
+   bubble_init_cairo(b, b->cr, style);
 }
 
 static void bubble_size_from_content(bubble_t *b, bubble_style_t style,
@@ -327,6 +349,7 @@ GdkPixbuf *make_dream_bubble(const char *file, int *p_width, int *p_height)
    bubble_t bubble;
    GError *error = NULL;
    GdkPixbuf *image = gdk_pixbuf_new_from_file(file, &error);
+   cairo_t *cr;
 
    if (NULL == image) {
       fprintf(stderr, "Error: failed to load %s\n", file);
@@ -340,10 +363,12 @@ GdkPixbuf *make_dream_bubble(const char *file, int *p_width, int *p_height)
 
    bubble_init(&bubble, THOUGHT);
 
-   gdk_draw_pixbuf(bubble.pixmap, bubble.gc, image, 0, 0,
-                   bubble_content_left(THOUGHT), bubble_content_top(),
-                   -1, -1, GDK_RGB_DITHER_NONE, 0, 0);
+   gdk_cairo_set_source_pixbuf(bubble.cr, image,
+                               bubble_content_left(THOUGHT),
+                               bubble_content_top());
+   cairo_paint(bubble.cr);
 
+   cairo_destroy(bubble.cr);
    g_object_unref(image);
 
    return bubble_tidy(&bubble);
@@ -397,8 +422,10 @@ GdkPixbuf *make_text_bubble(char *text, int *p_width, int *p_height,
    bubble_init(&bubble, style);
 
    // Render the text
-   gdk_draw_layout(bubble.pixmap, bubble.gc,
-      bubble_content_left(mode), bubble_content_top(), layout);
+   cairo_move_to(bubble.cr, bubble_content_left(style), bubble_content_top());
+   pango_cairo_show_layout(bubble.cr, layout);
+
+   cairo_destroy(bubble.cr);
 
    // Make sure to free the Pango objects
    g_object_unref(pango_context);
