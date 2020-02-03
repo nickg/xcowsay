@@ -16,3 +16,6 @@ $BUILD_DIR/src/xcowsay --think Hello World --left
 
 echo Dream
 $BUILD_DIR/src/xcowsay --dream $SRC_DIR/cow_small.png -t 2
+
+echo Unicode and Pango attributes
+$BUILD_DIR/src/xcowsay "<b>你好</b> <i>world</i>"

@@ -44,7 +44,7 @@ static gboolean draw_shape(GtkWidget *widget, GdkEventExpose *event,
 
    cr = gdk_cairo_create(gtk_widget_get_window(widget));
 
-   cairo_set_source_rgba (cr, 1.0, 1.0, 1.0, 0.0);
+   cairo_set_source_rgba(cr, 1.0, 1.0, 1.0, 0.0);
 
    gtk_window_get_size(GTK_WINDOW(widget), &width, &height);
 

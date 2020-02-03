@@ -1,5 +1,5 @@
 /*  xcowsayd.c -- DBus xcowsay daemon.
- *  Copyright (C) 2008  Nick Gasson
+ *  Copyright (C) 2008-2020  Nick Gasson
  *
  *  This program is free software: you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -93,7 +93,7 @@ static void enqueue_request(const char *mess, cowmode_t mode)
       }
       REQUEST_READY_SIGNAL;
    }
-   QUEUE_MUTEX_UNLOCK;   
+   QUEUE_MUTEX_UNLOCK;
 }
 
 static void wait_for_request(const char** mess, cowmode_t *mode)
@@ -125,8 +125,10 @@ static void request_complete()
 static gpointer cow_display_thread(gpointer data)
 {
    bool debug = *(bool*)data;
-   
+
    debug_msg("In the cow display thread\n");
+
+   g_mutex_lock(display_lock);
 
    for (;;) {
       const char *mess;
@@ -142,10 +144,12 @@ static gpointer cow_display_thread(gpointer data)
       gdk_threads_leave();
 
       g_cond_wait(display_complete, display_lock);
-      
+
       request_complete();
    }
-   
+
+   g_mutex_unlock(display_lock);
+
    return NULL;
 }
 
@@ -189,8 +193,8 @@ static void cowsayd_init(Cowsay *server)
       exit(EXIT_FAILURE);
    }
 
-   g_object_unref(driver_proxy);       
-                                       
+   g_object_unref(driver_proxy);
+
 }
 
 static gboolean cowsay_show_cow(Cowsay *obj, const gchar *mess, GError **error)
@@ -255,12 +259,12 @@ void run_cowsay_daemon(bool debug, int argc, char **argv)
    request_ready = g_cond_new();
    display_complete = g_cond_new();
    display_lock = g_mutex_new();
-   
+
    cowsay_init(&argc, &argv);
 
    g_type_init();
    Cowsay *server = g_object_new(cowsayd_get_type(), NULL);
-   
+
    GThread *displ = g_thread_create(cow_display_thread, (gpointer)&debug, FALSE, NULL);
    g_assert(displ);
 

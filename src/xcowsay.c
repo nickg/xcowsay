@@ -117,7 +117,7 @@ static void usage()
       "     --bubble-at=X,Y\t%s\n"
       "     --no-wrap\t\t%s\n"
       "     --config=FILE\t%s\n"
-      "     --debug\t\t%s\n\n"
+      "     --debug\t\t%s\n"
       "     --release\t\t%s\n\n"
       "%s\n\n"
       "%s\n\n"
