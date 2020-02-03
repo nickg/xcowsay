@@ -19,3 +19,16 @@ $BUILD_DIR/src/xcowsay --dream $SRC_DIR/cow_small.png -t 2
 
 echo Unicode and Pango attributes
 $BUILD_DIR/src/xcowsay "<b>你好</b> <i>world</i>"
+
+echo Daemon mode
+$BUILD_DIR/src/xcowsay --daemon --debug &
+pid=$!
+echo "PID is $pid"
+sleep 0.5
+
+$BUILD_DIR/src/xcowsay Hello World -t 100
+echo "Sleep for one second"
+sleep 1
+
+kill $pid
+wait

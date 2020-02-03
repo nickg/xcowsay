@@ -6,9 +6,9 @@
 #, fuzzy
 msgid ""
 msgstr ""
-"Project-Id-Version: xcowsay 1.4\n"
+"Project-Id-Version: xcowsay 1.5\n"
 "Report-Msgid-Bugs-To: nick@cakesniffer.co.uk\n"
-"POT-Creation-Date: 2016-09-08 21:31+0100\n"
+"POT-Creation-Date: 2020-02-03 17:52+0800\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -22,113 +22,113 @@ msgstr ""
 msgid "Failed to load cow image: %s\n"
 msgstr ""
 
-#: src/xcowsay.c:124
+#: src/xcowsay.c:125
 msgid "Usage"
 msgstr ""
 
-#: src/xcowsay.c:125
+#: src/xcowsay.c:126
 msgid "Display a cow on your desktop with MESSAGE or standard input."
 msgstr ""
 
-#: src/xcowsay.c:126
+#: src/xcowsay.c:127
 msgid "Options"
 msgstr ""
 
-#: src/xcowsay.c:127
+#: src/xcowsay.c:128
 msgid "Display this message and exit."
 msgstr ""
 
-#: src/xcowsay.c:128
+#: src/xcowsay.c:129
 msgid "Print version information."
 msgstr ""
 
-#: src/xcowsay.c:129
+#: src/xcowsay.c:130
 msgid "Number of seconds to display message for"
 msgstr ""
 
-#: src/xcowsay.c:130
+#: src/xcowsay.c:131
 msgid "Number of milliseconds to delay per word."
 msgstr ""
 
-#: src/xcowsay.c:131
+#: src/xcowsay.c:132
 msgid "Set message font (Pango format)."
 msgstr ""
 
-#: src/xcowsay.c:132
+#: src/xcowsay.c:133
 msgid "Display an image instead of text."
 msgstr ""
 
-#: src/xcowsay.c:133
+#: src/xcowsay.c:134
 msgid "Make the bubble appear to the left of cow."
 msgstr ""
 
-#: src/xcowsay.c:134
+#: src/xcowsay.c:135
 msgid "Display a thought bubble rather than a speech bubble."
 msgstr ""
 
-#: src/xcowsay.c:135
+#: src/xcowsay.c:136
 msgid "Run xcowsay in daemon mode."
 msgstr ""
 
-#: src/xcowsay.c:136
+#: src/xcowsay.c:137
 msgid "Size of the cow (small, med, large)."
 msgstr ""
 
-#: src/xcowsay.c:137
+#: src/xcowsay.c:138
 msgid "Use a different image instead of the cow."
 msgstr ""
 
-#: src/xcowsay.c:138
+#: src/xcowsay.c:139
 msgid "Display cow on monitor N."
 msgstr ""
 
-#: src/xcowsay.c:139
+#: src/xcowsay.c:140
 msgid "Force the cow to appear at screen location (X,Y)."
 msgstr ""
 
-#: src/xcowsay.c:140
+#: src/xcowsay.c:141
 msgid "Change relative position of bubble."
 msgstr ""
 
-#: src/xcowsay.c:141
+#: src/xcowsay.c:142
 msgid "Disable wrapping if text cannot fit on screen."
 msgstr ""
 
-#: src/xcowsay.c:142
+#: src/xcowsay.c:143
 msgid "Specify alternative config file."
 msgstr ""
 
-#: src/xcowsay.c:143
+#: src/xcowsay.c:144
 msgid "Keep daemon attached to terminal."
 msgstr ""
 
-#: src/xcowsay.c:144
+#: src/xcowsay.c:145
 msgid "Close window on release event instead of press."
 msgstr ""
 
-#: src/xcowsay.c:145
+#: src/xcowsay.c:146
 msgid ""
 "Default values for these options can be specified in the xcowsay config\n"
 "file.  See the man page for more information."
 msgstr ""
 
-#: src/xcowsay.c:147
+#: src/xcowsay.c:148
 msgid ""
 "If the display_time option is not set the display time will be calcuated\n"
 "from the reading_speed parameter multiplied by the word count.  Set the\n"
 "display time to zero to display the cow until it is clicked on."
 msgstr ""
 
-#: src/xcowsay.c:151
+#: src/xcowsay.c:152
 msgid "Report bugs to nick@nickg.me.uk"
 msgstr ""
 
-#: src/xcowsay.c:176
+#: src/xcowsay.c:177
 #, c-format
 msgid "Error: %s is not a valid integer\n"
 msgstr ""
 
-#: src/xcowsay.c:183
+#: src/xcowsay.c:184
 #, c-format
 msgid "Error: failed to parse '%s' as position\n"
 msgstr ""

@@ -1,5 +1,22 @@
-     Changes since 1.0
-     =================
+Changes in 1.5
+=====================
+
+- Updated from Gtk2/GDK to Gtk3/Cairo. Note that because of the removal
+  of the `gtk_widget_shape_combine_mask' API that xcowsay used for
+  transparency, we now rely on the alpha channel of the window and a
+  compositing window manager for this.
+
+- As a side effect of this, the bubble is now anti-aliased, fixing a
+  long-standing issue.
+
+- Unfortunately running xcowsay without a compositor is no longer
+  supported. If this affects you please continue to use 1.4 as there are
+  no functional changes in 1.5.
+
+- The cow position is more random (thanks to Tony Finch).
+
+Changes in 1.0 to 1.4
+=====================
 
 - Added a new option --dream which displays an image instead
   of text. 

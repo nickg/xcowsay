@@ -310,10 +310,6 @@ static GdkPixbuf *bubble_tidy(bubble_t *b)
    GdkPixbuf *pixbuf =
       gdk_pixbuf_get_from_surface(b->surface, 0, 0, b->width + BUBBLE_BORDER, b->height + BUBBLE_BORDER);
 
-   //      gdk_pixbuf_get_from_drawable(NULL, b->pixmap, NULL,
-   //                                0, 0, 0, 0,
-   //                                b->width + BUBBLE_BORDER,
-   //                                b->height + BUBBLE_BORDER);
    cairo_surface_destroy(b->surface);
    return pixbuf;
 }

@@ -1,3 +1,7 @@
+2020-02-03  Nick Gasson  <nick@nickg.me.uk>
+
+	* src/xcowsay.6: Remove the note about the lack of anti-aliasing.
+
 2020-02-02  Nick Gasson	 <nick@nickg.me.uk>
 
 	* src/floating_shape.c (make_shape_from_pixbuf): Update to Gtk3.
