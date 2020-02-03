@@ -34,7 +34,7 @@ typedef enum {
 } cowmode_t;
 
 // Show a cow with the given string and clean up afterwards
-void display_cow(bool debug, const char *text, bool run_main, cowmode_t mode);
+void display_cow(bool debug, const char *text, cowmode_t mode);
 void display_cow_or_invoke_daemon(bool debug, const char *text, cowmode_t mode);
 void cowsay_init(int *argc, char ***argv);
 

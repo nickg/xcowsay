@@ -222,6 +222,9 @@ static void normal_setup(const char *text, bool debug, cowmode_t mode)
    const int cow_width = shape_width(xcowsay.cow);
    const int max_width = xcowsay.screen_width - cow_width;
 
+   if (xcowsay.bubble_pixbuf != NULL)
+      g_object_unref(xcowsay.bubble_pixbuf);
+
    xcowsay.bubble_pixbuf = make_text_bubble(
       text_copy, &xcowsay.bubble_width, &xcowsay.bubble_height,
       max_width, mode);
@@ -236,11 +239,14 @@ static void dream_setup(const char *file, bool debug)
    if (xcowsay.display_time < 0)
       xcowsay.display_time = get_int_option("dream_time");
 
+   if (xcowsay.bubble_pixbuf != NULL)
+      g_object_unref(xcowsay.bubble_pixbuf);
+
    xcowsay.bubble_pixbuf = make_dream_bubble(file, &xcowsay.bubble_width,
                                              &xcowsay.bubble_height);
 }
 
-void display_cow(bool debug, const char *text, bool run_main, cowmode_t mode)
+void display_cow(bool debug, const char *text, cowmode_t mode)
 {
    GdkScreen *screen = gdk_screen_get_default();
 
@@ -335,12 +341,6 @@ void display_cow(bool debug, const char *text, bool run_main, cowmode_t mode)
    g_timeout_add(TICK_TIMEOUT, tick, NULL);
 
    close_when_clicked(xcowsay.cow);
-
-   if (run_main)
-      gtk_main();
-
-   g_object_unref(xcowsay.bubble_pixbuf);
-   xcowsay.bubble_pixbuf = NULL;
 }
 
 #ifndef WITH_DBUS
@@ -402,6 +402,8 @@ bool try_dbus(bool debug, const char *text, cowmode_t mode)
 
 void display_cow_or_invoke_daemon(bool debug, const char *text, cowmode_t mode)
 {
-   if (!try_dbus(debug, text, mode))
-      display_cow(debug, text, true, mode);
+   if (!try_dbus(debug, text, mode)) {
+      display_cow(debug, text, mode);
+      gtk_main();
+   }
 }
