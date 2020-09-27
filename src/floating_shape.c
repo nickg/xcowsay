@@ -86,18 +86,18 @@ float_shape_t *make_shape_from_pixbuf(GdkPixbuf *pixbuf)
    gtk_window_set_keep_above(GTK_WINDOW(s->window), TRUE);
    gtk_window_set_resizable(GTK_WINDOW(s->window), FALSE);
    gtk_window_set_default_size(GTK_WINDOW(s->window), s->width, s->height);
+   gtk_widget_set_size_request(GTK_WIDGET(s->window), s->width, s->height);
 
    gtk_widget_set_app_paintable(GTK_WIDGET(s->window), TRUE);
 
    screen = gtk_widget_get_screen(s->window);
    visual = gdk_screen_get_rgba_visual(screen);
 
-   if (visual == NULL) {
-      fprintf(stderr, "Error: display does not support alpha channel\n");
-      exit(1);
-   }
-
    gtk_widget_set_visual(s->window, visual);
+
+   if (!gdk_screen_is_composited(screen)) {
+      fprintf(stderr, "Warning: display does not support alpha channel\n");
+   }
 
    g_signal_connect(G_OBJECT(s->window), "draw",
                     G_CALLBACK(draw_shape), s);
