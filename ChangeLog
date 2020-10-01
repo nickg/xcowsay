@@ -1,3 +1,17 @@
+2020-10-01  Nick Gasson	 <nick@nickg.me.uk>
+
+	* src/floating_shape.c (make_shape_from_pixbuf): Correctly detect
+	if the display is composited or not.
+	* src/floating_shape.c (draw_shape): If the window manager is
+	non-compositing use the root window content as the window
+	background. The previous release would show black squares instead.
+
+	* xcowsay 1.5.1 released!
+
+2020-02-08  Nick Gasson  <nick@nickg.me.uk>
+
+	* xcowsay 1.5 released!
+
 2020-02-03  Nick Gasson  <nick@nickg.me.uk>
 
 	* src/xcowsay.6: Remove the note about the lack of anti-aliasing.

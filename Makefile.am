@@ -10,3 +10,4 @@ TESTS_ENVIRONMENT = \
 	BUILD_DIR=$(top_builddir) \
 	SRC_DIR=$(top_srcdir)
 
+TESTS = test.sh
