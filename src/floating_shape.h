@@ -28,7 +28,7 @@ typedef struct {
    GtkWidget *window;
    GdkPixbuf *pixbuf;
    int x, y, width, height;
-   bool has_rgba;
+   bool composited;
 } float_shape_t;
 
 float_shape_t *make_shape_from_pixbuf(GdkPixbuf *pixbuf);

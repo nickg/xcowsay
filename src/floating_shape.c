@@ -41,12 +41,28 @@ static gboolean draw_shape(GtkWidget *widget, GdkEventExpose *event,
    float_shape_t *s = (float_shape_t *)userdata;
    cairo_t *cr;
    int width, height;
+   GdkWindow *root_win;
+   GdkPixbuf *root_pb;
 
    cr = gdk_cairo_create(gtk_widget_get_window(widget));
 
    cairo_set_source_rgba(cr, 1.0, 1.0, 1.0, 0.0);
 
    gtk_window_get_size(GTK_WINDOW(widget), &width, &height);
+
+   if (!s->composited) {
+      // Gtk3 removed the gtk_widget_shape_combine_mask() function so to
+      // support transparency on a non-composited display we first
+      // capture the root window and use that as a backgroud for the
+      // floating shape.
+      root_win = gdk_get_default_root_window();
+      root_pb = gdk_pixbuf_get_from_window(root_win, s->x, s->y, width, height);
+
+      gdk_cairo_set_source_pixbuf(cr, root_pb, 0, 0);
+      cairo_paint(cr);
+
+      g_object_unref(root_pb);
+   }
 
    gdk_cairo_set_source_pixbuf(cr, s->pixbuf, 0, 0);
    cairo_paint(cr);
@@ -93,10 +109,9 @@ float_shape_t *make_shape_from_pixbuf(GdkPixbuf *pixbuf)
    screen = gtk_widget_get_screen(s->window);
    visual = gdk_screen_get_rgba_visual(screen);
 
-   gtk_widget_set_visual(s->window, visual);
-
-   if (!gdk_screen_is_composited(screen)) {
-      fprintf(stderr, "Warning: display does not support alpha channel\n");
+   if (gdk_screen_is_composited(screen) && visual) {
+      gtk_widget_set_visual(s->window, visual);
+      s->composited = true;
    }
 
    g_signal_connect(G_OBJECT(s->window), "draw",
