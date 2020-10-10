@@ -78,7 +78,7 @@ static token_t next_token(FILE *f, strbuf_t* sbuf, int *lineno, jmp_buf *escape)
    bool skip_to_eol = false;
    bool in_quotes = false;
    for (;;) {
-      char next = fgetc(f);
+      int next = fgetc(f);
       if (EOF == next)
          return (has_chars(sbuf) && !skip_to_eol) ? tTOKEN : tEOF;
       else if ('\n' == next) {
