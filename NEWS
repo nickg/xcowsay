@@ -1,3 +1,18 @@
+Changes in 1.6
+=====================
+
+- Fix portability issues with signed vs unsigned chars in the config
+  file parser (thanks to Charlène Wendling).
+
+- The -t option now allows fractional time values (e.g. -t 0.5 to
+  display for half a second).
+
+Changes in 1.5.1
+=====================
+
+- Fix black background on non-composited displays.  This is a workaround
+  for the Gtk3 limitation mentioned below.
+
 Changes in 1.5
 =====================
 
@@ -19,18 +34,18 @@ Changes in 1.0 to 1.4
 =====================
 
 - Added a new option --dream which displays an image instead
-  of text. 
+  of text.
 
 - Added a new --think mode which displays a thought bubble
   instead of the usual speech bubble
 
-- Added new wrapper scripts xcowdream and xcowthink as 
+- Added new wrapper scripts xcowdream and xcowthink as
   shortcuts for the above.
 
-- Added a new Portuguese translation (courtesy of Vin�cius 
+- Added a new Portuguese translation (courtesy of Vinícius
   Moreira de Oliveira)
 
-- Made --disable-dbus the default configure option as not 
+- Made --disable-dbus the default configure option as not
   many people seem to be using the daemon. Hopefully this
   will be replaced by the GNOME applet soon anyway.
 
