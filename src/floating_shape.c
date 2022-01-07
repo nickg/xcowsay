@@ -104,6 +104,10 @@ float_shape_t *make_shape_from_pixbuf(GdkPixbuf *pixbuf)
    gtk_window_set_default_size(GTK_WINDOW(s->window), s->width, s->height);
    gtk_widget_set_size_request(GTK_WIDGET(s->window), s->width, s->height);
 
+   gtk_window_set_type_hint(
+      GTK_WINDOW (s->window),
+      GDK_WINDOW_TYPE_HINT_NOTIFICATION);
+
    gtk_widget_set_app_paintable(GTK_WIDGET(s->window), TRUE);
 
    screen = gtk_widget_get_screen(s->window);
