@@ -28,6 +28,11 @@ $BUILD_DIR/src/xcowsay --dream $SRC_DIR/cow_small.png -t 2
 echo Unicode and Pango attributes
 $BUILD_DIR/src/xcowsay "<b>你好</b> <i>world</i>"
 
+echo Right-to-left text
+$BUILD_DIR/src/xcowsay <<EOF
+Najib said "السلام عليكم" to me.
+EOF
+
 echo Daemon mode
 $BUILD_DIR/src/xcowsay --daemon --debug &
 code=$?

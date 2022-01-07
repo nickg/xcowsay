@@ -10,6 +10,8 @@ Changes in 1.6
 - Set window type hint to notification to avoid shadows and other
   decorations (thanks to Markus Demleitner).
 
+- Add support for right-to-left text (thanks to @ilevi-code).
+
 Changes in 1.5.1
 =====================
 
