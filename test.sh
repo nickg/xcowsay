@@ -2,6 +2,11 @@
 
 set -e
 
+if [ -f "$HOME/.config/xcowsayrc" ]; then
+   mv $HOME/.config/xcowsayrc /tmp
+   trap "mv /tmp/xcowsayrc $HOME/.config/" EXIT
+fi
+
 echo Normal mode
 $BUILD_DIR/src/xcowsay Hello World
 
@@ -22,8 +27,9 @@ $BUILD_DIR/src/xcowsay "<b>你好</b> <i>world</i>"
 
 echo Daemon mode
 $BUILD_DIR/src/xcowsay --daemon --debug &
+code=$?
 pid=$!
-echo "PID is $pid"
+echo "PID is $pid; code is $?"
 sleep 0.5
 
 $BUILD_DIR/src/xcowsay Hello World -t 100
