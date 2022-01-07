@@ -371,6 +371,7 @@ GdkPixbuf *make_text_bubble(char *text, int *p_width, int *p_height,
    PangoFontDescription *font =
       pango_font_description_from_string(get_string_option("font"));
    PangoAttrList *pango_attrs = NULL;
+   PangoDirection text_direction = PANGO_DIRECTION_NEUTRAL;
 
    // Adjust max width to account for bubble edges
    max_width -= LEFT_BUF;
@@ -393,6 +394,9 @@ GdkPixbuf *make_text_bubble(char *text, int *p_width, int *p_height,
    else {
       pango_layout_set_attributes(layout, pango_attrs);
    }
+
+   text_direction = pango_find_base_dir(text, strlen(text));
+   pango_context_set_base_dir(pango_context, text_direction);
 
    pango_layout_set_font_description(layout, font);
    pango_layout_set_text(layout, stripped, -1);
