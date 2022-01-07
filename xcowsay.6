@@ -13,54 +13,55 @@ xcowsay \- Display a cute cow and speech bubble.
 .RB [ "-f"
 .RI \| font \|]
 .RI [\| text \|]...
-
+.\" ------------------------------------------------------------
 .SH DESCRIPTION
-Display a cow with a speech bubble containing some text. If 
+Display a cow with a speech bubble containing some text.  If
 .I text
-is specified it will be displayed in the bubble. Otherwise the text
-will be read from the standard input and displayed when end of file
-is encountered.
-
-The cow is displayed for either a fixed amount of time, or an amount
-of time calculated from the size of the text. Click on the cow to
-dismiss it immediately.
-
-If 
+is specified it will be displayed in the bubble.  Otherwise the text
+will be read from the standard input and displayed when end of file is
+encountered.
+.PP
+The cow is displayed for either a fixed amount of time, or an amount of
+time calculated from the size of the text.  Click on the cow to dismiss
+it immediately.
+.PP
+If
 .B xcowsay
 is started with
 .B "--daemon"
-it will fork away from the terminal and run in daemon mode. The 
-daemon provides a DBus service 
-.B uk.me.doof.Cowsay 
+it will fork away from the terminal and run in daemon mode.  The daemon
+provides a DBus service
+.B uk.me.doof.Cowsay
 that responds to
-.B ShowCow 
-requests. The daemon can queue up any number of requests and displays
-them in order. 
-
+.B ShowCow
+requests.  The daemon can queue up any number of requests and displays
+them in order.
+.PP
 When
 .B xcowsay
 starts it checks to see if a daemon is running, and if it is, sends a
 .B ShowCow
-request and returns immediately. Otherwise 
+request and returns immediately.  Otherwise
 .B xcowsay
 will block until the cow has disappeared.
-
+.PP
+.\" ------------------------------------------------------------
 .SH CONFIGURATION FILE
 xcowsay reads a configuration file on startup.  The configuration file
-can be stored in the XDG compliant location 
+can be stored in the XDG compliant location
 .I $XDG_CONFIG_HOME/xcowsayrc
 (which will default to
 .IR $HOME/.config/xcowsayrc )
 or in your home directory at
 .IR $HOME/.xcowsayrc .
-If the 
+If the
 .BI --config= FILE
-command line option is passed 
+command line option is passed
 .I FILE
 will be processed after your personal configuration file.
-
+.PP
 The configuration file consists of 'option = value' pairs, one per line.  The
-valid keys are given in the next section. For example, the following line sets
+valid keys are given in the next section.  For example, the following line sets
 display time to 10 seconds:
 .PP
 .RS
@@ -69,14 +70,14 @@ display_time = 10000
 .PP
 The character '#' begins a comment which lasts until the end of the
 line.
-
+.PP
 Values containing spaces should be enclosed in quotes.  For example:
 .PP
 .RS
 font = "mono 28"
 .RE
 .PP
-
+.\" ------------------------------------------------------------
 .SH OPTIONS
 Note that these options override any settings in the config file.
 .TP
@@ -86,45 +87,46 @@ Display usage information.
 .BI "-t " time ", --time=" time
 Display the cow for
 .I time
-seconds. This overrides any value set for
+seconds.  This overrides any value set for
 .IR reading_speed .
 Setting
 .I time
-to zero displays the cow until it is clicked.
-The corresponding config file option is
+to zero displays the cow until it is clicked.  The corresponding config
+file option is
 .IR display_time .
-This can also be set to a floating point value like 0.5.
+This can also be set to a fractional value like 0.5.
 .TP
 .BI "-r " speed ", --reading-speed=" speed
 Number of milliseconds to display the cow for each word in the input
-text. This is clamped to a minimum of
+text.  This is clamped to a minimum of
 .I min_display_time
 and a maximum of
 .IR max_display_time .
-The defaults are 1 second and 30 seconds respectively. The corresponding
-config file option is
+The defaults are 1 second and 30 seconds respectively.  The
+corresponding config file option is
 .IR reading_speed .
 .TP
 .BI "-f " font ", --font=" font
-Font for the speech bubble text. Accepts Pango font strings. The
+Font for the speech bubble text.  Accepts Pango font strings.  The
 corresponding config file option is
 .IR font .
 .TP
 .BI "-d " file ", --dream=" file
-Display an image instead of text in the cow's bubble. The
-.I dream_time 
+Display an image instead of text in the cow's bubble.  The
+.I dream_time
 config file option sets the numer of milliseconds to display the
-image for. The default is 10 seconds.
+image for.  The default is 10 seconds.
 .TP
 .B "--think"
 Display a thought bubble instead of a speech bubble.
 .TP
 .B "--daemon"
-Run xcowsay in daemon mode if DBus support has been enabled. See the
-description for more information.
+Run xcowsay in daemon mode if DBus support has been enabled.  See the
+.BR DESCRIPTION
+section above for more information.
 .TP
 .BI "--cow-size=" size
-Size of the cow image.  Current choices are 
+Size of the cow image.  Current choices are
 .BR small ", " med ", or " large .
 The corresponding config file option is
 .IR cow_size .
@@ -138,19 +140,19 @@ option is
 Make the cow appear on monitor N.
 .TP
 .BI "--at=" X,Y
-Force that cow to appear at screen location (X,Y).  The config file options
-are
+Force that cow to appear at screen location (X,Y).  The config file
+options are
 .I at_x
-and 
+and
 .IR at_y .
 .TP
 .BI "--bubble-at=" X,Y
-Change position of bubble relative to where it would normally appear.  This
-is most useful when combined with the 
+Change position of bubble relative to where it would normally appear.
+This is most useful when combined with the
 .I alt_image
 option to create your own characters.  The config file options are
-.I bubble_x 
-and 
+.I bubble_x
+and
 .IR bubble_y .
 .TP
 .B "--no-wrap"
@@ -159,7 +161,7 @@ The config file option
 .I wrap
 can be set to
 .I true
-or 
+or
 .I false
 to set this explicitly.
 .TP
@@ -170,7 +172,7 @@ if you are using your own image.
 .B "--debug"
 Print messages about what
 .B xcowsay
-is doing. Useful for finding out why the daemon fails.
+is doing.  Useful for finding out why the daemon fails.
 .TP
 .B "--release"
 Close window on release event instead of press.  The corresponding
