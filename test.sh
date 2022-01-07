@@ -19,6 +19,9 @@ $BUILD_DIR/src/xcowsay --think Hello World
 echo Left thought bubble
 $BUILD_DIR/src/xcowsay --think Hello World --left
 
+echo Fractional time
+$BUILD_DIR/src/xcowsay Very quick message -t 0.5
+
 echo Dream
 $BUILD_DIR/src/xcowsay --dream $SRC_DIR/cow_small.png -t 2
 

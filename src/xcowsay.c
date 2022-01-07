@@ -1,5 +1,5 @@
 /*  xcowsay.c -- Cute talking cow for GTK+.
- *  Copyright (C) 2008-2020  Nick Gasson
+ *  Copyright (C) 2008-2022  Nick Gasson
  *
  *  This program is free software: you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -155,7 +155,7 @@ static void usage()
 static void version()
 {
    static const char *copy =
-      "Copyright (C) 2008-2020  Nick Gasson\n"
+      "Copyright (C) 2008-2022  Nick Gasson\n"
       "This program comes with ABSOLUTELY NO WARRANTY. This is free software, and\n"
       "you are welcome to redistribute it under certain conditions. See the GNU\n"
       "General Public Licence for details.";
@@ -175,6 +175,18 @@ static int parse_int_option(const char *optarg)
       return r;
    else {
       fprintf(stderr, i18n("Error: %s is not a valid integer\n"), optarg);
+      exit(EXIT_FAILURE);
+   }
+}
+
+static double parse_float_option(const char *optarg)
+{
+   char *endptr;
+   double r = strtod(optarg, &endptr);
+   if ('\0' == *endptr)
+      return r;
+   else {
+      fprintf(stderr, i18n("Error: %s is not a valid number\n"), optarg);
       exit(EXIT_FAILURE);
    }
 }
@@ -256,7 +268,7 @@ int main(int argc, char **argv)
 
    parse_config_file();
 
-   int c, index = 0, failure = 0;
+   int c, index = 0, failure = 0, dtime;
    const char *spec = "hvld:r:t:f:";
    const char *dream_file = NULL;
    while ((c = getopt_long(argc, argv, spec, long_options, &index)) != -1) {
@@ -277,7 +289,9 @@ int main(int argc, char **argv)
          version();
          exit(EXIT_SUCCESS);
       case 't':
-         set_int_option("display_time", parse_int_option(optarg)*1000);
+         dtime = (int)(parse_float_option(optarg)*1000.0);
+         set_int_option("display_time", dtime);
+         set_int_option("min_display_time", dtime);
          break;
       case 'r':
          set_int_option("reading_speed", parse_int_option(optarg));
