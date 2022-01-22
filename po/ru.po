@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: ru\n"
 "Report-Msgid-Bugs-To: nick@cakesniffer.co.uk\n"
-"POT-Creation-Date: 2020-10-01 12:27+0800\n"
+"POT-Creation-Date: 2022-01-22 15:33+0800\n"
 "PO-Revision-Date: 2010-02-03 10:25+0500\n"
 "Last-Translator:  <kirin.yuri@ya.ru>\n"
 "Language-Team: Russian\n"
@@ -134,7 +134,12 @@ msgstr "Об ошибках пишите на nick@nickg.me.uk"
 msgid "Error: %s is not a valid integer\n"
 msgstr "Ошибка: %s не является корректным целым числом\n"
 
-#: src/xcowsay.c:184
+#: src/xcowsay.c:189
+#, fuzzy, c-format
+msgid "Error: %s is not a valid number\n"
+msgstr "Ошибка: %s не является корректным целым числом\n"
+
+#: src/xcowsay.c:196
 #, c-format
 msgid "Error: failed to parse '%s' as position\n"
 msgstr "Ошибка: '%s' не является корректным значением координат\n"

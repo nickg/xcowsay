@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: pt_BR\n"
 "Report-Msgid-Bugs-To: nick@cakesniffer.co.uk\n"
-"POT-Creation-Date: 2020-10-01 12:27+0800\n"
+"POT-Creation-Date: 2022-01-22 15:33+0800\n"
 "PO-Revision-Date: 2010-11-06 16:39-0200\n"
 "Last-Translator: Phantom X <megaphantomx at bol.com.br>\n"
 "Language-Team: Português do Brasil <pt@li.org>\n"
@@ -135,7 +135,12 @@ msgstr "Reporte bugs para nick@nickg.me.uk"
 msgid "Error: %s is not a valid integer\n"
 msgstr "Erro: %s não é um inteiro válido\n"
 
-#: src/xcowsay.c:184
+#: src/xcowsay.c:189
+#, fuzzy, c-format
+msgid "Error: %s is not a valid number\n"
+msgstr "Erro: %s não é um inteiro válido\n"
+
+#: src/xcowsay.c:196
 #, c-format
 msgid "Error: failed to parse '%s' as position\n"
 msgstr "Erro: falha ao analisar '%s' como posição\n"
