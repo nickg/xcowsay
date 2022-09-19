@@ -1,6 +1,6 @@
 #!/bin/bash
 
-set -e
+set -e -u
 
 export HOME=/nonexistent
 export XDG_CONFIG_HOME=/nonexistent
