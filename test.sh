@@ -2,10 +2,8 @@
 
 set -e
 
-if [ -f "$HOME/.config/xcowsayrc" ]; then
-   mv $HOME/.config/xcowsayrc /tmp
-   trap "mv /tmp/xcowsayrc $HOME/.config/" EXIT
-fi
+export HOME=/nonexistent
+export XDG_CONFIG_HOME=/nonexistent
 
 echo Normal mode
 $BUILD_DIR/src/xcowsay Hello World
