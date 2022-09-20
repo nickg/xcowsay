@@ -114,7 +114,7 @@ msgstr ""
 
 #: src/xcowsay.c:148
 msgid ""
-"If the display_time option is not set the display time will be calcuated\n"
+"If the display_time option is not set the display time will be calculated\n"
 "from the reading_speed parameter multiplied by the word count.  Set the\n"
 "display time to zero to display the cow until it is clicked on."
 msgstr ""

@@ -53,7 +53,7 @@ static gboolean draw_shape(GtkWidget *widget, GdkEventExpose *event,
    if (!s->composited) {
       // Gtk3 removed the gtk_widget_shape_combine_mask() function so to
       // support transparency on a non-composited display we first
-      // capture the root window and use that as a backgroud for the
+      // capture the root window and use that as a background for the
       // floating shape.
       root_win = gdk_get_default_root_window();
       root_pb = gdk_pixbuf_get_from_window(root_win, s->x, s->y, width, height);

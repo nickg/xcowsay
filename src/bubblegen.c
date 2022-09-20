@@ -43,18 +43,18 @@
 
 // These next ones control the size and position of the "thinking circles"
 // (or whatever you call them)
-#define BIG_KIRCLE_X      38
-#define BIG_KIRCLE_Y      70
-#define BIG_KIRCLE_DIAM   35
-#define BIG_KIRCLE_RADIUS (BIG_KIRCLE_DIAM / 2)
+#define BIG_CIRCLE_X      38
+#define BIG_CIRCLE_Y      70
+#define BIG_CIRCLE_DIAM   35
+#define BIG_CIRCLE_RADIUS (BIG_CIRCLE_DIAM / 2)
 
-#define SMALL_KIRCLE_X      5
-#define SMALL_KIRCLE_Y      40
-#define SMALL_KIRCLE_DIAM   20
-#define SMALL_KIRCLE_RADIUS (SMALL_KIRCLE_DIAM / 2)
+#define SMALL_CIRCLE_X      5
+#define SMALL_CIRCLE_Y      40
+#define SMALL_CIRCLE_DIAM   20
+#define SMALL_CIRCLE_RADIUS (SMALL_CIRCLE_DIAM / 2)
 
-// Min distance from top of the big kircle to the top of the bubble
-#define KIRCLE_TOP_MIN  10
+// Min distance from top of the big circle to the top of the bubble
+#define CIRCLE_TOP_MIN  10
 
 typedef struct {
    int width, height;
@@ -191,27 +191,27 @@ static void bubble_init_cairo(bubble_t *b, cairo_t *cr, bubble_style_t style)
       cairo_fill(cr);
    }
    else {
-      // Incrementally move the top kircle down so it's within the
+      // Incrementally move the top circle down so it's within the
       // bubble's border
-      int big_y = BIG_KIRCLE_Y;
-      int small_y = SMALL_KIRCLE_Y;
+      int big_y = BIG_CIRCLE_Y;
+      int small_y = SMALL_CIRCLE_Y;
 
-      while (big_y + KIRCLE_TOP_MIN > b->height/2) {
+      while (big_y + CIRCLE_TOP_MIN > b->height/2) {
          big_y /= 2;
          small_y /= 2;
       }
 
-      // Draw two think kircles
+      // Draw two think circles
       cairo_arc(cr,
-                (right ? BIG_KIRCLE_X + BIG_KIRCLE_RADIUS
-                 : b->width - BIG_KIRCLE_X - BIG_KIRCLE_RADIUS),
-                b->height/2 - big_y + BIG_KIRCLE_RADIUS, BIG_KIRCLE_RADIUS,
+                (right ? BIG_CIRCLE_X + BIG_CIRCLE_RADIUS
+                 : b->width - BIG_CIRCLE_X - BIG_CIRCLE_RADIUS),
+                b->height/2 - big_y + BIG_CIRCLE_RADIUS, BIG_CIRCLE_RADIUS,
                 0, 2.0 * M_PI);
 
       cairo_arc(cr,
-                (right ? SMALL_KIRCLE_X + SMALL_KIRCLE_RADIUS
-                 : b->width - SMALL_KIRCLE_X - SMALL_KIRCLE_RADIUS),
-                b->height/2 - small_y + SMALL_KIRCLE_RADIUS, SMALL_KIRCLE_RADIUS,
+                (right ? SMALL_CIRCLE_X + SMALL_CIRCLE_RADIUS
+                 : b->width - SMALL_CIRCLE_X - SMALL_CIRCLE_RADIUS),
+                b->height/2 - small_y + SMALL_CIRCLE_RADIUS, SMALL_CIRCLE_RADIUS,
                 0, 2.0 * M_PI);
 
       cairo_fill(cr);
@@ -219,17 +219,17 @@ static void bubble_init_cairo(bubble_t *b, cairo_t *cr, bubble_style_t style)
       cairo_set_source_rgb(cr, 0.0, 0.0, 0.0);
 
       cairo_arc(cr,
-                (right ? BIG_KIRCLE_X + BIG_KIRCLE_RADIUS
-                 : b->width - BIG_KIRCLE_X - BIG_KIRCLE_RADIUS),
-                b->height/2 - big_y + BIG_KIRCLE_RADIUS, BIG_KIRCLE_RADIUS,
+                (right ? BIG_CIRCLE_X + BIG_CIRCLE_RADIUS
+                 : b->width - BIG_CIRCLE_X - BIG_CIRCLE_RADIUS),
+                b->height/2 - big_y + BIG_CIRCLE_RADIUS, BIG_CIRCLE_RADIUS,
                 0, 2.0 * M_PI);
 
       cairo_stroke(cr);
 
       cairo_arc(cr,
-                (right ? SMALL_KIRCLE_X + SMALL_KIRCLE_RADIUS
-                 : b->width - SMALL_KIRCLE_X - SMALL_KIRCLE_RADIUS),
-                b->height/2 - small_y + SMALL_KIRCLE_RADIUS, SMALL_KIRCLE_RADIUS,
+                (right ? SMALL_CIRCLE_X + SMALL_CIRCLE_RADIUS
+                 : b->width - SMALL_CIRCLE_X - SMALL_CIRCLE_RADIUS),
+                b->height/2 - small_y + SMALL_CIRCLE_RADIUS, SMALL_CIRCLE_RADIUS,
                 0, 2.0 * M_PI);
 
       cairo_stroke(cr);
@@ -388,7 +388,7 @@ GdkPixbuf *make_text_bubble(char *text, int *p_width, int *p_height,
    if (!pango_parse_markup(text, -1, 0, &pango_attrs,
          &stripped, NULL, NULL)) {
 
-      // This isn't fatal as the the text may contain angled brackets, etc.
+      // This isn't fatal as the text may contain angled brackets, etc.
       stripped = text;
    }
    else {

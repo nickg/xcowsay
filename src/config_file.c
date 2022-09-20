@@ -164,7 +164,7 @@ static bool is_bool_option(const char *s, bool *bval)
 static char *config_file_name(void)
 {
    // There are three possible locations for the config file:
-   // - Specifed on the command line with --config
+   // - Specified on the command line with --config
    // - $XDG_CONFIG_HOME/xcowsayrc
    // - $HOME/.xcowsayrc
    // We prefer them in the above order

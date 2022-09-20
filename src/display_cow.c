@@ -192,7 +192,7 @@ static void normal_setup(const char *text, bool debug, cowmode_t mode)
    if ('\n' == text_copy[len-1])
       text_copy[len-1] = '\0';
 
-   // Count the words and work out the display time, if neccessary
+   // Count the words and work out the display time, if necessary
    xcowsay.display_time = get_int_option("display_time");
    if (xcowsay.display_time < 0) {
       int words = count_words(text_copy);
@@ -291,7 +291,7 @@ void display_cow(bool debug, const char *text, cowmode_t mode)
    int area_h = xcowsay.screen_height - total_height;
 
    // Fit the cow on the screen as best as we can
-   // The area can't be be zero or we'd get an FPE
+   // The area can't be zero or we'd get an FPE
    if (area_w < 1)
       area_w = 1;
    if (area_h < 1)
