@@ -146,7 +146,7 @@ static void usage()
       i18n("Default values for these options can be specified in the "
          "xcowsay config\nfile.  See the man page for more information."),
       i18n("If the display_time option is not set the display time will "
-         "be calcuated\nfrom the reading_speed parameter multiplied by "
+         "be calculated\nfrom the reading_speed parameter multiplied by "
          "the word count.  Set the\ndisplay time to zero to display the "
          "cow until it is clicked on."),
       i18n("Report bugs to nick@nickg.me.uk"));

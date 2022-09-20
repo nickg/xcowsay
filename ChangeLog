@@ -156,7 +156,7 @@
 2010-01-03  Nick Gasson  <nick@nickg.me.uk>
 
 	* src/xcowsay.c (main): Add --at option to specify cow location
-	on screen and correspoding at_x and at_y config variables.
+	on screen and corresponding at_x and at_y config variables.
 	(parse_position_option): New function to parse options specified
 	as X,Y pairs.
 	* src/display_cow.c (display_cow): Now recognises the at_x and
