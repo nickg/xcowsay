@@ -135,18 +135,22 @@ static gboolean tick(gpointer data)
          fprintf(stderr, "Internal Error: Invalid state csLeadIn\n");
          exit(EXIT_FAILURE);
       case csDisplay:
-         show_shape(xcowsay.bubble);
-         close_when_clicked(xcowsay.bubble);
+         if (xcowsay.bubble) {
+            show_shape(xcowsay.bubble);
+            close_when_clicked(xcowsay.bubble);
+         }
          xcowsay.transition_timeout = xcowsay.display_time;
          break;
       case csLeadOut:
-         hide_shape(xcowsay.bubble);
+         if (xcowsay.bubble)
+            hide_shape(xcowsay.bubble);
          xcowsay.transition_timeout = get_int_option("lead_out_time");
          break;
       case csCleanup:
          destroy_shape(xcowsay.cow);
          xcowsay.cow = NULL;
-         destroy_shape(xcowsay.bubble);
+         if (xcowsay.bubble)
+            destroy_shape(xcowsay.bubble);
          xcowsay.bubble = NULL;
          break;
       }
@@ -183,14 +187,36 @@ static int count_words(const char *s)
    return words;
 }
 
+static bool is_whitespace(const char *s)
+{
+   while (*s) {
+      if (!isspace(*s))
+         return false;
+      s++;
+   }
+   return true;
+}
+
 static void normal_setup(const char *text, bool debug, cowmode_t mode)
 {
    char *text_copy = strdup(text);
 
    // Trim any trailing newline
    size_t len = strlen(text_copy);
-   if ('\n' == text_copy[len-1])
+   if (len > 0 && '\n' == text_copy[len-1])
       text_copy[len-1] = '\0';
+
+   if (get_bool_option("no_bubble") || is_whitespace(text_copy)) {
+      xcowsay.bubble_pixbuf = NULL;
+      xcowsay.bubble_width = 0;
+      xcowsay.bubble_height = 0;
+      // Default display time if no text
+      xcowsay.display_time = get_int_option("display_time");
+      if (xcowsay.display_time < 0)
+         xcowsay.display_time = get_int_option("min_display_time");
+      free(text_copy);
+      return;
+   }
 
    // Count the words and work out the display time, if necessary
    xcowsay.display_time = get_int_option("display_time");
@@ -278,11 +304,15 @@ void display_cow(bool debug, const char *text, cowmode_t mode)
       exit(1);
    }
 
-   xcowsay.bubble = make_shape_from_pixbuf(xcowsay.bubble_pixbuf);
+   if (xcowsay.bubble_pixbuf != NULL)
+      xcowsay.bubble = make_shape_from_pixbuf(xcowsay.bubble_pixbuf);
+   else
+      xcowsay.bubble = NULL;
 
-   int total_width = shape_width(xcowsay.cow)
-      + get_int_option("bubble_x")
-      + xcowsay.bubble_width;
+   int total_width = shape_width(xcowsay.cow);
+   if (xcowsay.bubble)
+      total_width += get_int_option("bubble_x") + xcowsay.bubble_width;
+
    int total_height = max(shape_height(xcowsay.cow), xcowsay.bubble_height);
 
    int bubble_off = max((xcowsay.bubble_height - shape_height(xcowsay.cow))/2, 0);
@@ -315,12 +345,14 @@ void display_cow(bool debug, const char *text, cowmode_t mode)
                  geom.y + bubble_off + cow_y);
       show_shape(xcowsay.cow);
 
-      int bx = shape_x(xcowsay.cow) - xcowsay.bubble_width
-         + get_int_option("bubble_x");
-      int by = shape_y(xcowsay.cow)
-         + (shape_height(xcowsay.cow) - shape_height(xcowsay.bubble))/2
-         + get_int_option("bubble_y");
-      move_shape(xcowsay.bubble, bx, by);
+      if (xcowsay.bubble) {
+         int bx = shape_x(xcowsay.cow) - xcowsay.bubble_width
+            + get_int_option("bubble_x");
+         int by = shape_y(xcowsay.cow)
+            + (shape_height(xcowsay.cow) - shape_height(xcowsay.bubble))/2
+            + get_int_option("bubble_y");
+         move_shape(xcowsay.bubble, bx, by);
+      }
    }
    else {
       move_shape(xcowsay.cow,
@@ -328,12 +360,14 @@ void display_cow(bool debug, const char *text, cowmode_t mode)
                  geom.y + bubble_off + cow_y);
       show_shape(xcowsay.cow);
 
-      int bx = shape_x(xcowsay.cow) + shape_width(xcowsay.cow)
-         + get_int_option("bubble_x");
-      int by = shape_y(xcowsay.cow)
-         + (shape_height(xcowsay.cow) - shape_height(xcowsay.bubble))/2
-         + get_int_option("bubble_y");
-      move_shape(xcowsay.bubble, bx, by);
+      if (xcowsay.bubble) {
+         int bx = shape_x(xcowsay.cow) + shape_width(xcowsay.cow)
+            + get_int_option("bubble_x");
+         int by = shape_y(xcowsay.cow)
+            + (shape_height(xcowsay.cow) - shape_height(xcowsay.bubble))/2
+            + get_int_option("bubble_y");
+         move_shape(xcowsay.bubble, bx, by);
+      }
    }
 
    xcowsay.state = csLeadIn;
