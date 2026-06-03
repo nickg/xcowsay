@@ -23,6 +23,13 @@
 #include <stdbool.h>
 #include "floating_shape.h"
 
+#ifdef __APPLE__
+#include <objc/runtime.h>
+#include <objc/message.h>
+// Not in public header but exported from libgdk-3
+extern id gdk_quartz_window_get_nswindow(GdkWindow *window);
+#endif
+
 static float_shape_t *alloc_shape()
 {
    float_shape_t *s = (float_shape_t*)calloc(1, sizeof(float_shape_t));
@@ -35,18 +42,10 @@ static void quit_callback(GtkWidget *widget, gpointer data)
    gtk_main_quit();
 }
 
-static gboolean draw_shape(GtkWidget *widget, GdkEventExpose *event,
-                           gpointer userdata)
+static gboolean draw_shape(GtkWidget *widget, cairo_t *cr, gpointer userdata)
 {
    float_shape_t *s = (float_shape_t *)userdata;
-   cairo_t *cr;
    int width, height;
-   GdkWindow *root_win;
-   GdkPixbuf *root_pb;
-
-   cr = gdk_cairo_create(gtk_widget_get_window(widget));
-
-   cairo_set_source_rgba(cr, 1.0, 1.0, 1.0, 0.0);
 
    gtk_window_get_size(GTK_WINDOW(widget), &width, &height);
 
@@ -55,8 +54,8 @@ static gboolean draw_shape(GtkWidget *widget, GdkEventExpose *event,
       // support transparency on a non-composited display we first
       // capture the root window and use that as a background for the
       // floating shape.
-      root_win = gdk_get_default_root_window();
-      root_pb = gdk_pixbuf_get_from_window(root_win, s->x, s->y, width, height);
+      GdkWindow *root_win = gdk_get_default_root_window();
+      GdkPixbuf *root_pb = gdk_pixbuf_get_from_window(root_win, s->x, s->y, width, height);
 
       gdk_cairo_set_source_pixbuf(cr, root_pb, 0, 0);
       cairo_paint(cr);
@@ -67,7 +66,6 @@ static gboolean draw_shape(GtkWidget *widget, GdkEventExpose *event,
    gdk_cairo_set_source_pixbuf(cr, s->pixbuf, 0, 0);
    cairo_paint(cr);
 
-   cairo_destroy(cr);
    return FALSE;
 }
 
@@ -133,6 +131,21 @@ void show_shape(float_shape_t *shape)
    gtk_window_resize(GTK_WINDOW(shape->window), shape->width, shape->height);
    gtk_window_move(GTK_WINDOW(shape->window), shape->x, shape->y);
    gtk_widget_show_all(shape->window);
+#ifdef __APPLE__
+   {
+      id app = ((id (*)(id, SEL))objc_msgSend)(
+         (id)objc_getClass("NSApplication"),
+         sel_getUid("sharedApplication"));
+      ((void (*)(id, SEL, BOOL))objc_msgSend)(
+         app, sel_getUid("activateIgnoringOtherApps:"), YES);
+      // GTK3/Quartz ignores gtk_window_set_keep_above, so set NSFloatingWindowLevel
+      // (3) directly on the native NSWindow backing this GTK widget
+      GdkWindow *gdk_win = gtk_widget_get_window(shape->window);
+      id nswindow = gdk_quartz_window_get_nswindow(gdk_win);
+      ((void (*)(id, SEL, long))objc_msgSend)(nswindow, sel_getUid("setLevel:"), 3L);
+      ((void (*)(id, SEL))objc_msgSend)(nswindow, sel_getUid("orderFrontRegardless"));
+   }
+#endif
 }
 
 void hide_shape(float_shape_t *shape)
