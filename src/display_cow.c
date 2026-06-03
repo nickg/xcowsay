@@ -157,7 +157,10 @@ static gboolean tick(gpointer data)
 
 void cowsay_init(int *argc, char ***argv)
 {
-#ifndef __APPLE__
+#ifdef __APPLE__
+   // Force Quartz backend — if DISPLAY is set GTK would otherwise try X11
+   setenv("GDK_BACKEND", "quartz", 1);
+#else
    // Window positioning doesn't work on Wayland
    setenv("GDK_BACKEND", "x11", 1);
 #endif
