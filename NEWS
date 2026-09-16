@@ -1,3 +1,11 @@
+Changes in 1.7
+=====================
+
+- Added a new --no-bubble (or -n) option to hide the speech bubble.
+
+- The speech bubble is now automatically hidden if the message is empty or
+  only contains whitespace.
+
 Changes in 1.6
 =====================
 

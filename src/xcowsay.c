@@ -74,6 +74,7 @@ static struct option long_options[] = {
    {"bubble-at", required_argument, 0, 'b'},
    {"at", required_argument, 0, 'a'},
    {"no-wrap", no_argument, 0, 'w'},
+   {"no-bubble", no_argument, 0, 'n'},
    {"left", no_argument, 0, 'l'},
    {"config", required_argument, 0, 'o'},
    {"debug", no_argument, &debug, 1},
@@ -116,6 +117,7 @@ static void usage()
       "     --at=X,Y\t\t%s\n"
       "     --bubble-at=X,Y\t%s\n"
       "     --no-wrap\t\t%s\n"
+      " -n, --no-bubble\t\t%s\n"
       "     --config=FILE\t%s\n"
       "     --debug\t\t%s\n"
       "     --release\t\t%s\n\n"
@@ -140,6 +142,7 @@ static void usage()
       i18n("Force the cow to appear at screen location (X,Y)."),
       i18n("Change relative position of bubble."),
       i18n("Disable wrapping if text cannot fit on screen."),
+      i18n("Do not display a speech bubble."),
       i18n("Specify alternative config file."),
       i18n("Keep daemon attached to terminal."),
       i18n("Close window on release event instead of press."),
@@ -263,18 +266,22 @@ int main(int argc, char **argv)
    add_int_option("bubble_y", 0);
    add_string_option("alt_config_file", "");
    add_bool_option("wrap", true);
+   add_bool_option("no_bubble", false);
    add_bool_option("left", false);
    add_string_option("close_event", "button-press-event");
 
    parse_config_file();
 
    int c, index = 0, failure = 0, dtime;
-   const char *spec = "hvld:r:t:f:";
+   const char *spec = "nhvld:r:t:f:";
    const char *dream_file = NULL;
    while ((c = getopt_long(argc, argv, spec, long_options, &index)) != -1) {
       switch (c) {
       case 0:
          // Set a flag
+         break;
+      case 'n':
+         set_bool_option("no_bubble", true);
          break;
       case 'd':
          dream_file = optarg;
