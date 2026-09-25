@@ -161,8 +161,13 @@ static gboolean tick(gpointer data)
 
 void cowsay_init(int *argc, char ***argv)
 {
+#ifdef __APPLE__
+   // Force Quartz backend — if DISPLAY is set GTK would otherwise try X11
+   setenv("GDK_BACKEND", "quartz", 1);
+#else
    // Window positioning doesn't work on Wayland
    setenv("GDK_BACKEND", "x11", 1);
+#endif
 
    gtk_init(argc, argv);
 
@@ -274,16 +279,17 @@ static void dream_setup(const char *file, bool debug)
 
 void display_cow(bool debug, const char *text, cowmode_t mode)
 {
-   GdkScreen *screen = gdk_screen_get_default();
+   GdkDisplay *display = gdk_display_get_default();
 
-   gint n_monitors = gdk_screen_get_n_monitors(screen);
+   gint n_monitors = gdk_display_get_n_monitors(display);
 
    gint pick = get_int_option("monitor");
    if (pick < 0 || pick >= n_monitors)
       pick = random() % n_monitors;
 
    GdkRectangle geom;
-   gdk_screen_get_monitor_geometry(screen, pick, &geom);
+   GdkMonitor *monitor = gdk_display_get_monitor(display, pick);
+   gdk_monitor_get_geometry(monitor, &geom);
 
    xcowsay.screen_width = geom.width;
    xcowsay.screen_height = geom.height;
